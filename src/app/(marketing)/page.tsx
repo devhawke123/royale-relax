@@ -57,20 +57,20 @@ export default function MarketingPage() {
       <FeaturedProducts products={featured} />
 
       <BestSellers products={bestSellers} />
-
+      {/* 
       <ProductCarousel
         items={latest}
         title="Latest Products"
         description="Discover our handpicked selection of luxury beds designed to transform your bedroom"
-      />
+      /> */}
 
-      <AboutSection />
+      {/* <AboutSection />
 
       <BedOfTheWeek product={bedOfTheWeek} endsAt={bedOfTheWeekEndsAt} />
 
       <FaqAccordion />
 
-      <Testimonials />
+      <Testimonials /> */}
     </main>
   )
 }

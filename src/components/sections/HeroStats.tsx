@@ -49,7 +49,7 @@ function StatBlock({ stat, start }: { stat: Stat; start: boolean }) {
     <div className="flex flex-col">
       <span className="text-3xl font-bold text-white tabular-nums sm:text-4xl">
         {display}
-        {stat.suffix}
+        {stat.suffix === '★' ? <span className="text-[#C4894A]">{stat.suffix}</span> : stat.suffix}
       </span>
       <span className="mt-1 text-xs font-normal text-white/80 sm:text-sm">{stat.label}</span>
     </div>
