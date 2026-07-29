@@ -27,7 +27,7 @@ export default function MarketingPage() {
         titleLine1="Sleep in"
         titleLine2="Pure Luxury"
         description="Experience unparalleled comfort with our handcrafted bed collection. Each piece is designed to transform your bedroom into a sanctuary of rest and elegance."
-        image="public/images/lifestyle/hero-bedroom.jpg"
+        image="/images/lifestyle/hero-bedroom.jpg"
         primaryCta={{ label: 'SHOP NOW', href: '/shop/beds' }}
         secondaryCta={{ label: 'CONTACT US', href: '/contact' }}
       />
