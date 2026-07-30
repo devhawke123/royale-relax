@@ -1,0 +1,704 @@
+{
+  "beds": [
+    {
+      "name": "Balmoral Bed",
+      "slug": "balmoral-bed",
+      "images": [
+        {
+          "path": "products/beds/balmoral-bed/main.webp",
+          "color": "Rectangle 11"
+        },
+        {
+          "path": "products/beds/balmoral-bed/color-rectangle-12.webp",
+          "color": "Rectangle 12"
+        }
+      ]
+    },
+    {
+      "name": "Celestia Bed",
+      "slug": "celestia-bed",
+      "images": [
+        {
+          "path": "products/beds/celestia-bed/main.webp",
+          "color": "Rectangle 13"
+        },
+        {
+          "path": "products/beds/celestia-bed/color-rectangle-14.webp",
+          "color": "Rectangle 14"
+        },
+        {
+          "path": "products/beds/celestia-bed/color-rectangle-15.webp",
+          "color": "Rectangle 15"
+        }
+      ]
+    },
+    {
+      "name": "Elan Bed",
+      "slug": "elan-bed",
+      "images": [
+        {
+          "path": "products/beds/elan-bed/main.webp",
+          "color": "Rectangle 16"
+        },
+        {
+          "path": "products/beds/elan-bed/color-rectangle-17-1.webp",
+          "color": "Rectangle 17 (1)"
+        }
+      ]
+    },
+    {
+      "name": "Ellington Bed",
+      "slug": "ellington-bed",
+      "images": [
+        {
+          "path": "products/beds/ellington-bed/main.webp",
+          "color": "Rectangle 18"
+        },
+        {
+          "path": "products/beds/ellington-bed/color-rectangle-19.webp",
+          "color": "Rectangle 19"
+        }
+      ]
+    },
+    {
+      "name": "Eminence Bed",
+      "slug": "eminence-bed",
+      "images": [
+        {
+          "path": "products/beds/eminence-bed/main.webp",
+          "color": "Rectangle 20 (1)"
+        },
+        {
+          "path": "products/beds/eminence-bed/color-rectangle-21.webp",
+          "color": "Rectangle 21"
+        }
+      ]
+    },
+    {
+      "name": "Grand Regent Bed",
+      "slug": "grand-regent-bed",
+      "images": [
+        {
+          "path": "products/beds/grand-regent-bed/main.webp",
+          "color": "Rectangle 22"
+        }
+      ]
+    },
+    {
+      "name": "Grand Royale Bed",
+      "slug": "grand-royale-bed",
+      "images": [
+        {
+          "path": "products/beds/grand-royale-bed/main.webp",
+          "color": "Rectangle 23"
+        },
+        {
+          "path": "products/beds/grand-royale-bed/color-rectangle-24.webp",
+          "color": "Rectangle 24"
+        }
+      ]
+    },
+    {
+      "name": "Harington Bed",
+      "slug": "harington-bed",
+      "images": [
+        {
+          "path": "products/beds/harington-bed/main.webp",
+          "color": "Rectangle 25"
+        },
+        {
+          "path": "products/beds/harington-bed/color-rectangle-26.webp",
+          "color": "Rectangle 26"
+        }
+      ]
+    },
+    {
+      "name": "Heritage Elite Bed",
+      "slug": "heritage-elite-bed",
+      "images": [
+        {
+          "path": "products/beds/heritage-elite-bed/main.webp",
+          "color": "Rectangle 27"
+        }
+      ]
+    },
+    {
+      "name": "Kendal Divan Bed",
+      "slug": "kendal-divan-bed",
+      "images": [
+        {
+          "path": "products/beds/kendal-divan-bed/main.webp",
+          "color": "Rectangle 28"
+        },
+        {
+          "path": "products/beds/kendal-divan-bed/color-rectangle-29.webp",
+          "color": "Rectangle 29"
+        },
+        {
+          "path": "products/beds/kendal-divan-bed/color-rectangle-30.webp",
+          "color": "Rectangle 30"
+        },
+        {
+          "path": "products/beds/kendal-divan-bed/color-rectangle-31.webp",
+          "color": "Rectangle 31"
+        },
+        {
+          "path": "products/beds/kendal-divan-bed/color-rectangle-32.webp",
+          "color": "Rectangle 32"
+        }
+      ]
+    },
+    {
+      "name": "Kensington Bed",
+      "slug": "kensington-bed",
+      "images": [
+        {
+          "path": "products/beds/kensington-bed/main.webp",
+          "color": "Rectangle 33"
+        },
+        {
+          "path": "products/beds/kensington-bed/color-rectangle-34.webp",
+          "color": "Rectangle 34"
+        }
+      ]
+    },
+    {
+      "name": "Luxe Divan Bed",
+      "slug": "luxe-divan-bed",
+      "images": [
+        {
+          "path": "products/beds/luxe-divan-bed/main.webp",
+          "color": "Rectangle 35"
+        },
+        {
+          "path": "products/beds/luxe-divan-bed/color-rectangle-36.webp",
+          "color": "Rectangle 36"
+        }
+      ]
+    },
+    {
+      "name": "Madison Divan Bed",
+      "slug": "madison-divan-bed",
+      "images": [
+        {
+          "path": "products/beds/madison-divan-bed/main.webp",
+          "color": "Rectangle 37"
+        },
+        {
+          "path": "products/beds/madison-divan-bed/color-rectangle-38.webp",
+          "color": "Rectangle 38"
+        }
+      ]
+    },
+    {
+      "name": "Majestic Bed",
+      "slug": "majestic-bed",
+      "images": [
+        {
+          "path": "products/beds/majestic-bed/main.webp",
+          "color": "Rectangle 39"
+        }
+      ]
+    },
+    {
+      "name": "Montrose Bed",
+      "slug": "montrose-bed",
+      "images": [
+        {
+          "path": "products/beds/montrose-bed/main.webp",
+          "color": "Rectangle 40"
+        },
+        {
+          "path": "products/beds/montrose-bed/color-rectangle-41.webp",
+          "color": "Rectangle 41"
+        }
+      ]
+    },
+    {
+      "name": "Regent Bed",
+      "slug": "regent-bed",
+      "images": [
+        {
+          "path": "products/beds/regent-bed/main.webp",
+          "color": "Rectangle 42"
+        },
+        {
+          "path": "products/beds/regent-bed/color-rectangle-43.webp",
+          "color": "Rectangle 43"
+        },
+        {
+          "path": "products/beds/regent-bed/color-rectangle-44.webp",
+          "color": "Rectangle 44"
+        },
+        {
+          "path": "products/beds/regent-bed/color-rectangle-45.webp",
+          "color": "Rectangle 45"
+        }
+      ]
+    },
+    {
+      "name": "Royale Signature Bed",
+      "slug": "royale-signature-bed",
+      "images": [
+        {
+          "path": "products/beds/royale-signature-bed/main.webp",
+          "color": "Rectangle 46"
+        },
+        {
+          "path": "products/beds/royale-signature-bed/color-rectangle-47.webp",
+          "color": "Rectangle 47"
+        },
+        {
+          "path": "products/beds/royale-signature-bed/color-rectangle-48.webp",
+          "color": "Rectangle 48"
+        }
+      ]
+    },
+    {
+      "name": "Savoy Imperial Bed",
+      "slug": "savoy-imperial-bed",
+      "images": [
+        {
+          "path": "products/beds/savoy-imperial-bed/main.webp",
+          "color": "Rectangle 49"
+        },
+        {
+          "path": "products/beds/savoy-imperial-bed/color-rectangle-50.webp",
+          "color": "Rectangle 50"
+        },
+        {
+          "path": "products/beds/savoy-imperial-bed/color-rectangle-51.webp",
+          "color": "Rectangle 51"
+        }
+      ]
+    },
+    {
+      "name": "Valencia Wing Bed",
+      "slug": "valencia-wing-bed",
+      "images": [
+        {
+          "path": "products/beds/valencia-wing-bed/main.webp",
+          "color": "Rectangle 52"
+        }
+      ]
+    },
+    {
+      "name": "Velvet Dawn Bed",
+      "slug": "velvet-dawn-bed",
+      "images": [
+        {
+          "path": "products/beds/velvet-dawn-bed/main.webp",
+          "color": "Rectangle 105"
+        },
+        {
+          "path": "products/beds/velvet-dawn-bed/color-rectangle-53.webp",
+          "color": "Rectangle 53"
+        }
+      ]
+    },
+    {
+      "name": "Verona Bed",
+      "slug": "verona-bed",
+      "images": [
+        {
+          "path": "products/beds/verona-bed/main.webp",
+          "color": "Rectangle 55"
+        },
+        {
+          "path": "products/beds/verona-bed/color-rectangle-56.webp",
+          "color": "Rectangle 56"
+        }
+      ]
+    },
+    {
+      "name": "Versailles Bed",
+      "slug": "versailles-bed",
+      "images": [
+        {
+          "path": "products/beds/versailles-bed/main.webp",
+          "color": "Rectangle 57"
+        },
+        {
+          "path": "products/beds/versailles-bed/color-rectangle-58-1.webp",
+          "color": "Rectangle 58 (1)"
+        },
+        {
+          "path": "products/beds/versailles-bed/color-rectangle-59.webp",
+          "color": "Rectangle 59"
+        },
+        {
+          "path": "products/beds/versailles-bed/color-rectangle-60.webp",
+          "color": "Rectangle 60"
+        },
+        {
+          "path": "products/beds/versailles-bed/color-rectangle-61.webp",
+          "color": "Rectangle 61"
+        }
+      ]
+    }
+  ],
+  "fabrics": [
+    {
+      "name": "Chenille",
+      "slug": "chenille",
+      "images": [
+        {
+          "path": "products/fabrics/chenille/main.webp",
+          "color": "Cream"
+        },
+        {
+          "path": "products/fabrics/chenille/color-mink.webp",
+          "color": "Mink"
+        },
+        {
+          "path": "products/fabrics/chenille/color-chocolate.webp",
+          "color": "Chocolate"
+        },
+        {
+          "path": "products/fabrics/chenille/color-silver.webp",
+          "color": "Silver"
+        },
+        {
+          "path": "products/fabrics/chenille/color-duck-egg.webp",
+          "color": "Duck Egg"
+        },
+        {
+          "path": "products/fabrics/chenille/color-teal.webp",
+          "color": "Teal"
+        },
+        {
+          "path": "products/fabrics/chenille/color-purple.webp",
+          "color": "Purple"
+        },
+        {
+          "path": "products/fabrics/chenille/color-aubergine.webp",
+          "color": "Aubergine"
+        },
+        {
+          "path": "products/fabrics/chenille/color-red.webp",
+          "color": "Red"
+        },
+        {
+          "path": "products/fabrics/chenille/color-black.webp",
+          "color": "Black"
+        }
+      ]
+    },
+    {
+      "name": "Cord Grey",
+      "slug": "cord-grey",
+      "images": [
+        {
+          "path": "products/fabrics/cord-grey/main.webp",
+          "color": null
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-black.webp",
+          "color": "Cord Black"
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-stone.webp",
+          "color": "Cord Stone"
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-champagne.webp",
+          "color": "Cord Champagne"
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-coffee.webp",
+          "color": "Cord Coffee"
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-chocolate.webp",
+          "color": "Cord Chocolate"
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-mustard.webp",
+          "color": "Cord Mustard"
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-marine.webp",
+          "color": "Cord Marine"
+        },
+        {
+          "path": "products/fabrics/cord-grey/color-cord-teal.webp",
+          "color": "Cord Teal"
+        }
+      ]
+    },
+    {
+      "name": "Crushed Velvet",
+      "slug": "crushed-velvet",
+      "images": [
+        {
+          "path": "products/fabrics/crushed-velvet/main.webp",
+          "color": "CV01 White"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv04-cream.webp",
+          "color": "CV04 Cream"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv05-champagne.webp",
+          "color": "CV05 Champagne"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv06-gold.webp",
+          "color": "CV06 Gold"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv07-mink.webp",
+          "color": "CV07 Mink"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv08-brown.webp",
+          "color": "CV08 Brown"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv09-teal.webp",
+          "color": "CV09 Teal"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv10-denim-blue.webp",
+          "color": "CV10 Denim Blue"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv11-red.webp",
+          "color": "CV11 Red"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv13-black.webp",
+          "color": "CV13 Black"
+        },
+        {
+          "path": "products/fabrics/crushed-velvet/color-cv15-pewter.webp",
+          "color": "CV15 Pewter"
+        }
+      ]
+    },
+    {
+      "name": "Dumfries",
+      "slug": "dumfries",
+      "images": [
+        {
+          "path": "products/fabrics/dumfries/main.webp",
+          "color": "Gold"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-mustard.webp",
+          "color": "Mustard"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-winedf04-dumfries-wine.webp",
+          "color": "WineDF04 Dumfries Wine"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-marine.webp",
+          "color": "Marine"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-olive.webp",
+          "color": "Olive"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-mink.webp",
+          "color": "Mink"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-pewter.webp",
+          "color": "Pewter"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-saphire.webp",
+          "color": "Saphire"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-raven.webp",
+          "color": "Raven"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-steel.webp",
+          "color": "Steel"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-lilac.webp",
+          "color": "Lilac"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-thistle.webp",
+          "color": "Thistle"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-claret.webp",
+          "color": "Claret"
+        },
+        {
+          "path": "products/fabrics/dumfries/color-truffle.webp",
+          "color": "Truffle"
+        }
+      ]
+    },
+    {
+      "name": "Marble",
+      "slug": "marble",
+      "images": [
+        {
+          "path": "products/fabrics/marble/main.webp",
+          "color": "Silver"
+        },
+        {
+          "path": "products/fabrics/marble/color-platinum.webp",
+          "color": "Platinum"
+        },
+        {
+          "path": "products/fabrics/marble/color-steel.webp",
+          "color": "Steel"
+        },
+        {
+          "path": "products/fabrics/marble/color-gunmetal.webp",
+          "color": "Gunmetal"
+        },
+        {
+          "path": "products/fabrics/marble/color-oatmeal.webp",
+          "color": "Oatmeal"
+        },
+        {
+          "path": "products/fabrics/marble/color-mink.webp",
+          "color": "Mink"
+        },
+        {
+          "path": "products/fabrics/marble/color-stone.webp",
+          "color": "Stone"
+        },
+        {
+          "path": "products/fabrics/marble/color-ocean.webp",
+          "color": "Ocean"
+        },
+        {
+          "path": "products/fabrics/marble/color-peacock.webp",
+          "color": "Peacock"
+        }
+      ]
+    },
+    {
+      "name": "Naple",
+      "slug": "naple",
+      "images": [
+        {
+          "path": "products/fabrics/naple/main.webp",
+          "color": "Cream"
+        },
+        {
+          "path": "products/fabrics/naple/color-beige.webp",
+          "color": "Beige"
+        },
+        {
+          "path": "products/fabrics/naple/color-sand.webp",
+          "color": "Sand"
+        },
+        {
+          "path": "products/fabrics/naple/color-mink.webp",
+          "color": "Mink"
+        },
+        {
+          "path": "products/fabrics/naple/color-seal-grey.webp",
+          "color": "Seal Grey"
+        },
+        {
+          "path": "products/fabrics/naple/color-silver.webp",
+          "color": "Silver"
+        },
+        {
+          "path": "products/fabrics/naple/color-slate-grey.webp",
+          "color": "Slate Grey"
+        },
+        {
+          "path": "products/fabrics/naple/color-charcoal.webp",
+          "color": "Charcoal"
+        },
+        {
+          "path": "products/fabrics/naple/color-blue.webp",
+          "color": "Blue"
+        },
+        {
+          "path": "products/fabrics/naple/color-purple.webp",
+          "color": "Purple"
+        },
+        {
+          "path": "products/fabrics/naple/color-black.webp",
+          "color": "Black"
+        }
+      ]
+    },
+    {
+      "name": "Plush Soft",
+      "slug": "plush-soft",
+      "images": [
+        {
+          "path": "products/fabrics/plush-soft/main.webp",
+          "color": "Velvet Steel"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-silver.webp",
+          "color": "Velvet Silver"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-grey.webp",
+          "color": "Velvet Grey"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-mustard.webp",
+          "color": "Velvet Mustard"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-sky.webp",
+          "color": "Velvet Sky"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-mink.webp",
+          "color": "Velvet Mink"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-torqouise.webp",
+          "color": "Velvet Torqouise"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-soft-plush-velvet-blue.webp",
+          "color": "Soft Plush Velvet Blue"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-claret.webp",
+          "color": "Velvet Claret"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-soft-plush-velvet-white.webp",
+          "color": "Soft Plush Velvet White"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-pink.webp",
+          "color": "Velvet Pink"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-ice.webp",
+          "color": "Velvet Ice"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-soft-plush-velvet-pebble.webp",
+          "color": "Soft Plush Velvet Pebble"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-mocca.webp",
+          "color": "Velvet Mocca"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-emerald.webp",
+          "color": "Velvet Emerald"
+        },
+        {
+          "path": "products/fabrics/plush-soft/color-velvet-burnt-orange.webp",
+          "color": "Velvet Burnt Orange"
+        }
+      ]
+    }
+  ]
+}

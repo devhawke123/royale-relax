@@ -5,10 +5,10 @@ export interface Product {
   slug: string
   name: string
   category: ProductCategory
-  shortDescription: string
-  description: string
-  basePrice: number
-  currency: string
+  shortDescription?: string
+  description?: string
+  basePrice?: number
+  currency?: string
   images: string[]
   variants: ProductVariant[]
   isFeatured?: boolean
@@ -19,7 +19,7 @@ export interface Product {
   rating?: number
   reviewCount?: number
   createdAt: string
-  updatedAt: string
+  updatedAt?: string
 }
 
 export interface ProductVariant {

@@ -26,8 +26,8 @@ export function BestSellers({ products }: BestSellersProps) {
               <ProductCard product={hero} variant="hero" />
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              {sideCards.map((product) => (
-                <ProductCard key={product.id} product={product} variant="compact" />
+              {sideCards.map((product, index) => (
+                <ProductCard key={`${product.id}-${index}`} product={product} variant="compact" />
               ))}
             </div>
           </div>
@@ -35,8 +35,8 @@ export function BestSellers({ products }: BestSellersProps) {
 
         {bottomCards.length > 0 && (
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {bottomCards.map((product) => (
-              <ProductCard key={product.id} product={product} variant="compact" />
+            {bottomCards.map((product, index) => (
+              <ProductCard key={`${product.id}-${index}`} product={product} variant="compact" />
             ))}
           </div>
         )}

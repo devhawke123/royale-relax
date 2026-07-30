@@ -20,8 +20,9 @@ function formatPrice(amount: number, currency: string) {
 export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
   const variant = product.variants[0]
   const price = variant?.price ?? product.basePrice
+  const currency = product.currency ?? 'GBP'
   const compareAtPrice = variant?.compareAtPrice
-  const savings = compareAtPrice ? compareAtPrice - price : undefined
+  const savings = compareAtPrice && price !== undefined ? compareAtPrice - price : undefined
 
   return (
     <section className="bg-[#f5f5f5] px-6 py-16 xl:px-8">
@@ -49,23 +50,27 @@ export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
             <span aria-hidden>🕐</span> Deal Of The Week
           </p>
           <h3 className="text-4xl font-bold text-[#222] sm:text-5xl">{product.name}</h3>
-          <p className="max-w-md text-lg leading-relaxed text-[#757575]">{product.description}</p>
+          {product.description && (
+            <p className="max-w-md text-lg leading-relaxed text-[#757575]">{product.description}</p>
+          )}
 
-          <div className="flex flex-wrap items-baseline gap-3">
-            <span className="text-4xl font-bold text-[#b3404a] sm:text-5xl">
-              {formatPrice(price, product.currency)}
-            </span>
-            {compareAtPrice && (
-              <span className="text-xl text-[#99a1af] line-through">
-                {formatPrice(compareAtPrice, product.currency)}
+          {price !== undefined && (
+            <div className="flex flex-wrap items-baseline gap-3">
+              <span className="text-4xl font-bold text-[#b3404a] sm:text-5xl">
+                {formatPrice(price, currency)}
               </span>
-            )}
-            {savings && savings > 0 && (
-              <span className="text-sm font-bold text-[#00a63e]">
-                Save {formatPrice(savings, product.currency)}
-              </span>
-            )}
-          </div>
+              {compareAtPrice && (
+                <span className="text-xl text-[#99a1af] line-through">
+                  {formatPrice(compareAtPrice, currency)}
+                </span>
+              )}
+              {savings && savings > 0 && (
+                <span className="text-sm font-bold text-[#00a63e]">
+                  Save {formatPrice(savings, currency)}
+                </span>
+              )}
+            </div>
+          )}
 
           <div>
             <p className="mb-3 text-lg text-[#222]">Offer ends in:</p>

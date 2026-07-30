@@ -19,13 +19,17 @@ function formatPrice(amount: number, currency: string) {
   }).format(amount)
 }
 
+function priceLabel(price: number | undefined, currency: string | undefined) {
+  return price !== undefined ? formatPrice(price, currency ?? 'GBP') : undefined
+}
+
 function hrefFor(product: Product) {
   return `/shop/${product.category === 'mattress' ? 'mattresses' : product.category === 'fabric' ? 'fabrics' : 'beds'}`
 }
 
 export function ProductCard({ product, variant = 'default', categoryLabel }: ProductCardProps) {
   const primaryVariant = product.variants[0]
-  const price = primaryVariant?.price ?? product.basePrice
+  const price = priceLabel(primaryVariant?.price ?? product.basePrice, product.currency)
   const href = hrefFor(product)
   const { addToCart } = useCart()
 
@@ -43,9 +47,7 @@ export function ProductCard({ product, variant = 'default', categoryLabel }: Pro
         <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-4 p-6 sm:p-8">
           <div>
             <p className="text-2xl font-semibold text-white sm:text-3xl">{product.name}</p>
-            <p className="mt-1 text-xl font-bold text-white">
-              {formatPrice(price, product.currency)}
-            </p>
+            {price && <p className="mt-1 text-xl font-bold text-white">{price}</p>}
           </div>
           <Link
             href={href}
@@ -76,9 +78,7 @@ export function ProductCard({ product, variant = 'default', categoryLabel }: Pro
             className="flex items-baseline justify-between gap-2 hover:text-[#b87333]"
           >
             <span className="text-lg font-normal text-[#171717]">{product.name}</span>
-            <span className="text-lg font-bold text-[#b87333]">
-              {formatPrice(price, product.currency)}
-            </span>
+            {price && <span className="text-lg font-bold text-[#b87333]">{price}</span>}
           </Link>
         </div>
       </div>
@@ -113,9 +113,7 @@ export function ProductCard({ product, variant = 'default', categoryLabel }: Pro
         <div className="flex flex-col gap-2 p-5">
           <p className="text-lg font-medium text-[#222]">{product.name}</p>
           <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-[#b87333]">
-              {formatPrice(price, product.currency)}
-            </span>
+            {price ? <span className="text-xl font-bold text-[#b87333]">{price}</span> : <span />}
             <Link href={href} className="text-sm font-medium text-[#222] hover:text-[#b87333]">
               View Details →
             </Link>
@@ -139,9 +137,7 @@ export function ProductCard({ product, variant = 'default', categoryLabel }: Pro
       <div className="flex flex-1 flex-col gap-2 p-6">
         <p className="text-xl font-normal text-[#222]">{product.name}</p>
         <div className="mt-auto flex items-center justify-between pt-4">
-          <span className="text-2xl font-bold text-[#110d0a]">
-            {formatPrice(price, product.currency)}
-          </span>
+          {price ? <span className="text-2xl font-bold text-[#110d0a]">{price}</span> : <span />}
           <Link
             href={href}
             className="inline-flex items-center rounded-md bg-[#b87333] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#a3662e]"

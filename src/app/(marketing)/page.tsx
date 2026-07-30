@@ -8,17 +8,36 @@ import { AboutSection } from '@/components/sections/AboutSection'
 import { BedOfTheWeek } from '@/components/sections/BedOfTheWeek'
 import { FaqAccordion } from '@/components/sections/FaqAccordion'
 import { Testimonials } from '@/components/sections/Testimonials'
-import { mockProducts, bedOfTheWeekEndsAt } from '@/data/mock-products'
+import { bedOfTheWeekEndsAt } from '@/data/mock-products'
+import {
+  getFeaturedProducts,
+  getProductsByCategory,
+  getProductsBySlugsInOrder,
+  toDisplayProduct,
+} from '@/lib/products'
 
-export default function MarketingPage() {
-  const featured = mockProducts.filter((product) => product.isFeatured).slice(0, 3)
-  const bestSellers = mockProducts
-    .filter((product) => product.isBestSeller)
-    .sort((a, b) => (a.bestSellerRank ?? 0) - (b.bestSellerRank ?? 0))
-  const latest = [...mockProducts]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 6)
-  const bedOfTheWeek = mockProducts.find((product) => product.isBedOfTheWeek) ?? mockProducts[0]
+// Hand-curated picks (no isFeatured/isBestSeller signal in the DB yet).
+const FEATURED_SLUGS = ['versailles-bed', 'verona-bed', 'elan-bed']
+const BEST_SELLER_SLUGS = [
+  'celestia-bed',
+  'balmoral-bed',
+  'grand-regent-bed',
+  'harington-bed',
+  'luxe-divan-bed',
+  'harington-bed',
+]
+
+export default async function MarketingPage() {
+  const [featuredProducts, latestProducts, bestSellerProducts, bedsProducts] = await Promise.all([
+    getProductsBySlugsInOrder(FEATURED_SLUGS),
+    getFeaturedProducts(6),
+    getProductsBySlugsInOrder(BEST_SELLER_SLUGS),
+    getProductsByCategory('BEDS'),
+  ])
+  const featured = featuredProducts.map(toDisplayProduct)
+  const latest = latestProducts.map(toDisplayProduct)
+  const bestSellers = bestSellerProducts.map(toDisplayProduct)
+  const bedOfTheWeek = bedsProducts[0] ? toDisplayProduct(bedsProducts[0]) : undefined
 
   return (
     <main className="flex min-h-screen flex-col bg-stone-50 text-stone-900">
@@ -52,15 +71,18 @@ export default function MarketingPage() {
       />
       <BrandStrip />
       <FeaturedProducts products={featured} />
-      <BestSellers products={bestSellers} />
       <ProductCarousel
         items={latest}
         title="Latest Products"
         description="Discover our handpicked selection of luxury beds designed to transform your bedroom"
       />
+
       <AboutSection />
-      <BedOfTheWeek product={bedOfTheWeek} endsAt={bedOfTheWeekEndsAt} />
+
+      {bedOfTheWeek && <BedOfTheWeek product={bedOfTheWeek} endsAt={bedOfTheWeekEndsAt} />}
+
       <FaqAccordion />
+
       <Testimonials />
     </main>
   )

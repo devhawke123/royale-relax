@@ -195,7 +195,7 @@ export function Header() {
       }
     >
       <div className="bg-[#B87333] text-white">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2 text-sm xl:px-8">
+        <div className="flex w-full items-center justify-between px-6 py-2 text-sm xl:px-8 2xl:px-16">
           <div className="flex items-center gap-6">
             <a
               href="mailto:info@royalerelax.co.uk"
@@ -221,7 +221,7 @@ export function Header() {
       </div>
 
       <div className={transparent ? '' : 'border-b border-stone-200'}>
-        <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-4 xl:px-8">
+        <div className="relative flex w-full items-center justify-between gap-4 px-6 py-4 xl:px-8 2xl:px-16">
           <Logo overlay={transparent} />
 
           <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">

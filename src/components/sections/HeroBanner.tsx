@@ -42,12 +42,12 @@ export function HeroBanner({
   secondaryCta,
 }: HeroBannerProps) {
   return (
-    <section className="relative flex min-h-[100svh] w-full items-end overflow-hidden bg-stone-900">
+    <section className="relative flex min-h-[100svh] w-full flex-col justify-center overflow-hidden bg-stone-900 lg:max-h-[880px] 2xl:max-h-[960px]">
       <Image src={image} alt="" fill priority className="object-cover" sizes="100vw" />
       <div className="absolute inset-0 bg-gradient-to-r from-stone-950/75 via-stone-950/35 to-stone-950/10" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-950/50 via-transparent to-stone-950/20" />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-4 px-6 pt-36 pb-10 sm:gap-5 sm:pt-40 sm:pb-12 xl:px-8">
+      <div className="relative flex w-full flex-col gap-3.5 px-6 pt-32 pb-8 sm:gap-4 sm:pt-36 sm:pb-10 lg:gap-5 xl:px-10 2xl:px-16">
         <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-3.5 py-1 text-xs font-medium tracking-wide text-stone-800">
           <Image
             src="/icons/premium-sleep-collec.svg"
