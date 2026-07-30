@@ -1,5 +1,5 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/components/ui/Button'
 
 const shopHighlights = [
   { href: '/shop/mattresses', label: 'Mattresses' },
@@ -106,24 +106,33 @@ export function Footer() {
             © Copyright {new Date().getFullYear()} - Design &amp; Developed by Royale Relax
           </p>
           <div className="flex items-center gap-3">
-            <Button
-              variant="secondary"
-              className="rounded-full border-none bg-[#efefef] px-4 py-3 text-[#6a6d70] hover:bg-stone-200"
+            <Link
+              href="https://wa.me/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#efefef] transition-colors hover:bg-stone-200"
             >
-              WhatsApp
-            </Button>
-            <Button
-              variant="secondary"
-              className="rounded-full border-none bg-[#efefef] px-4 py-3 text-[#6a6d70] hover:bg-stone-200"
+              <Image src="/icons/ic_outline-whatsapp.svg" alt="WhatsApp" width={24} height={24} />
+            </Link>
+            <Link
+              href="https://instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#efefef] transition-colors hover:bg-stone-200"
             >
-              Instagram
-            </Button>
-            <Button
-              variant="secondary"
-              className="rounded-full border-none bg-[#efefef] px-4 py-3 text-[#6a6d70] hover:bg-stone-200"
+              <Image src="/icons/insagram.svg" alt="Instagram" width={24} height={24} />
+            </Link>
+            <Link
+              href="https://facebook.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#efefef] transition-colors hover:bg-stone-200"
             >
-              Facebook
-            </Button>
+              <Image src="/icons/facebook.svg" alt="Facebook" width={24} height={24} />
+            </Link>
           </div>
         </div>
       </div>
