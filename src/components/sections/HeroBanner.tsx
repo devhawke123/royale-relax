@@ -102,5 +102,7 @@ export function HeroBanner({
         <HeroStats />
       </div>
     </section>
+    // comment
+
   )
 }
