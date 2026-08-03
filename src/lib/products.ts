@@ -10,6 +10,7 @@ const productWithColorsInclude = {
       images: { orderBy: { sortOrder: 'asc' as const } },
     },
   },
+  variants: { orderBy: { size: 'asc' as const } },
 }
 
 export function getFeaturedProducts(limit: number) {
@@ -22,11 +23,12 @@ export function getFeaturedProducts(limit: number) {
 
 export function getProductsByCategory(category: Category) {
   return prisma.product.findMany({
-    where: { category },
+    where: { category, status: 'PUBLISHED' },
     orderBy: { createdAt: 'desc' },
     include: productWithColorsInclude,
   })
 }
+
 
 export function getProductBySlug(slug: string) {
   return prisma.product.findUnique({
@@ -66,9 +68,9 @@ const categoryToDisplay: Record<Category, ProductCategory> = {
 }
 
 /**
- * Adapts a DB product (no pricing/description data yet) into the shape the
- * existing UI components expect. Price/description fields are left undefined
- * until that data model is finalized.
+ * Adapts a DB product into the shape the UI components expect. Variant and
+ * basePrice fields are included so listing/detail pages can show prices.
+ * Variant prices default to 0 (per migration) and the UI must handle that.
  */
 export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
   const productImages = getProductImages(product)
@@ -77,13 +79,25 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
     ? [mainImage, ...productImages.filter((image) => image !== mainImage)]
     : productImages
 
+  const variants = (product as any).variants?.map((v: any) => ({
+    id: v.id,
+    productId: product.id,
+    sku: v.sku ?? '',
+    size: v.size,
+    price: Number(v.price ?? 0),
+    inStock: !!v.inStock,
+  })) ?? []
+
   return {
     id: product.id,
     slug: product.slug,
     name: product.name,
     category: categoryToDisplay[product.category],
     images: images.map((image) => getImageUrl(image.path)),
-    variants: [],
+    variants,
+    basePrice: Number((product as any).basePrice ?? 0),
+    hasStorage: Boolean((product as any).hasStorage),
+    hasDrawer: Boolean((product as any).hasDrawer),
     createdAt: product.createdAt.toISOString(),
   }
 }

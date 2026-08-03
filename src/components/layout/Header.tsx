@@ -158,17 +158,24 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const isHome = pathname === '/'
+  const isBedsPage = pathname.startsWith('/shop/beds')
+  const isOverlayPage = isHome || isBedsPage
   const { cartCount, wishlistCount } = useCart()
 
   useEffect(() => {
-    if (!isHome) return
+    if (!isOverlayPage) return
 
     let ticking = false
     const update = () => {
       setScrolled(window.scrollY > SCROLL_THRESHOLD)
       ticking = false
     }
-    update()
+
+    if (isHome) {
+      update()
+    } else {
+      setScrolled(false)
+    }
 
     const onScroll = () => {
       if (!ticking) {
@@ -179,21 +186,22 @@ export function Header() {
 
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [isHome])
+  }, [isOverlayPage, isHome])
 
-  // True only while sitting transparent over the hero (home page, not yet scrolled).
-  const transparent = isHome && !scrolled
+  // True only while sitting transparent over the hero.
+  const transparent = isOverlayPage && !scrolled
 
   return (
-    <header
-      className={
-        isHome
-          ? `fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-300 ease-out ${
-              transparent ? 'bg-transparent' : 'bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
-            }`
-          : 'sticky top-0 z-50 bg-white shadow-sm'
-      }
-    >
+    <>
+      <header
+        className={
+          isOverlayPage
+            ? `fixed inset-x-0 top-0 z-50 overflow-hidden transition-[background-color,box-shadow] duration-300 ease-out ${
+                transparent ? 'bg-transparent' : 'bg-white shadow-[0_2px_8px_rgba(0,0,0,0.08)]'
+              }`
+            : 'sticky top-0 z-50 bg-white shadow-sm'
+        }
+      >
       <div className="bg-[#B87333] text-white">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2 text-sm xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
           <div className="flex items-center gap-6">
@@ -201,18 +209,26 @@ export function Header() {
               href="mailto:info@royalerelax.co.uk"
               className="flex items-center gap-2 hover:opacity-90"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0">
-                <path d="M2.5 6.5L10 11.5L17.5 6.5M3 15H17C17.5523 15 18 14.5523 18 14V6C18 5.44772 17.5523 5 17 5H3C2.44772 5 2 5.44772 2 6V14C2 14.5523 2.44772 15 3 15Z" />
-              </svg>
+              <Image
+                src="/icons/mail.svg"
+                alt="Email"
+                width={16}
+                height={16}
+                className="h-4 w-4 shrink-0"
+              />
               info@royalerelax.co.uk
             </a>
             <a
               href="tel:+447999371906"
               className="hidden items-center gap-2 hover:opacity-90 sm:flex"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0">
-                <path d="M2 3C2 2.44772 2.44772 2 3 2H5.15287C5.64171 2 6.0589 2.35341 6.13927 2.8356L6.87858 7.27147C6.95075 7.70451 6.73206 8.13397 6.3394 8.3303L4.79126 9.10437C5.90756 11.8783 8.12168 14.0924 10.8956 15.2087L11.6697 13.6606C11.866 13.2679 12.2955 13.0492 12.7285 13.1214L17.1644 13.8607C17.6466 13.9411 18 14.3583 18 14.8471V17C18 17.5523 17.5523 18 17 18H15C7.8203 18 2 12.1797 2 5V3Z" />
-              </svg>
+              <Image
+                src="/icons/phone-svgrepo-com 1.svg"
+                alt="Phone"
+                width={16}
+                height={16}
+                className="h-4 w-4 shrink-0"
+              />
               +44 7999 371906
             </a>
           </div>
@@ -269,5 +285,6 @@ export function Header() {
         </div>
       )}
     </header>
-  )
+
+  </>)
 }

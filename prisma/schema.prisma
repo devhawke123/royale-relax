@@ -48,12 +48,27 @@ model Product {
   isNew        Boolean        @default(false)
   onSale       Boolean        @default(false)
   salePrice    Decimal?       @db.Decimal(10, 2)
+  hasStorage   Boolean        @default(false)
+  hasDrawer    Boolean        @default(false)
   status       ProductStatus  @default(DRAFT)
   createdAt    DateTime       @default(now())
   colors       ProductColor[]
   sizes        ProductSize[]
+  variants     ProductVariant[]
   addons       ProductAddon[]
   orderItems   OrderItem[]
+}
+
+model ProductVariant {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size      String
+  price     Decimal  @default(0) @db.Decimal(10, 2)
+  sku       String?
+  inStock   Boolean  @default(true)
+
+  @@unique([productId, size])
 }
 
 model ProductColor {

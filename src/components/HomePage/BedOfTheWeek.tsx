@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/Button'
-import { CountdownTimer } from '@/components/sections/CountdownTimer'
+import { CountdownTimer } from '@/components/HomePage/CountdownTimer'
 
 interface BedOfTheWeekProps {
   product: Product

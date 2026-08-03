@@ -11,6 +11,8 @@ export interface Product {
   currency?: string
   images: string[]
   variants: ProductVariant[]
+  hasStorage?: boolean
+  hasDrawer?: boolean
   isFeatured?: boolean
   isBedOfTheWeek?: boolean
   isBestSeller?: boolean

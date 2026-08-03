@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { HeroStats } from '@/components/sections/HeroStats'
+import { HeroStats } from '@/components/HomePage/HeroStats'
 
 interface HeroBannerProps {
   eyebrow: string
@@ -102,7 +102,7 @@ export function HeroBanner({
         <HeroStats />
       </div>
     </section>
-    // comment
+    // commentssss
 
   )
 }

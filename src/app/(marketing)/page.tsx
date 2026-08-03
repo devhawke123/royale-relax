@@ -1,13 +1,13 @@
-import { HeroBanner } from '@/components/sections/HeroBanner'
-import { TrustBar } from '@/components/sections/TrustBar'
-import { BrandStrip } from '@/components/sections/BrandStrip'
-import { FeaturedProducts } from '@/components/sections/FeaturedProducts'
-import { BestSellers } from '@/components/sections/BestSellers'
-import { ProductCarousel } from '@/components/sections/ProductCarousel'
-import { AboutSection } from '@/components/sections/AboutSection'
-import { BedOfTheWeek } from '@/components/sections/BedOfTheWeek'
-import { FaqAccordion } from '@/components/sections/FaqAccordion'
-import { Testimonials } from '@/components/sections/Testimonials'
+import { HeroBanner } from '@/components/HomePage/HeroBanner'
+import { TrustBar } from '@/components/HomePage/TrustBar'
+import { BrandStrip } from '@/components/HomePage/BrandStrip'
+import { FeaturedProducts } from '@/components/HomePage/FeaturedProducts'
+import { BestSellers } from '@/components/HomePage/BestSellers'
+import { ProductCarousel } from '@/components/HomePage/ProductCarousel'
+import { AboutSection } from '@/components/HomePage/AboutSection'
+import { BedOfTheWeek } from '@/components/HomePage/BedOfTheWeek'
+import { FaqAccordion } from '@/components/HomePage/FaqAccordion'
+import { Testimonials } from '@/components/HomePage/Testimonials'
 import { bedOfTheWeekEndsAt } from '@/data/mock-products'
 import {
   getFeaturedProducts,
@@ -76,6 +76,8 @@ export default async function MarketingPage() {
         title="Latest Products"
         description="Discover our handpicked selection of luxury beds designed to transform your bedroom"
       />
+
+      <BestSellers products={bestSellers} />
 
       <AboutSection />
 
