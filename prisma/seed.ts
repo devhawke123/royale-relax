@@ -42,6 +42,10 @@ function normalizeImagePath(path: string) {
 async function main() {
   const manifest: Manifest = JSON.parse(fs.readFileSync('./data/products-manifest.json', 'utf-8'))
 
+  await prisma.product.deleteMany({
+    where: { slug: { in: Object.values(manifest).flat().map((product) => product.slug) } },
+  })
+
   for (const category of Object.keys(manifest)) {
     for (const product of manifest[category]) {
       const colorGroups = groupImagesByColor(product.images)
