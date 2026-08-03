@@ -35,6 +35,10 @@ function groupImagesByColor(images: ManifestImage[]) {
   return groups
 }
 
+function normalizeImagePath(path: string) {
+  return `/images/Products/${path.replace(/^\/?products\//i, '')}`
+}
+
 async function main() {
   const manifest: Manifest = JSON.parse(fs.readFileSync('./data/products-manifest.json', 'utf-8'))
 
@@ -64,7 +68,7 @@ async function main() {
                   }
 
                   return {
-                    path: img.path,
+                    path: normalizeImagePath(img.path),
                     isMain,
                     sortOrder: imageIndex,
                   }
