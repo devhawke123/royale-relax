@@ -93,7 +93,7 @@ export function BedsPageClient({ products, initialFilter, serverFiltered }: Beds
   return (
     <main className="min-h-screen bg-white">
       {/* ── Hero Banner ── */}
-      <div className="relative h-[250px] w-full overflow-hidden sm:h-[280px]">
+      <div className="relative h-[280px] w-full overflow-hidden sm:h-[320px]">
         <Image
           src="/images/lifestyle/hero-bedroom.jpg"
           alt="Beds collection"
@@ -105,8 +105,15 @@ export function BedsPageClient({ products, initialFilter, serverFiltered }: Beds
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/55" />
 
-        {/* Text */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center">
+        {/* Text — centered within the space below the fixed/transparent header
+            (which overlays the top of this banner), not the full banner height,
+            so it reads as centered without colliding with the nav. Uses the
+            header's real measured height (--header-height, set in Header.tsx)
+            rather than a guessed pixel value. */}
+        <div
+          className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-center gap-2 text-center pb-12"
+          style={{ top: 'var(--header-height, 180px)' }}
+        >
           <h1 className="text-4xl font-bold tracking-wide text-white sm:text-5xl">Beds</h1>
           <p className="text-sm text-white/80">
             <Link href="/" className="hover:underline">Home</Link>

@@ -700,5 +700,43 @@
         }
       ]
     }
+  ],
+  "mattresses": [
+    {
+      "name": "Luxury 1000 Pocket Memory Mattress",
+      "slug": "luxury-1000-pocket-memory-mattress",
+      "images": [
+        {
+          "path": "products/mattresses/luxury-1000-pocket-memory/main.webp"
+        },
+        {
+          "path": "products/mattresses/luxury-1000-pocket-memory/secondary.webp"
+        }
+      ]
+    },
+    {
+      "name": "Royale Hybrid 3000 Pillow Top Mattress",
+      "slug": "royale-hybrid-3000-pillow-top-mattress",
+      "images": [
+        {
+          "path": "products/mattresses/royale-hybrid-3000-pillow-top/main.webp"
+        },
+        {
+          "path": "products/mattresses/royale-hybrid-3000-pillow-top/secondary.webp"
+        }
+      ]
+    },
+    {
+      "name": "VIP Luxury 3000 Pocket Mattress",
+      "slug": "vip-luxury-3000-pocket-mattress",
+      "images": [
+        {
+          "path": "products/mattresses/vip-luxury-3000-pocket/main.webp"
+        },
+        {
+          "path": "products/mattresses/vip-luxury-3000-pocket/secondary.webp"
+        }
+      ]
+    }
   ]
 }

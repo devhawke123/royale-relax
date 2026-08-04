@@ -88,16 +88,25 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
     inStock: !!v.inStock,
   })) ?? []
 
+  const colors = product.colors.map((color) => ({
+    id: color.id,
+    name: color.name,
+    images: color.images.map((image) => getImageUrl(image.path)),
+  }))
+
   return {
     id: product.id,
     slug: product.slug,
     name: product.name,
     category: categoryToDisplay[product.category],
+    description: (product as any).description ?? '',
     images: images.map((image) => getImageUrl(image.path)),
+    colors,
     variants,
     basePrice: Number((product as any).basePrice ?? 0),
     hasStorage: Boolean((product as any).hasStorage),
     hasDrawer: Boolean((product as any).hasDrawer),
+    isNew: Boolean((product as any).isNew),
     createdAt: product.createdAt.toISOString(),
   }
 }

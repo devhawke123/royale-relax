@@ -10,6 +10,7 @@ export interface Product {
   basePrice?: number
   currency?: string
   images: string[]
+  colors?: ProductColorway[]
   variants: ProductVariant[]
   hasStorage?: boolean
   hasDrawer?: boolean
@@ -22,6 +23,12 @@ export interface Product {
   reviewCount?: number
   createdAt: string
   updatedAt?: string
+}
+
+export interface ProductColorway {
+  id: string
+  name: string
+  images: string[]
 }
 
 export interface ProductVariant {

@@ -26,14 +26,8 @@ export function Footer() {
   return (
     <footer className="bg-[#f3f3f3]">
       <div className="mx-auto w-full max-w-7xl px-6 py-10 xl:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-stone-900 text-lg font-semibold">
-            R
-          </span>
-          <span className="flex flex-col leading-none">
-            <span className="text-base font-semibold tracking-wide text-stone-900">ROYALE</span>
-            <span className="text-xs tracking-[0.3em] text-stone-500">RELAX</span>
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image src="/icons/footer-logo.svg" alt="Royale Relax" width={130} height={54} />
         </Link>
 
         <div className="mt-10 grid gap-10 border-t border-stone-300 pt-8 sm:grid-cols-2 lg:grid-cols-5">

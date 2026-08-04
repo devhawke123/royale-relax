@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -158,9 +158,34 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
   const isHome = pathname === '/'
-  const isBedsPage = pathname.startsWith('/shop/beds')
-  const isOverlayPage = isHome || isBedsPage
+  // Only the beds *listing* routes have a hero banner behind the header —
+  // the bed detail page (/shop/beds/[slug]) doesn't, so it must not get the
+  // fixed/transparent overlay treatment (it would float over the gallery
+  // with nothing behind it).
+  const isBedsPage = pathname === '/shop/beds' || pathname === '/shop/beds/storage' || pathname === '/shop/beds/drawer'
+  const isFabricsPage = pathname.startsWith('/shop/fabrics')
+  const isMattressesPage = pathname.startsWith('/shop/mattresses')
+  const isAboutPage = pathname.startsWith('/about')
+  const isOverlayPage = isHome || isBedsPage || isFabricsPage || isMattressesPage || isAboutPage
   const { cartCount, wishlistCount } = useCart()
+  const headerRef = useRef<HTMLElement>(null)
+
+  // Publish the header's real rendered height as a CSS var so pages with a
+  // hero banner behind the fixed/transparent header (e.g. Beds) can lay
+  // content out relative to it without guessing pixel values.
+  useEffect(() => {
+    const el = headerRef.current
+    if (!el) return
+
+    const setVar = () => {
+      document.documentElement.style.setProperty('--header-height', `${el.offsetHeight}px`)
+    }
+
+    setVar()
+    const observer = new ResizeObserver(setVar)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [menuOpen])
 
   useEffect(() => {
     if (!isOverlayPage) return
@@ -194,6 +219,7 @@ export function Header() {
   return (
     <>
       <header
+        ref={headerRef}
         className={
           isOverlayPage
             ? `fixed inset-x-0 top-0 z-50 overflow-hidden transition-[background-color,box-shadow] duration-300 ease-out ${
