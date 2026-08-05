@@ -1,4 +1,4 @@
-import { getProductsByCategory, toDisplayProduct } from '@/lib/products'
+import { getFabricCatalog, toDisplayFabrics } from '@/lib/fabrics'
 import { FabricsPageClient } from '@/components/FabricsPage/FabricsPageClient'
 
 export const metadata = {
@@ -8,8 +8,13 @@ export const metadata = {
 }
 
 export default async function FabricsPage() {
-  const rawProducts = await getProductsByCategory('FABRICS')
-  const products = rawProducts.map(toDisplayProduct)
+  const fabrics = await getFabricCatalog()
+  const displayFabrics = toDisplayFabrics(fabrics)
+  const samples = displayFabrics.map((fabric) => ({
+    slug: fabric.slug,
+    name: fabric.name,
+    image: fabric.swatches[0]?.image ?? '',
+  }))
 
-  return <FabricsPageClient products={products} />
+  return <FabricsPageClient samples={samples} />
 }

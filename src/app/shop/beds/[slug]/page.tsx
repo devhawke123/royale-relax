@@ -1,4 +1,5 @@
 import { getProductBySlug, getProductsByCategory, toDisplayProduct } from '@/lib/products'
+import { getFabricCatalog, toDisplayFabrics } from '@/lib/fabrics'
 import { BedDetailClient } from '@/components/BedDetailPage/BedDetailClient'
 import { notFound } from 'next/navigation'
 
@@ -15,17 +16,18 @@ export default async function BedDetailPage({ params }: { params: Promise<{ slug
 
   const product = toDisplayProduct(raw)
 
-  // The Figma design's "Choose Fabric" swatch grid isn't backed by a
-  // bed-to-fabric relationship in the schema yet, so it's stood in for here
-  // using one real fabric family's colourways from the Fabrics catalog.
-  const fabricProducts = await getProductsByCategory('FABRICS')
-  const fabricSource = fabricProducts.find((f) => f.slug === 'naple') ?? fabricProducts[0]
-  const fabricSwatches = fabricSource
-    ? (toDisplayProduct(fabricSource).colors ?? [])
-        .filter((c) => !/^rectangle/i.test(c.name))
-        .map((c) => ({ id: c.id, name: c.name, image: c.images[0] }))
-        .filter((c): c is { id: string; name: string; image: string } => Boolean(c.image))
-    : []
+  // "Choose Fabric" is backed by the Fabric catalog: each Fabric row is a
+  // fabric type (Chenille, Crushed Velvet, ...) and its FabricColor rows are
+  // that fabric's colour variants. Fetch the whole catalog here so the
+  // client can filter swatches by fabric type in real time.
+  const fabricCatalog = await getFabricCatalog()
+  const fabrics = toDisplayFabrics(fabricCatalog)
 
-  return <BedDetailClient product={product} fabricSwatches={fabricSwatches} />
+  const otherBeds = await getProductsByCategory('BEDS')
+  const relatedProducts = otherBeds
+    .filter((b) => b.slug !== slug)
+    .slice(0, 4)
+    .map(toDisplayProduct)
+
+  return <BedDetailClient product={product} fabrics={fabrics} relatedProducts={relatedProducts} />
 }

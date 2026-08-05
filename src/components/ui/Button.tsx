@@ -7,7 +7,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-stone-900 text-white hover:bg-stone-700',
+  primary: 'bg-[#B87333] text-white hover:bg-[#A3662E]',
   secondary: 'bg-white text-stone-900 border border-stone-300 hover:bg-stone-50',
   ghost: 'bg-transparent text-stone-900 hover:bg-stone-100',
 }
@@ -15,7 +15,7 @@ const variantStyles: Record<ButtonVariant, string> = {
 export function Button({ variant = 'primary', className = '', ...props }: ButtonProps) {
   return (
     <button
-      className={`inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${variantStyles[variant]} ${className}`}
+      className={`inline-flex items-center justify-center rounded-none text-center transition-colors ${variantStyles[variant]} ${className}`}
       {...props}
     />
   )

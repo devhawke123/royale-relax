@@ -67,10 +67,7 @@ export function FaqAccordion() {
           personalized advice.
         </p>
         <Link href="/contact" className="mt-6 inline-block">
-          <Button
-            variant="primary"
-            className="rounded-none bg-[#b87333] px-8 py-3.5 font-bold hover:bg-[#a3662e]"
-          >
+          <Button variant="primary" className="px-8 py-3.5 font-bold">
             Contact Our Experts
           </Button>
         </Link>

@@ -133,6 +133,28 @@ model ProductAddonOption {
   @@index([addonId])
 }
 
+model Fabric {
+  id        String        @id @default(uuid())
+  slug      String        @unique
+  name      String        @unique
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  colors    FabricColor[]
+}
+
+model FabricColor {
+  id        String   @id @default(uuid())
+  fabricId  String
+  code      String   @unique
+  colorName String
+  imagePath String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  fabric    Fabric   @relation(fields: [fabricId], references: [id], onDelete: Cascade)
+
+  @@index([fabricId])
+}
+
 model Order {
   id                         String      @id @default(uuid())
   orderNumber                String      @unique

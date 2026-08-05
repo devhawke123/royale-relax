@@ -18,7 +18,10 @@ function MattressCard({ product }: { product: Product }) {
   const priceLabel = formatPrice(product.basePrice, product.currency)
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-[28px] border border-stone-200/70 bg-white shadow-sm transition duration-300 hover:shadow-md">
+    <Link
+      href={`/shop/mattresses/${product.slug}`}
+      className="flex flex-col overflow-hidden rounded-[28px] border border-stone-200/70 bg-white shadow-sm transition duration-300 hover:shadow-md"
+    >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e4e0]">
         {imageSrc ? (
           <Image
@@ -45,7 +48,7 @@ function MattressCard({ product }: { product: Product }) {
           </span>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 

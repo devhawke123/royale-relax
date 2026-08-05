@@ -74,11 +74,7 @@ export function WhyChooseRoyaleRelax() {
         </div>
 
         <Link href="/shop/beds" className="mt-12 inline-block">
-          <Button
-            variant="primary"
-            className="px-11 py-3.5 text-base font-bold hover:bg-[#a3662e]"
-            style={{ backgroundColor: '#B87333' }}
-          >
+          <Button variant="primary" className="px-11 py-3.5 text-base font-bold">
             Explore Our Collection
           </Button>
         </Link>

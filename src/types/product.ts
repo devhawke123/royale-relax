@@ -28,6 +28,7 @@ export interface Product {
 export interface ProductColorway {
   id: string
   name: string
+  code?: string | null
   images: string[]
 }
 

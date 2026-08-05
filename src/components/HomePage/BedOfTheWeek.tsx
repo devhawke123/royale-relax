@@ -80,7 +80,7 @@ export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
           <div className="flex flex-wrap gap-4 pt-2">
             <Button
               variant="primary"
-              className="flex-1 rounded-none bg-[#b87333] py-4 text-lg font-medium hover:bg-[#a3662e] sm:flex-none sm:px-10"
+              className="flex-1 py-4 text-lg font-medium sm:flex-none sm:px-10"
             >
               Grab This Deal
             </Button>

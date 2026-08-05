@@ -91,6 +91,7 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
   const colors = product.colors.map((color) => ({
     id: color.id,
     name: color.name,
+    code: color.code,
     images: color.images.map((image) => getImageUrl(image.path)),
   }))
 

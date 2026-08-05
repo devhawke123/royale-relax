@@ -100,10 +100,7 @@ export function Testimonials() {
       </div>
 
       <div className="mt-10 flex justify-center">
-        <Button
-          variant="primary"
-          className="rounded-none bg-[#b87333] px-8 py-3.5 font-bold hover:bg-[#a3662e]"
-        >
+        <Button variant="primary" className="px-8 py-3.5 font-bold">
           + Add Review
         </Button>
       </div>

@@ -7,7 +7,7 @@ import type { Product } from '@/types/product'
 
 interface ProductCardProps {
   product: Product
-  variant?: 'default' | 'compact' | 'hero' | 'catalog'
+  variant?: 'default' | 'compact' | 'hero' | 'catalog' | 'related'
   categoryLabel?: string
 }
 
@@ -25,6 +25,10 @@ function priceLabel(price: number | undefined, currency: string | undefined) {
 
 function hrefFor(product: Product) {
   return `/shop/${product.category === 'mattress' ? 'mattresses' : product.category === 'fabric' ? 'fabrics' : 'beds'}`
+}
+
+function detailHrefFor(product: Product) {
+  return `${hrefFor(product)}/${product.slug}`
 }
 
 export function ProductCard({ product, variant = 'default', categoryLabel }: ProductCardProps) {
@@ -118,6 +122,40 @@ export function ProductCard({ product, variant = 'default', categoryLabel }: Pro
               View Details →
             </Link>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (variant === 'related') {
+    const detailHref = detailHrefFor(product)
+    return (
+      <div className="flex h-full w-full flex-col bg-white">
+        <Link href={detailHref} className="relative aspect-[350/193] w-full overflow-hidden bg-[#f2f2f2]">
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 50vw, 25vw"
+            className="object-cover"
+          />
+        </Link>
+        <div className="flex flex-1 flex-col gap-3 pt-4">
+          <Link href={detailHref} className="text-[20px] text-black hover:text-[#b87333]">
+            {product.name}
+          </Link>
+          {price && (
+            <p className="text-[15px] leading-tight font-bold text-[#0a8b0a]">
+              <span className="block text-[13px] font-normal">From</span>
+              {price}
+            </p>
+          )}
+          <Link
+            href={detailHref}
+            className="mt-auto flex items-center justify-center rounded-[2px] bg-[#b87333] px-4 py-3 text-[13px] font-bold text-white transition-colors hover:bg-[#9c5f28]"
+          >
+            Choose options
+          </Link>
         </div>
       </div>
     )
