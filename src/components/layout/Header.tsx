@@ -163,7 +163,12 @@ export function Header() {
   // fixed/transparent overlay treatment (it would float over the gallery
   // with nothing behind it).
   const isBedsPage = pathname === '/shop/beds' || pathname === '/shop/beds/storage' || pathname === '/shop/beds/drawer'
-  const isFabricsPage = pathname.startsWith('/shop/fabrics')
+  // Like isBedsPage/isMattressesPage above: only the fabrics *listing* has a
+  // hero banner behind the header. The fabric detail page
+  // (/shop/fabrics/[slug]) doesn't, so it must render the normal solid
+  // header, not the fixed transparent overlay (which would float over the
+  // gallery with nothing behind it).
+  const isFabricsPage = pathname === '/shop/fabrics'
   // Like isBedsPage above: only the mattresses *listing* has a hero banner
   // behind the header. The mattress detail page (/shop/mattresses/[slug])
   // doesn't, so it must render the normal solid header, not the fixed

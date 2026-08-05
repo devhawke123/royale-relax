@@ -86,7 +86,7 @@ export function FabricDetailClient({ fabric, relatedFabrics = [] }: FabricDetail
         <div className="grid gap-12 lg:grid-cols-[3fr_2fr]">
           {/* ── Left column: swatch image ── */}
           <div className="flex flex-col gap-6">
-            <div className="relative aspect-square w-full overflow-hidden rounded-[3px] border border-stone-100 bg-[#e8e4e0]">
+            <div className="relative aspect-square w-full max-w-[560px] overflow-hidden rounded-[3px] border border-stone-100 bg-[#e8e4e0]">
               {selectedSwatch?.image ? (
                 <Image
                   src={selectedSwatch.image}
