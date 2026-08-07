@@ -1,0 +1,645 @@
+// =============================================================================
+// Royale Relax — proposed Prisma schema (storefront + admin dashboard)
+// Postgres. All money is Decimal(10,2) — never do arithmetic on these in JS
+// floats; use Prisma.Decimal or decimal.js.
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =============================================================================
+// ENUMS
+// =============================================================================
+
+/// All three are Products. FABRICS are sold as a single fixed-price swatch;
+/// the customer picks one of that product's own FabricColor children.
+enum Category {
+  BEDS
+  MATTRESSES
+  FABRICS
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+/// TRACKED       = real stock counted per variant, block purchase at 0
+/// MADE_TO_ORDER = never blocks purchase, shows leadTimeDays instead
+enum StockPolicy {
+  TRACKED
+  MADE_TO_ORDER
+}
+
+enum BedStyle {
+  DIVAN
+  OTTOMAN
+  SLEIGH
+  PANEL
+  UPHOLSTERED
+  WINGED
+  CHESTERFIELD
+}
+
+enum MattressType {
+  POCKET_SPRUNG
+  MEMORY_FOAM
+  PILLOW_TOP
+  HYBRID
+  LATEX
+}
+
+enum Firmness {
+  SOFT
+  MEDIUM
+  MEDIUM_FIRM
+  FIRM
+}
+
+enum AddonType {
+  TOGGLE
+  SELECT
+  TEXT_INPUT
+}
+
+enum FabricStatus {
+  ACTIVE
+  DISCONTINUED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  UNPAID
+  AUTHORIZED
+  PAID
+  PARTIALLY_REFUNDED
+  REFUNDED
+  FAILED
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum AdminRole {
+  ADMIN
+  MANAGER
+}
+
+enum BlockType {
+  FEATURED
+  BEST_SELLING
+  LATEST
+}
+
+enum ContactStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+}
+
+// =============================================================================
+// CATALOG
+// =============================================================================
+
+model Product {
+  id               String        @id @default(uuid())
+  slug             String        @unique
+  name             String
+  shortDescription String        @default("")
+  description      String        @default("")
+  category         Category
+  basePrice        Decimal       @db.Decimal(10, 2)
+
+  // --- merchandising flags (admin-editable booleans) ---
+  isFeatured       Boolean       @default(false)
+  isBestSeller     Boolean       @default(false)
+  isNew            Boolean       @default(false)
+
+  // --- evergreen sale (admin "put this product on sale") ---
+  // Time-boxed countdown deals live in Promotion instead.
+  onSale           Boolean       @default(false)
+  salePrice        Decimal?      @db.Decimal(10, 2)
+  saleStartsAt     DateTime?
+  saleEndsAt       DateTime?
+
+  // --- bed attributes (null for mattresses) ---
+  bedStyle         BedStyle?
+  hasStorage       Boolean       @default(false)
+  hasDrawer        Boolean       @default(false)
+  frameMaterial    String?
+
+  // --- mattress attributes (null for beds) ---
+  mattressType     MattressType?
+  firmness         Firmness?
+  depthCm          Int?
+
+  // --- fulfilment ---
+  stockPolicy      StockPolicy   @default(MADE_TO_ORDER)
+  leadTimeDays     Int?
+  warrantyMonths   Int?
+  careInstructions String?
+  specSheetUrl     String? // fabrics: supplier / spec sheet link
+
+  // --- denormalised review aggregates, recomputed on review approval ---
+  ratingAvg        Decimal?      @db.Decimal(3, 2)
+  reviewCount      Int           @default(0)
+
+  // --- SEO ---
+  metaTitle        String?
+  metaDescription  String?
+
+  status           ProductStatus @default(DRAFT)
+  sortOrder        Int           @default(0)
+  publishedAt      DateTime?
+  deletedAt        DateTime? // soft delete = admin "Archive"
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  /// BEDS/MATTRESSES: one row per size, and the only price-bearing option.
+  /// FABRICS: empty — a swatch is a flat price on basePrice.
+  sizes            ProductSize[]
+  /// FABRICS only: this family's own colourways.
+  /// On a bed PDP the swatch grid is every ACTIVE colourway in the catalogue,
+  /// not a per-product list — any bed can be made in any fabric.
+  fabricColors     FabricColor[]
+  images           ProductImage[]
+  addons           ProductAddon[]
+  reviews          Review[]
+  promotions       Promotion[]
+  homepageBlocks   HomepageBlock[]
+  orderItems       OrderItem[]
+  salesDaily       ProductSalesDaily[]
+
+  @@index([category, status])
+  @@index([status, isFeatured])
+  @@index([status, isBestSeller])
+  @@index([status, isNew])
+  @@index([deletedAt])
+}
+
+/// The purchasable unit. Size is the ONLY dimension that varies price or stock —
+/// fabric is a finish choice recorded on the order, not a separate SKU.
+/// Final price = product.basePrice + size.priceModifier (or priceOverride).
+model ProductSize {
+  id            String      @id @default(uuid())
+  productId     String
+  label         String // "Single", "Double", "King", "Super King"
+  priceModifier Decimal     @default(0) @db.Decimal(10, 2)
+  priceOverride Decimal?    @db.Decimal(10, 2) // set only to break the formula outright
+  sku           String?     @unique
+  stockQty      Int         @default(0)
+  isAvailable   Boolean     @default(true)
+  leadTimeDays  Int? // overrides the product-level lead time
+  widthCm       Int?
+  lengthCm      Int?
+  heightCm      Int?
+  sortOrder     Int         @default(0)
+
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems    OrderItem[]
+
+  @@unique([productId, label])
+  @@index([productId])
+}
+
+// (No ProductFabric join: every bed can be upholstered in any active colourway,
+//  so the swatch list is a straight query on FabricColor. See design notes §2c.)
+
+/// The PDP gallery: one fixed set of shots per product, ordered by sortOrder,
+/// with isMain as the card/thumbnail image.
+///
+/// Deliberately NOT linked to FabricColor. The gallery does not change when a
+/// customer picks a swatch — the fabric selector is an ordering choice, and the
+/// swatch image itself comes from FabricColor.imagePath. (This departs from the
+/// storefront PRD's "fabric-selected state (image swaps)"; see design notes §1c.)
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String
+  path      String
+  alt       String?
+  isMain    Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, sortOrder])
+}
+
+model ProductAddon {
+  id         String               @id @default(uuid())
+  productId  String
+  name       String
+  type       AddonType
+  price      Decimal              @default(0) @db.Decimal(10, 2)
+  isRequired Boolean              @default(false)
+  sortOrder  Int                  @default(0)
+
+  product    Product              @relation(fields: [productId], references: [id], onDelete: Cascade)
+  options    ProductAddonOption[]
+
+  @@index([productId])
+}
+
+model ProductAddonOption {
+  id            String       @id @default(uuid())
+  addonId       String
+  label         String
+  priceModifier Decimal      @default(0) @db.Decimal(10, 2)
+  sortOrder     Int          @default(0)
+
+  addon         ProductAddon @relation(fields: [addonId], references: [id], onDelete: Cascade)
+
+  @@index([addonId])
+}
+
+// =============================================================================
+// FABRIC COLOURWAYS
+//
+// The fabric *family* (Chenille, Crushed Velvet) is a Product with
+// category = FABRICS — that's what carries the name, description, price,
+// gallery, reviews and SEO. There is no separate Fabric table.
+//
+// A colourway serves two roles at once:
+//   1. the thing a customer picks when buying a swatch of its own family
+//   2. an upholstery option on ANY bed — every bed can be made in every
+//      active colourway, so there is no per-product allow-list
+// Setting status = DISCONTINUED therefore removes it from every bed at once.
+// =============================================================================
+
+model FabricColor {
+  id          String                    @id @default(uuid())
+  /// The FABRICS-category Product this colourway belongs to.
+  productId   String
+  code        String                    @unique // "CH01", "CV04"
+  colorName   String
+  slug        String                    @unique
+  hex         String?
+  imagePath   String
+  description String?
+  /// Swatch stock. Only enforced when the parent product is TRACKED.
+  stockQty    Int                       @default(0)
+  status      FabricStatus              @default(ACTIVE)
+  sortOrder   Int                       @default(0)
+  createdAt   DateTime                  @default(now())
+  updatedAt   DateTime                  @updatedAt
+
+  product     Product                   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
+  sampleItems FabricSampleRequestItem[]
+
+  @@index([productId, status])
+  @@index([status, sortOrder])
+}
+
+// =============================================================================
+// PROMOTIONS — "Bed of the Week"
+// =============================================================================
+
+/// Status is DERIVED, never stored: live = isActive AND now BETWEEN startAt/endAt
+/// AND (stockCap IS NULL OR unitsSold < stockCap). No cron job needed.
+model Promotion {
+  id            String       @id @default(uuid())
+  name          String
+  productId     String
+  discountType  DiscountType
+  discountValue Decimal      @db.Decimal(10, 2)
+  startAt       DateTime
+  endAt         DateTime
+  stockCap      Int?
+  unitsSold     Int          @default(0)
+  isActive      Boolean      @default(true)
+  headline      String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  product       Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orders        Order[]
+
+  @@index([isActive, startAt, endAt])
+}
+
+// =============================================================================
+// REVIEWS — customer submits, admin approves/rejects
+// =============================================================================
+
+model Review {
+  id            String       @id @default(uuid())
+  productId     String
+  orderId       String? // set = verified purchase
+  customerName  String
+  customerEmail String
+  rating        Int // 1..5, enforce with a CHECK constraint
+  title         String?
+  body          String
+  status        ReviewStatus @default(PENDING)
+  adminNote     String?
+  moderatedAt   DateTime?
+  moderatedById String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  product       Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order         Order?       @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  moderatedBy   AdminUser?   @relation(fields: [moderatedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([productId, status])
+}
+
+// =============================================================================
+// ORDERS
+// =============================================================================
+
+model Order {
+  id                        String        @id @default(uuid())
+  orderNumber               String        @unique
+  customerId                String? // reserved for phase-2 customer accounts
+  status                    OrderStatus   @default(PENDING)
+  paymentStatus             PaymentStatus @default(UNPAID)
+
+  // billing / contact
+  firstName                 String
+  lastName                  String
+  companyName               String?
+  email                     String
+  phone                     String
+  country                   String
+  countryCode               String        @default("GB")
+  address                   String
+  city                      String
+  county                    String
+  postcode                  String
+
+  // shipping (populated only when deliverToDifferentAddress is true)
+  deliverToDifferentAddress Boolean       @default(false)
+  shipFirstName             String?
+  shipLastName              String?
+  shipAddress               String?
+  shipCity                  String?
+  shipCounty                String?
+  shipPostcode              String?
+  shipCountry               String?
+
+  /// Primary grouping for the sales-by-location report. Copied from the
+  /// delivering address (shipCounty ?? county) at write time so the report
+  /// never has to branch on deliverToDifferentAddress.
+  salesRegion               String?
+  /// Optional finer detail: the leading part of the delivering postcode.
+  /// The parsing rule is market-specific (Eircode routing key = first 3 chars;
+  /// UK outward code = everything before the last 3). Set it in one place.
+  postcodeArea              String?
+
+  orderNotes                String?
+  internalNotes             String? // admin-only, never shown to customer
+  deliverySlotAt            DateTime?
+
+  promotionId               String?
+  currency                  String        @default("EUR")
+  subtotal                  Decimal       @db.Decimal(10, 2)
+  discountTotal             Decimal       @default(0) @db.Decimal(10, 2)
+  shippingFee               Decimal       @default(0) @db.Decimal(10, 2)
+  taxTotal                  Decimal       @default(0) @db.Decimal(10, 2)
+  total                     Decimal       @db.Decimal(10, 2)
+
+  paymentProvider           String? // "stripe"
+  paymentIntentId           String?
+  paidAt                    DateTime?
+
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @updatedAt
+
+  items                     OrderItem[]
+  statusHistory             OrderStatusHistory[]
+  reviews                   Review[]
+  promotion                 Promotion?    @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([createdAt])
+  @@index([salesRegion])
+  @@index([postcodeArea])
+  @@index([email])
+}
+
+model OrderItem {
+  id            String           @id @default(uuid())
+  orderId       String
+  productId     String? // SetNull so deleting a product never destroys order history
+  sizeId        String?
+  /// The colourway chosen — the bed's upholstery, or the swatch being bought.
+  fabricColorId String?
+
+  // --- immutable snapshot: what the customer actually bought, at that price ---
+  productName   String
+  productSlug   String?
+  categoryLabel String?
+  sizeLabel     String?
+  fabricCode    String?
+  fabricName    String?
+  sku           String?
+  imagePath     String?
+  unitPrice     Decimal          @db.Decimal(10, 2)
+  quantity      Int
+  lineTotal     Decimal          @db.Decimal(10, 2)
+
+  order         Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product       Product?         @relation(fields: [productId], references: [id], onDelete: SetNull)
+  size          ProductSize?     @relation(fields: [sizeId], references: [id], onDelete: SetNull)
+  fabricColor   FabricColor?     @relation(fields: [fabricColorId], references: [id], onDelete: SetNull)
+  addons        OrderItemAddon[]
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model OrderItemAddon {
+  id            String    @id @default(uuid())
+  orderItemId   String
+  addonName     String
+  selectedLabel String?
+  textValue     String?
+  priceAtOrder  Decimal   @db.Decimal(10, 2)
+
+  orderItem     OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+
+  @@index([orderItemId])
+}
+
+/// Audit trail; also the hook for "status change sends the customer an email".
+model OrderStatusHistory {
+  id           String      @id @default(uuid())
+  orderId      String
+  fromStatus   OrderStatus?
+  toStatus     OrderStatus
+  note         String?
+  changedById  String?
+  notifiedAt   DateTime?
+  createdAt    DateTime    @default(now())
+
+  order        Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  changedBy    AdminUser?  @relation(fields: [changedById], references: [id], onDelete: SetNull)
+
+  @@index([orderId, createdAt])
+}
+
+// =============================================================================
+// SALES REPORTING
+// =============================================================================
+
+/// Nightly rollup. Live queries against OrderItem are fine up to ~100k rows;
+/// add this when the dashboard starts feeling slow, not before.
+model ProductSalesDaily {
+  date      DateTime @db.Date
+  productId String
+  region    String   @default("UNKNOWN")
+  unitsSold Int      @default(0)
+  revenue   Decimal  @default(0) @db.Decimal(12, 2)
+  orderCount Int     @default(0)
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([date, productId, region])
+  @@index([productId, date])
+  @@index([region, date])
+}
+
+// =============================================================================
+// CONTENT & CMS
+// =============================================================================
+
+/// Optional: only needed if the admin wants to hand-order homepage picks.
+/// If the isFeatured/isBestSeller/isNew booleans on Product are enough, skip this.
+model HomepageBlock {
+  id        String    @id @default(uuid())
+  blockType BlockType
+  productId String
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([blockType, productId])
+  @@index([blockType, sortOrder])
+}
+
+model Faq {
+  id          String   @id @default(uuid())
+  question    String
+  answer      String
+  pageContext String   @default("home")
+  sortOrder   Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([pageContext, sortOrder])
+}
+
+model Testimonial {
+  id           String   @id @default(uuid())
+  customerName String
+  rating       Int      @default(5)
+  quote        String
+  avatarPath   String?
+  isFeatured   Boolean  @default(false)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id        String        @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  status    ContactStatus @default(NEW)
+  createdAt DateTime      @default(now())
+
+  @@index([status, createdAt])
+}
+
+model NewsletterSubscriber {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  confirmedAt  DateTime?
+  unsubscribedAt DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model FabricSampleRequest {
+  id        String                    @id @default(uuid())
+  name      String
+  email     String
+  address   String
+  city      String?
+  postcode  String?
+  status    ContactStatus             @default(NEW)
+  createdAt DateTime                  @default(now())
+
+  items     FabricSampleRequestItem[]
+}
+
+model FabricSampleRequestItem {
+  id            String              @id @default(uuid())
+  requestId     String
+  fabricColorId String
+
+  request       FabricSampleRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  fabricColor   FabricColor         @relation(fields: [fabricColorId], references: [id], onDelete: Restrict)
+
+  @@unique([requestId, fabricColorId])
+}
+
+// =============================================================================
+// ADMIN & SETTINGS
+// =============================================================================
+
+model AdminUser {
+  id              String               @id @default(uuid())
+  name            String
+  email           String               @unique
+  passwordHash    String
+  role            AdminRole            @default(ADMIN)
+  isActive        Boolean              @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  moderatedReviews Review[]
+  statusChanges    OrderStatusHistory[]
+}
+
+/// Key-value store for delivery fee, free-delivery threshold, tax rate,
+/// low-stock threshold, store phone/email.
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
