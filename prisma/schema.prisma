@@ -72,6 +72,25 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum PaymentStatus {
+  UNPAID
+  AUTHORIZED
+  PAID
+  PARTIALLY_REFUNDED
+  REFUNDED
+  FAILED
+}
+
+enum AdminRole {
+  ADMIN
+  MANAGER
+}
+
+enum TokenSubject {
+  CUSTOMER
+  ADMIN
+}
+
 model Product {
   id               String           @id @default(uuid())
   slug             String           @unique
@@ -154,6 +173,7 @@ model ProductSize {
   heightCm      Int?
   sortOrder     Int     @default(0)
   product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems    OrderItem[]
 
   @@index([productId])
 }
@@ -195,14 +215,19 @@ model FabricColor {
   sortOrder   Int          @default(0)
   createdAt   DateTime     @default(now())
   product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
 
   @@index([productId])
 }
 
 model Order {
-  id                         String      @id @default(uuid())
-  orderNumber                String      @unique
-  status                     OrderStatus @default(PENDING)
+  id                         String        @id @default(uuid())
+  orderNumber                String        @unique
+  /// Null = guest checkout. Guests are first-class, not a degraded path.
+  customerId                 String?
+  customer                   Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  status                     OrderStatus   @default(PENDING)
+  paymentStatus              PaymentStatus @default(UNPAID)
   firstName                  String
   lastName                   String
   companyName                String?
@@ -213,27 +238,56 @@ model Order {
   postcode                   String
   phone                      String
   email                      String
-  deliverToDifferentAddress  Boolean     @default(false)
+  deliverToDifferentAddress  Boolean       @default(false)
   orderNotes                 String?
-  subtotal                   Decimal     @db.Decimal(10, 2)
-  shippingFee                Decimal     @db.Decimal(10, 2)
-  total                      Decimal     @db.Decimal(10, 2)
-  createdAt                  DateTime    @default(now())
+  subtotal                   Decimal       @db.Decimal(10, 2)
+  shippingFee                Decimal       @db.Decimal(10, 2)
+  total                      Decimal       @db.Decimal(10, 2)
+
+  paymentProvider            String?       @default("stripe")
+  /// The Stripe Checkout Session id — created before redirect, this is what
+  /// you look the order up by when the webhook fires.
+  stripeCheckoutSessionId    String?       @unique
+  /// Populated from the webhook payload once the session completes. Only the
+  /// webhook handler may set this / flip paymentStatus to PAID.
+  stripePaymentIntentId      String?
+  paidAt                     DateTime?
+
+  createdAt                  DateTime      @default(now())
+  updatedAt                  DateTime      @default(now()) @updatedAt
   items                      OrderItem[]
+
+  @@index([customerId])
+  @@index([status, createdAt])
+  @@index([email])
 }
 
 model OrderItem {
-  id          String           @id @default(uuid())
-  orderId     String
-  productId   String
-  productName String
-  colorName   String?
-  sizeLabel   String?
-  unitPrice   Decimal          @db.Decimal(10, 2)
-  quantity    Int
-  order       Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product     Product          @relation(fields: [productId], references: [id], onDelete: Restrict)
-  addons      OrderItemAddon[]
+  id            String           @id @default(uuid())
+  orderId       String
+  productId     String? // SetNull so deleting a product never destroys order history
+  sizeId        String?
+  /// The colourway chosen — the bed's upholstery, or the swatch being bought.
+  fabricColorId String?
+
+  // --- immutable snapshot: what the customer actually bought, at that price ---
+  productName   String
+  productSlug   String?
+  categoryLabel String?
+  sizeLabel     String?
+  fabricCode    String?
+  fabricName    String?
+  sku           String?
+  imagePath     String?
+  unitPrice     Decimal          @db.Decimal(10, 2)
+  quantity      Int
+  lineTotal     Decimal          @db.Decimal(10, 2)
+
+  order         Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product       Product?         @relation(fields: [productId], references: [id], onDelete: SetNull)
+  size          ProductSize?     @relation(fields: [sizeId], references: [id], onDelete: SetNull)
+  fabricColor   FabricColor?     @relation(fields: [fabricColorId], references: [id], onDelete: SetNull)
+  addons        OrderItemAddon[]
 
   @@index([orderId])
   @@index([productId])
@@ -249,4 +303,77 @@ model OrderItemAddon {
   orderItem      OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
 
   @@index([orderItemId])
+}
+
+// =============================================================================
+// CUSTOMERS, AUTH & PAYMENTS
+// =============================================================================
+
+model Customer {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  firstName     String
+  lastName      String
+  phone         String?
+  isActive      Boolean        @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+
+  orders        Order[]
+  refreshTokens RefreshToken[]
+
+  @@index([email])
+}
+
+model AdminUser {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  passwordHash  String
+  role          AdminRole      @default(ADMIN)
+  isActive      Boolean        @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now()) @updatedAt
+
+  refreshTokens RefreshToken[]
+}
+
+/// Backs JWT auth for BOTH customers and admins. Access tokens are short-lived
+/// and stateless (never touch the DB); this table exists purely so a refresh
+/// token can be revoked — on logout, password change, or a suspected leak.
+/// Exactly one of customerId/adminUserId is set, matching subject.
+model RefreshToken {
+  id           String        @id @default(uuid())
+  /// SHA-256 of the actual token. The raw token is never stored — this table
+  /// leaking is not equivalent to every session leaking.
+  tokenHash    String        @unique
+  subject      TokenSubject
+  customerId   String?
+  adminUserId  String?
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  /// Set when this token was exchanged for a new one, pointing at its
+  /// replacement. A token used twice after rotation is theft, not a race.
+  replacedById String?
+  userAgent    String?
+  createdAt    DateTime      @default(now())
+
+  customer     Customer?     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  adminUser    AdminUser?    @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([adminUserId])
+  @@index([expiresAt])
+}
+
+/// Every Stripe webhook event id we've successfully processed. Stripe retries
+/// on anything but a 200, so the same event WILL arrive more than once —
+/// this is what stops a retried webhook double-fulfilling an order.
+model StripeWebhookEvent {
+  id          String   @id // the Stripe event id ("evt_...") — the dedupe key
+  type        String
+  processedAt DateTime @default(now())
 }

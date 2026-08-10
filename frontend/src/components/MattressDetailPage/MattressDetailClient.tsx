@@ -9,7 +9,6 @@ import { ProductCard } from '@/components/ui/ProductCard'
 import {
   formatPrice,
   ChevronDownIcon,
-  HeartIcon,
   OrderOptionSelect,
   RatingStars,
   VisaBadge,
@@ -30,7 +29,7 @@ interface MattressDetailClientProps {
 }
 
 export function MattressDetailClient({ product, relatedProducts = [] }: MattressDetailClientProps) {
-  const { toggleWishlist, isWishlisted, addToCart } = useCart()
+  const { addToCart } = useCart()
   const parsed = useMemo(() => parseBedDescription(product.description ?? ''), [product.description])
   const whyBody = useMemo(() => parsed.whyBody?.replace(NOTE_SENTENCE, '').trim() || parsed.whyBody, [parsed.whyBody])
 
@@ -41,8 +40,6 @@ export function MattressDetailClient({ product, relatedProducts = [] }: Mattress
 
   const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
   const price = selectedVariant?.price ?? product.basePrice ?? 0
-
-  const wishlisted = isWishlisted(product.id)
 
   const thumbnails = product.images
 
@@ -114,15 +111,6 @@ export function MattressDetailClient({ product, relatedProducts = [] }: Mattress
           <div className="flex flex-col gap-6">
             <div className="flex items-start justify-between gap-4 border-b border-stone-100 pb-6">
               <h1 className="text-[24px] font-bold text-black">{product.name}</h1>
-              <button
-                type="button"
-                onClick={() => toggleWishlist(product.id)}
-                aria-pressed={wishlisted}
-                aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                className={`shrink-0 transition-colors ${wishlisted ? 'text-[#b87333]' : 'text-stone-400 hover:text-[#b87333]'}`}
-              >
-                <HeartIcon filled={wishlisted} />
-              </button>
             </div>
 
             <p className="text-[40px] font-bold text-[#b87333]">{formatPrice(price)}</p>
@@ -176,6 +164,7 @@ export function MattressDetailClient({ product, relatedProducts = [] }: Mattress
                     image: activeImage ?? product.images[0],
                     price,
                     href: `/shop/mattresses/${product.slug}`,
+                    sizeId: selectedVariant?.id,
                     options: selectedVariant?.size ? [{ label: 'Size', value: selectedVariant.size }] : [],
                   },
                   quantity,

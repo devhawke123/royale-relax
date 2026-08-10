@@ -118,6 +118,7 @@ export function ProductCard({
                 image: product.images[0],
                 price: primaryVariant?.price ?? product.basePrice ?? 0,
                 href,
+                sizeId: primaryVariant?.id,
               })
             }
             className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white text-stone-700 shadow-md hover:text-[#b87333]"

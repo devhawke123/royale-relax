@@ -24,20 +24,6 @@ function ChevronDownIcon({ className = '' }: { className?: string }) {
   )
 }
 
-function HeartIcon({ filled }: { filled: boolean }) {
-  return (
-    <svg viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} className="h-5 w-5">
-      <path
-        d="M12 21s-7.5-4.6-10.2-9.3C.2 8.6 1.6 5 5.1 4.1c2.2-.6 4.4.3 5.9 2.2 1.5-1.9 3.7-2.8 5.9-2.2 3.5.9 4.9 4.5 3.3 7.6C19.5 16.4 12 21 12 21z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 interface ListboxOption {
   value: string
   label: string
@@ -313,7 +299,7 @@ interface BedDetailClientProps {
 }
 
 export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedDetailClientProps) {
-  const { toggleWishlist, isWishlisted, addToCart } = useCart()
+  const { addToCart } = useCart()
   const parsed = useMemo(() => parseBedDescription(product.description ?? ''), [product.description])
 
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id)
@@ -329,7 +315,6 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
   const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
   const price = selectedVariant?.price ?? product.basePrice ?? 0
 
-  const wishlisted = isWishlisted(product.id)
   // Drawer beds (Kendal, Luxe, Madison) ship with under-bed drawers built
   // in — there's nothing to opt into. Only ottoman-storage beds have this
   // as an add-on choice.
@@ -397,15 +382,6 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
           <div className="flex flex-col gap-4">
             <div className="flex items-start justify-between gap-4 border-b border-stone-100 pb-6">
               <h1 className="text-[24px] font-bold text-black">{product.name}</h1>
-              <button
-                type="button"
-                onClick={() => toggleWishlist(product.id)}
-                aria-pressed={wishlisted}
-                aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                className={`shrink-0 transition-colors ${wishlisted ? 'text-[#b87333]' : 'text-stone-400 hover:text-[#b87333]'}`}
-              >
-                <HeartIcon filled={wishlisted} />
-              </button>
             </div>
 
             <p className="text-[40px] font-bold text-[#b87333]">{formatPrice(price)}</p>
@@ -572,6 +548,8 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                   image: activeImage ?? product.images[0],
                   price,
                   href: `/shop/beds/${product.slug}`,
+                  sizeId: selectedVariant?.id,
+                  fabricColorId: selectedFabricSwatch?.id,
                   options: [
                     ...(selectedVariant?.size ? [{ label: 'Size', value: selectedVariant.size }] : []),
                     ...(selectedFabricType

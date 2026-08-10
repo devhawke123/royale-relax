@@ -19,20 +19,6 @@ export function ChevronDownIcon({ className = '' }: { className?: string }) {
   )
 }
 
-export function HeartIcon({ filled }: { filled: boolean }) {
-  return (
-    <svg viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} className="h-5 w-5">
-      <path
-        d="M12 21s-7.5-4.6-10.2-9.3C.2 8.6 1.6 5 5.1 4.1c2.2-.6 4.4.3 5.9 2.2 1.5-1.9 3.7-2.8 5.9-2.2 3.5.9 4.9 4.5 3.3 7.6C19.5 16.4 12 21 12 21z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 export function StarIcon({ filled }: { filled: boolean }) {
   return (
     <svg viewBox="0 0 20 20" fill={filled ? '#b87333' : 'none'} className="h-[18px] w-[18px] shrink-0">

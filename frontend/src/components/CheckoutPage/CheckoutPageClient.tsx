@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { type FormEvent, type InputHTMLAttributes, useState } from 'react'
 import { useCart } from '@/lib/cart-context'
 import { formatPrice, VisaBadge, MastercardBadge } from '@/components/ProductDetailPage/shared'
@@ -67,17 +66,74 @@ function EmptyCheckout() {
 
 export function CheckoutPageClient() {
   const { cartItems, subtotal, clearCart } = useCart()
-  const router = useRouter()
   const isEmpty = cartItems.length === 0
 
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [createAccount, setCreateAccount] = useState(false)
   const [deliverToDifferentAddress, setDeliverToDifferentAddress] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
-  function handlePlaceOrder(event: FormEvent<HTMLFormElement>) {
+  async function handlePlaceOrder(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    clearCart()
-    router.push('/cart/success')
+    setCheckoutError(null)
+
+    const formData = new FormData(event.currentTarget)
+    const field = (name: string) => (formData.get(name) as string | null)?.trim() || undefined
+
+    const billing = {
+      firstName: field('firstName') ?? '',
+      lastName: field('lastName') ?? '',
+      companyName: field('companyName'),
+      country: field('country') ?? '',
+      address: field('address') ?? '',
+      city: field('city') ?? '',
+      county: field('county') ?? '',
+      postcode: field('postcode') ?? '',
+      phone: field('phone') ?? '',
+      email: field('email') ?? '',
+      deliverToDifferentAddress,
+      orderNotes: field('orderNotes'),
+    }
+
+    const cart = {
+      items: cartItems.map((line) => ({
+        productId: line.productId,
+        sizeId: line.sizeId,
+        fabricColorId: line.fabricColorId,
+        quantity: line.quantity,
+      })),
+    }
+
+    setIsSubmitting(true)
+    try {
+      const accessToken = typeof window !== 'undefined' ? window.localStorage.getItem('rr_access_token') : null
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
+        body: JSON.stringify({ cart, billing }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok || !data.url) {
+        setCheckoutError(data.error ?? 'Something went wrong starting checkout. Please try again.')
+        setIsSubmitting(false)
+        return
+      }
+
+      // Order is created; hand off to Stripe's hosted page for card entry.
+      // Cart clears now — the order already exists server-side regardless
+      // of whether payment completes, so there's nothing left to "keep".
+      clearCart()
+      window.location.href = data.url
+    } catch {
+      setCheckoutError('Could not reach the server. Please check your connection and try again.')
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -174,11 +230,16 @@ export function CheckoutPageClient() {
                 I have read and agree to the website terms and conditions and I have reviewed my order carefully. *
               </label>
 
+              {checkoutError && (
+                <p className="rounded-[8px] bg-red-50 px-4 py-3 text-[14px] text-red-700">{checkoutError}</p>
+              )}
+
               <button
                 type="submit"
-                className="flex h-[56px] w-full items-center justify-center rounded-[5px] bg-[#9d6026] text-[18px] font-bold text-white transition-colors hover:bg-[#84501f]"
+                disabled={isSubmitting}
+                className="flex h-[56px] w-full items-center justify-center rounded-[5px] bg-[#9d6026] text-[18px] font-bold text-white transition-colors hover:bg-[#84501f] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Place Order
+                {isSubmitting ? 'Redirecting to payment…' : 'Place Order'}
               </button>
             </div>
 

@@ -15,6 +15,10 @@ export interface CartLineInput {
   href?: string
   sku?: string
   options?: CartLineOption[]
+  /** Real ProductSize.id — required at checkout to re-derive the price server-side. */
+  sizeId?: string
+  /** Real FabricColor.id — the upholstery/colourway chosen, if any. */
+  fabricColorId?: string
 }
 
 export interface CartLine extends CartLineInput {
@@ -31,20 +35,16 @@ interface CartContextValue {
   cartItems: CartLine[]
   cartCount: number
   subtotal: number
-  wishlistCount: number
   addToCart: (item: CartLineInput, quantity?: number) => void
   removeFromCart: (lineId: string) => void
   updateQuantity: (lineId: string, quantity: number) => void
   clearCart: () => void
-  toggleWishlist: (productId: string) => void
-  isWishlisted: (productId: string) => boolean
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartLine[]>([])
-  const [wishlistItems, setWishlistItems] = useState<Set<string>>(new Set())
 
   const addToCart = (item: CartLineInput, quantity = 1) => {
     setCartItems((prev) => {
@@ -72,18 +72,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = () => setCartItems([])
 
-  const toggleWishlist = (productId: string) => {
-    setWishlistItems((prev) => {
-      const next = new Set(prev)
-      if (next.has(productId)) {
-        next.delete(productId)
-      } else {
-        next.add(productId)
-      }
-      return next
-    })
-  }
-
   const cartCount = useMemo(
     () => cartItems.reduce((sum, line) => sum + line.quantity, 0),
     [cartItems],
@@ -92,22 +80,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     () => cartItems.reduce((sum, line) => sum + line.price * line.quantity, 0),
     [cartItems],
   )
-  const wishlistCount = wishlistItems.size
 
   const value = useMemo(
     () => ({
       cartItems,
       cartCount,
       subtotal,
-      wishlistCount,
       addToCart,
       removeFromCart,
       updateQuantity,
       clearCart,
-      toggleWishlist,
-      isWishlisted: (productId: string) => wishlistItems.has(productId),
     }),
-    [cartItems, cartCount, subtotal, wishlistCount, wishlistItems],
+    [cartItems, cartCount, subtotal],
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

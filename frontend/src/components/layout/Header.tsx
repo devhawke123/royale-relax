@@ -7,6 +7,14 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Nav, MobileNav } from '@/components/layout/Nav'
 import { useCart } from '@/lib/cart-context'
+import { useAuth } from '@/lib/auth-context'
+import type { Product } from '@/types/product'
+
+function hrefForProduct(product: Product) {
+  const section =
+    product.category === 'mattress' ? 'mattresses' : product.category === 'fabric' ? 'fabrics' : 'beds'
+  return `/shop/${section}/${product.slug}`
+}
 
 function Logo({ overlay }: { overlay?: boolean }) {
   if (overlay) {
@@ -134,9 +142,37 @@ function SearchPopover({
 }) {
   const router = useRouter()
   const [value, setValue] = useState('')
+  const [results, setResults] = useState<Product[]>([])
+  const [loading, setLoading] = useState(false)
   const [coords, setCoords] = useState<{ top: number; right: number } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const term = value.trim()
+    if (!term) {
+      setResults([])
+      setLoading(false)
+      return
+    }
+
+    setLoading(true)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(term)}`, { signal: controller.signal })
+        .then((res) => res.json())
+        .then((data: { results: Product[] }) => setResults(data.results ?? []))
+        .catch((err) => {
+          if (err.name !== 'AbortError') setResults([])
+        })
+        .finally(() => setLoading(false))
+    }, 250)
+
+    return () => {
+      clearTimeout(timeoutId)
+      controller.abort()
+    }
+  }, [value])
 
   useLayoutEffect(() => {
     const anchor = anchorRef.current
@@ -199,22 +235,110 @@ function SearchPopover({
           className="w-full bg-transparent text-[14px] text-stone-900 outline-none placeholder:text-stone-400"
         />
       </form>
+
+      {value.trim() !== '' && (
+        <div className="mt-2 max-h-[360px] overflow-y-auto">
+          {loading ? (
+            <p className="px-3 py-4 text-center text-[13px] text-stone-400">Searching...</p>
+          ) : results.length === 0 ? (
+            <p className="px-3 py-4 text-center text-[13px] text-stone-400">No results found.</p>
+          ) : (
+            <ul className="flex flex-col">
+              {results.map((product) => (
+                <li key={product.id}>
+                  <Link
+                    href={hrefForProduct(product)}
+                    onClick={onClose}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-stone-50"
+                  >
+                    <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-stone-100">
+                      {product.images[0] && (
+                        <Image src={product.images[0]} alt="" fill className="object-cover" />
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1 truncate text-[14px] text-stone-900">
+                      {product.name}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>,
     document.body,
   )
 }
 
-// heart.svg
-function HeartIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.624 4.42553C3.965 5.18353 2.75 6.98753 2.75 9.13853C2.75 11.3355 3.65 13.0295 4.938 14.4815C6.001 15.6775 7.287 16.6695 8.541 17.6355C8.83967 17.8655 9.13467 18.0949 9.426 18.3235C9.952 18.7385 10.421 19.1015 10.874 19.3665C11.327 19.6315 11.69 19.7515 12 19.7515C12.31 19.7515 12.674 19.6315 13.126 19.3665C13.579 19.1015 14.048 18.7385 14.574 18.3235C14.8653 18.0942 15.1603 17.8652 15.459 17.6365C16.713 16.6685 17.999 15.6775 19.062 14.4815C20.351 13.0295 21.25 11.3355 21.25 9.13853C21.25 6.98853 20.035 5.18353 18.376 4.42553C16.764 3.68853 14.598 3.88353 12.54 6.02253C12.47 6.09512 12.3862 6.15286 12.2934 6.19229C12.2006 6.23173 12.1008 6.25205 12 6.25205C11.8992 6.25205 11.7994 6.23173 11.7066 6.19229C11.6138 6.15286 11.53 6.09512 11.46 6.02253C9.402 3.88353 7.236 3.68853 5.624 4.42553ZM12 4.46153C9.688 2.39153 7.099 2.10153 5 3.06053C2.786 4.07553 1.25 6.42753 1.25 9.13953C1.25 11.8045 2.36 13.8385 3.817 15.4785C4.983 16.7915 6.41 17.8905 7.671 18.8605C7.95767 19.0805 8.233 19.2945 8.497 19.5025C9.01 19.9065 9.56 20.3365 10.117 20.6625C10.674 20.9885 11.31 21.2525 12 21.2525C12.69 21.2525 13.326 20.9875 13.883 20.6625C14.441 20.3365 14.99 19.9065 15.503 19.5025C15.767 19.2945 16.0423 19.0805 16.329 18.8605C17.589 17.8905 19.017 16.7905 20.183 15.4785C21.64 13.8385 22.75 11.8045 22.75 9.13953C22.75 6.42753 21.215 4.07553 19 3.06253C16.901 2.10253 14.312 2.39253 12 4.46153Z"
-        fill="currentColor"
-      />
-    </svg>
+/**
+ * Signed-in state's account menu — same portal-anchored pattern as
+ * SearchPopover, so it isn't clipped by the header's `overflow-hidden`.
+ */
+function AccountPopover({
+  anchorRef,
+  onClose,
+}: {
+  anchorRef: React.RefObject<HTMLElement | null>
+  onClose: () => void
+}) {
+  const { customerEmail, logout } = useAuth()
+  const [coords, setCoords] = useState<{ top: number; right: number } | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current
+    if (!anchor) return
+    const rect = anchor.getBoundingClientRect()
+    setCoords({ top: rect.bottom + 12, right: window.innerWidth - rect.right })
+  }, [anchorRef])
+
+  useEffect(() => {
+    function handlePointerDown(e: PointerEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node) &&
+        !anchorRef.current?.contains(e.target as Node)
+      ) {
+        onClose()
+      }
+    }
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+    window.addEventListener('scroll', onClose, { passive: true })
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+      window.removeEventListener('scroll', onClose)
+    }
+  }, [onClose, anchorRef])
+
+  if (!coords) return null
+
+  return createPortal(
+    <div
+      ref={containerRef}
+      style={{ top: coords.top, right: coords.right }}
+      className="fixed z-[60] w-[calc(100vw-3rem)] max-w-[260px] rounded-[14px] border border-stone-200 bg-white p-3 shadow-xl"
+    >
+      {customerEmail && (
+        <p className="truncate px-1 pb-2 text-[13px] text-stone-500">Signed in as {customerEmail}</p>
+      )}
+      <button
+        type="button"
+        onClick={() => {
+          onClose()
+          logout()
+        }}
+        className="w-full rounded-lg px-1 py-2 text-left text-[14px] text-stone-900 hover:bg-stone-50"
+      >
+        Log out
+      </button>
+    </div>,
+    document.body,
   )
 }
 
@@ -258,7 +382,10 @@ function AccountIcon() {
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
   const searchAnchorRef = useRef<HTMLDivElement>(null)
+  const accountAnchorRef = useRef<HTMLDivElement>(null)
+  const { status } = useAuth()
   const pathname = usePathname()
   const isHome = pathname === '/'
   // Only the beds *listing* routes have a hero banner behind the header —
@@ -282,11 +409,12 @@ export function Header() {
   const isContactPage = pathname.startsWith('/contact')
   const isOverlayPage =
     isHome || isBedsPage || isFabricsPage || isMattressesPage || isAboutPage || isContactPage
-  const { cartCount, wishlistCount } = useCart()
+  const { cartCount } = useCart()
   const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     setSearchOpen(false)
+    setAccountOpen(false)
   }, [pathname])
 
   // Publish the header's real rendered height as a CSS var so pages with a
@@ -378,12 +506,25 @@ export function Header() {
                   <SearchPopover anchorRef={searchAnchorRef} onClose={() => setSearchOpen(false)} />
                 )}
               </div>
-              <IconButton label="Account" overlay={transparent}>
-                <AccountIcon />
-              </IconButton>
-              <IconButton label="Wishlist" badge={wishlistCount} overlay={transparent}>
-                <HeartIcon />
-              </IconButton>
+              <div ref={accountAnchorRef}>
+                {status === 'authenticated' ? (
+                  <IconButton
+                    label={accountOpen ? 'Close account menu' : 'Account'}
+                    overlay={transparent}
+                    pressed={accountOpen}
+                    onClick={() => setAccountOpen((open) => !open)}
+                  >
+                    <AccountIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton label="Sign in" overlay={transparent} href="/login">
+                    <AccountIcon />
+                  </IconButton>
+                )}
+                {accountOpen && status === 'authenticated' && (
+                  <AccountPopover anchorRef={accountAnchorRef} onClose={() => setAccountOpen(false)} />
+                )}
+              </div>
               <IconButton label="Cart" badge={cartCount} overlay={transparent} href="/cart">
                 <CartIcon />
               </IconButton>

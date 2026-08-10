@@ -4,11 +4,40 @@ import { useState, type FormEvent } from 'react'
 import { Button } from '@/components/ui/Button'
 
 export function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'submitted'>('idle')
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'submitted' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setStatus('submitted')
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    const payload = {
+      name: formData.get('name')?.toString() ?? '',
+      email: formData.get('email')?.toString() ?? '',
+      phone: formData.get('phone')?.toString() ?? '',
+      message: formData.get('message')?.toString() ?? '',
+    }
+
+    setStatus('submitting')
+    setErrorMessage('')
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error ?? 'Failed to send message.')
+      }
+
+      setStatus('submitted')
+    } catch (err) {
+      setStatus('error')
+      setErrorMessage(err instanceof Error ? err.message : 'Failed to send message.')
+    }
   }
 
   return (
@@ -60,8 +89,17 @@ export function ContactForm() {
             />
           </label>
 
-          <Button type="submit" variant="primary" className="h-12 w-full rounded-full text-base">
-            Submit
+          {status === 'error' && (
+            <p className="text-sm text-red-600">{errorMessage}</p>
+          )}
+
+          <Button
+            type="submit"
+            variant="primary"
+            className="h-12 w-full rounded-full text-base disabled:opacity-60"
+            disabled={status === 'submitting'}
+          >
+            {status === 'submitting' ? 'Sending...' : 'Submit'}
           </Button>
         </form>
       )}

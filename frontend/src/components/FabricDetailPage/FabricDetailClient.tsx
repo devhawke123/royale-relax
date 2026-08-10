@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { useCart } from '@/lib/cart-context'
 import { parseFabricDescription } from '@/lib/fabric-description'
 import {
-  HeartIcon,
   RatingStars,
   VisaBadge,
   MastercardBadge,
@@ -75,12 +74,11 @@ interface FabricDetailClientProps {
 }
 
 export function FabricDetailClient({ fabric, relatedFabrics = [] }: FabricDetailClientProps) {
-  const { toggleWishlist, isWishlisted, addToCart } = useCart()
+  const { addToCart } = useCart()
   const [selectedSwatchId, setSelectedSwatchId] = useState(fabric.swatches[0]?.id)
   const [quantity, setQuantity] = useState(1)
 
   const selectedSwatch = fabric.swatches.find((s) => s.id === selectedSwatchId) ?? fabric.swatches[0]
-  const wishlisted = isWishlisted(fabric.id)
   const parsed = useMemo(
     () => parseFabricDescription(selectedSwatch?.description ?? ''),
     [selectedSwatch?.description],
@@ -138,15 +136,6 @@ export function FabricDetailClient({ fabric, relatedFabrics = [] }: FabricDetail
           <div className="flex flex-col gap-6">
             <div className="flex items-start justify-between gap-4 border-b border-stone-100 pb-6">
               <h1 className="text-[24px] font-bold text-black">Fabric {fabric.name}</h1>
-              <button
-                type="button"
-                onClick={() => toggleWishlist(fabric.id)}
-                aria-pressed={wishlisted}
-                aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-                className={`shrink-0 transition-colors ${wishlisted ? 'text-[#b87333]' : 'text-stone-400 hover:text-[#b87333]'}`}
-              >
-                <HeartIcon filled={wishlisted} />
-              </button>
             </div>
 
             <RatingStars rating={4.9} reviewCount={150} />
@@ -197,6 +186,7 @@ export function FabricDetailClient({ fabric, relatedFabrics = [] }: FabricDetail
                     image: selectedSwatch?.image,
                     price: SAMPLE_PRICE,
                     href: `/shop/fabrics/${fabric.slug}`,
+                    fabricColorId: selectedSwatch?.id,
                     options: selectedSwatch ? [{ label: 'Colour', value: `${selectedSwatch.code} - ${selectedSwatch.name}` }] : [],
                   },
                   quantity,
