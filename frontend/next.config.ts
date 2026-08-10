@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
         hostname: 'res.cloudinary.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'br-lively-night-ay6u5eor.storage.c-5.us-east-2.aws.neon.tech',
+        pathname: '/royale-relax-products/**',
+      },
     ],
   },
 }

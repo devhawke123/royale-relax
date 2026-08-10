@@ -1,0 +1,357 @@
+[
+  {
+    "productImageId": "2e7698dd-6c66-4254-b86a-78626f7ebd7f",
+    "oldPath": "/images/Products/beds/verona-bed/main.webp",
+    "newKey": "products/verona-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "a247a10d-292b-444c-8a49-7272728e2ad2",
+    "oldPath": "/images/Products/beds/verona-bed/color-rectangle-56.webp",
+    "newKey": "products/verona-bed-color-rectangle-56.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c349b580-0013-49b8-abfd-96afb4aa5ff7",
+    "oldPath": "/images/Products/beds/savoy-imperial-bed/color-rectangle-50.webp",
+    "newKey": "products/savoy-imperial-bed-color-rectangle-50.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c46addfb-8c9b-4c4c-beb9-be6ec242d032",
+    "oldPath": "/images/Products/beds/savoy-imperial-bed/color-rectangle-51.webp",
+    "newKey": "products/savoy-imperial-bed-color-rectangle-51.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "3bcfee16-9701-41ce-a238-2186aa1b1dcb",
+    "oldPath": "/images/Products/beds/savoy-imperial-bed/main.webp",
+    "newKey": "products/savoy-imperial-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "70ea2b2a-d763-402f-8159-6d1f10d003ce",
+    "oldPath": "/images/Products/beds/balmoral-bed/color-rectangle-12.webp",
+    "newKey": "products/balmoral-bed-color-rectangle-12.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "1e3bf7eb-d302-48d1-a06e-e86e449a100e",
+    "oldPath": "/images/Products/beds/balmoral-bed/main.webp",
+    "newKey": "products/balmoral-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "5df5ed71-4ec0-4e33-9ac5-d4dd7d6ed123",
+    "oldPath": "/images/Products/beds/ellington-bed/color-rectangle-19.webp",
+    "newKey": "products/ellington-bed-color-rectangle-19.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c89c9866-c260-408d-81b7-3d6e849139d7",
+    "oldPath": "/images/Products/beds/ellington-bed/main.webp",
+    "newKey": "products/ellington-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "61f27d6c-3fe6-40e1-b2de-76861dbeed33",
+    "oldPath": "/images/Products/beds/royale-signature-bed/color-rectangle-48.webp",
+    "newKey": "products/royale-signature-bed-color-rectangle-48.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c1e7e404-1c8c-4f6a-9b48-242860ebd4b5",
+    "oldPath": "/images/Products/beds/royale-signature-bed/main.webp",
+    "newKey": "products/royale-signature-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "9fba6966-7a9c-4ac0-a402-838a0fa0d706",
+    "oldPath": "/images/Products/beds/royale-signature-bed/color-rectangle-47.webp",
+    "newKey": "products/royale-signature-bed-color-rectangle-47.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "7ce6cd19-b6cb-4f6f-9a0f-1fc54b3fb21d",
+    "oldPath": "/images/Products/beds/madison-divan-bed/color-rectangle-38.webp",
+    "newKey": "products/madison-divan-bed-color-rectangle-38.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "f1365347-eebf-4a50-8d9c-9e1b53f28647",
+    "oldPath": "/images/Products/beds/madison-divan-bed/main.webp",
+    "newKey": "products/madison-divan-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "f597af9c-922b-4941-81e2-5d4d4a8536cd",
+    "oldPath": "/images/Products/beds/regent-bed/main.webp",
+    "newKey": "products/regent-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "3784452f-5b16-4c70-a4f7-672f21ec27c5",
+    "oldPath": "/images/Products/beds/regent-bed/color-rectangle-44.webp",
+    "newKey": "products/regent-bed-color-rectangle-44.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "ccc393f0-d2d4-403e-aa0a-ebff587e70cd",
+    "oldPath": "/images/Products/beds/regent-bed/color-rectangle-45.webp",
+    "newKey": "products/regent-bed-color-rectangle-45.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "edbd2803-8917-4a61-acf6-1ed7643d669d",
+    "oldPath": "/images/Products/beds/regent-bed/color-rectangle-43.webp",
+    "newKey": "products/regent-bed-color-rectangle-43.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c88f64dc-215b-486e-9b83-ca8c6e3148bf",
+    "oldPath": "/images/Products/beds/harington-bed/main.webp",
+    "newKey": "products/harington-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "5c778a4b-9fd6-4a20-a47e-be15d6d71688",
+    "oldPath": "/images/Products/beds/harington-bed/color-rectangle-26.webp",
+    "newKey": "products/harington-bed-color-rectangle-26.webp",
+    "status": "skipped",
+    "error": "local file not found"
+  },
+  {
+    "productImageId": "54cae565-8ca7-4030-93a7-23ba7440e9f7",
+    "oldPath": "/images/Products/mattresses/royale-hybrid-3000-pillow-top/secondary.webp",
+    "newKey": "products/royale-hybrid-3000-pillow-top-mattress-secondary.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "cca9302b-d8d8-434f-a9d8-7fb738a5765b",
+    "oldPath": "/images/Products/mattresses/royale-hybrid-3000-pillow-top/main.webp",
+    "newKey": "products/royale-hybrid-3000-pillow-top-mattress-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "5845e838-3335-4b1d-b198-0652409e3cf4",
+    "oldPath": "/images/Products/beds/kendal-divan-bed/main.webp",
+    "newKey": "products/kendal-divan-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "3d625571-a974-4bec-baf9-d2894ae83670",
+    "oldPath": "/images/Products/beds/kendal-divan-bed/color-rectangle-29.webp",
+    "newKey": "products/kendal-divan-bed-color-rectangle-29.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "10b37a3a-66a3-4f83-b199-476db6b0a236",
+    "oldPath": "/images/Products/beds/kendal-divan-bed/color-rectangle-30.webp",
+    "newKey": "products/kendal-divan-bed-color-rectangle-30.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "015d2610-1bae-405e-8a05-2d8e5b2e4013",
+    "oldPath": "/images/Products/beds/kendal-divan-bed/color-rectangle-31.webp",
+    "newKey": "products/kendal-divan-bed-color-rectangle-31.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "86f8c52b-9028-42cb-924d-d1e4f8970c63",
+    "oldPath": "/images/Products/beds/kendal-divan-bed/color-rectangle-32.webp",
+    "newKey": "products/kendal-divan-bed-color-rectangle-32.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c613c5aa-e53d-4405-a7c5-6188199356f7",
+    "oldPath": "/images/Products/beds/eminence-bed/color-rectangle-21.webp",
+    "newKey": "products/eminence-bed-color-rectangle-21.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "6447113f-a2ce-41be-af83-a3f9659ebedb",
+    "oldPath": "/images/Products/beds/eminence-bed/main.webp",
+    "newKey": "products/eminence-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "02937c1b-ee8d-49dd-85d4-7774b94c38f1",
+    "oldPath": "/images/Products/beds/celestia-bed/main.webp",
+    "newKey": "products/celestia-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "256566fe-aabf-4738-bfbc-821bb99f1d7c",
+    "oldPath": "/images/Products/beds/celestia-bed/color-rectangle-14.webp",
+    "newKey": "products/celestia-bed-color-rectangle-14.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "8f6919fd-7358-4497-bc41-8bfb0742ef65",
+    "oldPath": "/images/Products/beds/celestia-bed/color-rectangle-15.webp",
+    "newKey": "products/celestia-bed-color-rectangle-15.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "82c0313e-0188-41f2-9c9a-e26a52fd6e94",
+    "oldPath": "/images/Products/mattresses/luxury-1000-pocket-memory/main.webp",
+    "newKey": "products/luxury-1000-pocket-memory-mattress-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "57a3cf87-8feb-49a8-8080-ccf5eb6d3057",
+    "oldPath": "/images/Products/mattresses/luxury-1000-pocket-memory/secondary.webp",
+    "newKey": "products/luxury-1000-pocket-memory-mattress-secondary.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "0f10dfd5-fa25-41f9-af2d-d4965891711f",
+    "oldPath": "/images/Products/beds/elan-bed/color-rectangle-17-1.webp",
+    "newKey": "products/elan-bed-color-rectangle-17-1.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "fba30973-af2e-49a4-930e-72aaf19bc389",
+    "oldPath": "/images/Products/beds/elan-bed/main.webp",
+    "newKey": "products/elan-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "256448c1-6c8e-454a-b2d5-5389e03893f1",
+    "oldPath": "/images/Products/beds/versailles-bed/color-rectangle-58-1.webp",
+    "newKey": "products/versailles-bed-color-rectangle-58-1.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "6ccb42b4-baaf-45cf-ab4e-ddc6c7f05562",
+    "oldPath": "/images/Products/beds/versailles-bed/color-rectangle-61.webp",
+    "newKey": "products/versailles-bed-color-rectangle-61.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "55430fb5-1ae7-4380-9930-b9f7bd0c363c",
+    "oldPath": "/images/Products/beds/versailles-bed/color-rectangle-60.webp",
+    "newKey": "products/versailles-bed-color-rectangle-60.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "8dc277e0-7e35-4c1a-9c51-5292acd4d9a2",
+    "oldPath": "/images/Products/beds/versailles-bed/color-rectangle-59.webp",
+    "newKey": "products/versailles-bed-color-rectangle-59.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "a75b3a84-0a58-46ab-8427-f3d5416484a0",
+    "oldPath": "/images/Products/beds/versailles-bed/main.webp",
+    "newKey": "products/versailles-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "fcc1b5b0-13d4-4039-be24-6b76906ab0fb",
+    "oldPath": "/images/Products/beds/grand-royale-bed/color-rectangle-24.webp",
+    "newKey": "products/grand-royale-bed-color-rectangle-24.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "8fdaf529-2797-47c5-871b-e3b85b8ed81f",
+    "oldPath": "/images/Products/beds/grand-royale-bed/main.webp",
+    "newKey": "products/grand-royale-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "4c4669f5-c489-4723-a644-8e7b808c0c20",
+    "oldPath": "/images/Products/beds/heritage-elite-bed/main.webp",
+    "newKey": "products/heritage-elite-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "18d718b1-158b-46ef-8db5-e550956e72d0",
+    "oldPath": "/images/Products/beds/grand-regent-bed/main.webp",
+    "newKey": "products/grand-regent-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "17e30b14-e8f0-4db6-ab59-f95b1b77a80b",
+    "oldPath": "/images/Products/beds/majestic-bed/main.webp",
+    "newKey": "products/majestic-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "11154192-c91d-47ce-aaa1-d6f9a49f0151",
+    "oldPath": "/images/Products/beds/luxe-divan-bed/color-rectangle-36.webp",
+    "newKey": "products/luxe-divan-bed-color-rectangle-36.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "68511179-e4e5-43f8-9de3-18d8f4c95c10",
+    "oldPath": "/images/Products/beds/luxe-divan-bed/main.webp",
+    "newKey": "products/luxe-divan-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "fbb1a18d-1472-4b7d-b59a-cd53039c348e",
+    "oldPath": "/images/Products/beds/velvet-dawn-bed/main.webp",
+    "newKey": "products/velvet-dawn-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "ac1cbb06-dfff-49f0-aef1-209220dd33c0",
+    "oldPath": "/images/Products/beds/velvet-dawn-bed/color-rectangle-53.webp",
+    "newKey": "products/velvet-dawn-bed-color-rectangle-53.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "dcf91f93-b2f4-4002-9ed2-e5373e8c74b2",
+    "oldPath": "/images/Products/mattresses/presidential-hand-stitched-pillow-top/main.webp",
+    "newKey": "products/presidential-hand-stitched-pillow-top-mattress-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "4f0b798c-3da8-4d71-bb4d-2c74e9f5d8ac",
+    "oldPath": "/images/Products/mattresses/presidential-hand-stitched-pillow-top/secondary.webp",
+    "newKey": "products/presidential-hand-stitched-pillow-top-mattress-secondary.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "d069b779-3e46-4402-8467-f57f759479e4",
+    "oldPath": "/images/Products/beds/kensington-bed/main.webp",
+    "newKey": "products/kensington-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c65b187d-8eae-48e8-b1dd-323ab25ac0f6",
+    "oldPath": "/images/Products/beds/kensington-bed/color-rectangle-34.webp",
+    "newKey": "products/kensington-bed-color-rectangle-34.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "c5557fbd-0b1a-4759-bb92-5ad2b10f66d8",
+    "oldPath": "/images/Products/beds/valencia-wing-bed/main.webp",
+    "newKey": "products/valencia-wing-bed-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "b779d95a-3dcd-469b-86b4-866a6c47d8d4",
+    "oldPath": "/images/Products/mattresses/vip-luxury-3000-pocket/main.webp",
+    "newKey": "products/vip-luxury-3000-pocket-mattress-main.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "b3f08b27-c2ea-4ed0-b863-42f390e61883",
+    "oldPath": "/images/Products/mattresses/vip-luxury-3000-pocket/secondary.webp",
+    "newKey": "products/vip-luxury-3000-pocket-mattress-secondary.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "b4f31e5c-69c9-4395-9062-21c2fa4c5428",
+    "oldPath": "/images/Products/beds/montrose-bed/color-rectangle-41.webp",
+    "newKey": "products/montrose-bed-color-rectangle-41.webp",
+    "status": "success"
+  },
+  {
+    "productImageId": "f8da0bba-680c-4181-b406-070c2b7fc308",
+    "oldPath": "/images/Products/beds/montrose-bed/main.webp",
+    "newKey": "products/montrose-bed-main.webp",
+    "status": "success"
+  }
+]
