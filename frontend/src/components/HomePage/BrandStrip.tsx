@@ -1,6 +1,6 @@
 export function BrandStrip() {
   return (
-    <section className="bg-[#f5f5f5] px-6 pt-8 pb-4 xl:px-8">
+    <section className="bg-[#f5f5f5] px-6 py-16 sm:py-20 xl:px-8">
       <div className="mx-auto w-full max-w-7xl">
         <div
           className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center rounded-2xl px-8 py-7 text-center shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] sm:py-8"

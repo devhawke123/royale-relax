@@ -7,7 +7,8 @@ export function formatPrice(price: number) {
   return new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency: 'GBP',
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
   }).format(price)
 }
 
@@ -137,19 +138,35 @@ export function Listbox({
 }
 
 /**
+ * Option labels for these add-on fields embed their surcharge as e.g.
+ * "Room of Choice Assembly (+£49.99)" — this pulls that number back out so
+ * the selection can be added to the displayed/charged price. Options with no
+ * "(+£...)" suffix (the free ones) resolve to 0.
+ */
+export function extractPriceDelta(optionLabel: string): number {
+  const match = optionLabel.match(/\(\+\s*£([\d,]+(?:\.\d+)?)\)/)
+  return match ? Number(match[1].replace(/,/g, '')) : 0
+}
+
+/**
  * Wraps Listbox with its own uncontrolled selection state, for "Choose ..."
- * add-on fields that don't have a backing data model yet.
+ * add-on fields that don't have a backing data model yet. `onSelect` is an
+ * optional escape hatch so the parent can react to the pick (e.g. to fold
+ * the option's `(+£X)` surcharge into the displayed price) without having to
+ * fully lift the selection state itself.
  */
 export function OrderOptionSelect({
   label,
   required,
   options,
   defaultValue,
+  onSelect,
 }: {
   label: string
   required?: boolean
   options: string[]
   defaultValue?: string
+  onSelect?: (value: string) => void
 }) {
   const [selected, setSelected] = useState(defaultValue ?? options[0])
   return (
@@ -157,7 +174,10 @@ export function OrderOptionSelect({
       label={label}
       required={required}
       value={selected}
-      onChange={setSelected}
+      onChange={(value) => {
+        setSelected(value)
+        onSelect?.(value)
+      }}
       options={options.map((option) => ({ value: option, label: option }))}
     />
   )

@@ -377,3 +377,12 @@ model StripeWebhookEvent {
   type        String
   processedAt DateTime @default(now())
 }
+
+/// Singleton row (id always "default") backing the admin Settings page.
+model StoreSettings {
+  id        String   @id @default("default")
+  storeName String
+  email     String
+  phone     String
+  updatedAt DateTime @default(now()) @updatedAt
+}

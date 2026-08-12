@@ -6,7 +6,7 @@ export function Testimonials() {
   const [first, quote, ...rest] = mockTestimonials
 
   return (
-    <section className="bg-[#f5f5f5] px-6 py-16 xl:px-8">
+    <section className="bg-[#f5f5f5] px-6 py-16 sm:py-20 xl:px-8">
       <h2 className="text-center text-3xl font-bold text-[#222] capitalize sm:text-4xl">
         What Our Customers Are Saying
       </h2>

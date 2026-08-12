@@ -15,7 +15,7 @@ const categoryLabels: Record<Product['category'], string> = {
 
 export function ProductCarousel({ items, title, description }: ProductCarouselProps) {
   return (
-    <section className="bg-[#f5f5f5] px-6 py-16 xl:px-8">
+    <section className="bg-[#f5f5f5] px-6 py-16 sm:py-20 xl:px-8">
       {(title || description) && (
         <div className="mx-auto max-w-2xl text-center">
           {title && (
@@ -24,7 +24,7 @@ export function ProductCarousel({ items, title, description }: ProductCarouselPr
           {description && <p className="mt-4 text-stone-500">{description}</p>}
         </div>
       )}
-      <div className="mx-auto mt-10 flex max-w-7xl snap-x gap-6 overflow-x-auto pb-2">
+      <div className="mx-auto mt-10 flex max-w-7xl snap-x justify-center gap-6 overflow-x-auto pb-2">
         {items.map((product) => (
           <div key={product.id} className="w-64 shrink-0 snap-start sm:w-72">
             <ProductCard

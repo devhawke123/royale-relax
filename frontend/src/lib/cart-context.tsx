@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useContext, useMemo, useRef, useState, type ReactNode } from 'react'
 
 export interface CartLineOption {
   label: string
@@ -26,6 +26,12 @@ export interface CartLine extends CartLineInput {
   quantity: number
 }
 
+export interface CartToast {
+  id: number
+  name: string
+  image?: string
+}
+
 function lineSignature(item: CartLineInput) {
   const options = (item.options ?? []).map((o) => `${o.label}:${o.value}`).join('|')
   return `${item.productId}::${options}`
@@ -35,16 +41,27 @@ interface CartContextValue {
   cartItems: CartLine[]
   cartCount: number
   subtotal: number
+  toast: CartToast | null
   addToCart: (item: CartLineInput, quantity?: number) => void
   removeFromCart: (lineId: string) => void
   updateQuantity: (lineId: string, quantity: number) => void
   clearCart: () => void
+  dismissToast: () => void
 }
 
 const CartContext = createContext<CartContextValue | null>(null)
 
+const TOAST_DURATION_MS = 3000
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartLine[]>([])
+  const [toast, setToast] = useState<CartToast | null>(null)
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const dismissToast = () => {
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current)
+    setToast(null)
+  }
 
   const addToCart = (item: CartLineInput, quantity = 1) => {
     setCartItems((prev) => {
@@ -58,6 +75,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const id = `${signature}::${Date.now()}::${Math.random().toString(36).slice(2)}`
       return [...prev, { ...item, id, quantity }]
     })
+
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current)
+    setToast({ id: Date.now(), name: item.name, image: item.image })
+    toastTimeoutRef.current = setTimeout(() => setToast(null), TOAST_DURATION_MS)
   }
 
   const removeFromCart = (lineId: string) => {
@@ -86,12 +107,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cartItems,
       cartCount,
       subtotal,
+      toast,
       addToCart,
       removeFromCart,
       updateQuantity,
       clearCart,
+      dismissToast,
     }),
-    [cartItems, cartCount, subtotal],
+    [cartItems, cartCount, subtotal, toast],
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 interface ContactPayload {
   name?: string
@@ -19,28 +19,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Name, email, and message are required.' }, { status: 400 })
   }
 
-  const user = process.env.CONTACT_EMAIL_USER
-  const pass = process.env.CONTACT_EMAIL_PASS
-  const to = process.env.CONTACT_EMAIL_TO ?? user
+  const apiKey = process.env.RESEND_API_KEY
+  const to = process.env.CONTACT_EMAIL_TO
+  const from = process.env.CONTACT_EMAIL_FROM || 'Royale Relax Contact Form <onboarding@resend.dev>'
 
-  if (!user || !pass) {
+  if (!apiKey || !to) {
     return NextResponse.json({ error: 'Contact form is not configured.' }, { status: 500 })
   }
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass },
+  const resend = new Resend(apiKey)
+
+  const { error } = await resend.emails.send({
+    from,
+    to,
+    replyTo: email,
+    subject: `New contact form message from ${name}`,
+    text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'N/A'}\n\nMessage:\n${message}`,
   })
 
-  try {
-    await transporter.sendMail({
-      from: `"Royale Relax Contact Form" <${user}>`,
-      to,
-      replyTo: email,
-      subject: `New contact form message from ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'N/A'}\n\nMessage:\n${message}`,
-    })
-  } catch {
+  if (error) {
     return NextResponse.json({ error: 'Failed to send message. Please try again.' }, { status: 502 })
   }
 

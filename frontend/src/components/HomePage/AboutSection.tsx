@@ -6,7 +6,7 @@ import arrowIcon from '../../../public/images/icons2/arrow-duotone.svg'
 export function AboutSection() {
   return (
     <section
-      className="bg-[#f3f3f3] px-6 py-14 xl:px-8"
+      className="bg-[#f3f3f3] px-6 py-16 sm:py-20 xl:px-8"
       style={{ scrollMarginTop: 'var(--header-height, 180px)' }}
     >
       <div className="mx-auto flex max-w-7xl flex-col gap-10 lg:h-[533px] lg:flex-row lg:items-center lg:gap-6">

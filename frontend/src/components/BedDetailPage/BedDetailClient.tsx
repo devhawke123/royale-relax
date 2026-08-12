@@ -16,6 +16,17 @@ function formatPrice(price: number) {
   }).format(price)
 }
 
+/**
+ * Option labels for these add-on fields embed their surcharge as e.g.
+ * "Room of Choice Assembly (+£49.99)" — this pulls that number back out so
+ * the selection can be added to the displayed/charged price. Options with no
+ * "(+£...)" suffix (the free ones) resolve to 0.
+ */
+function extractPriceDelta(optionLabel: string): number {
+  const match = optionLabel.match(/\(\+\s*£([\d,]+(?:\.\d+)?)\)/)
+  return match ? Number(match[1].replace(/,/g, '')) : 0
+}
+
 function ChevronDownIcon({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={`h-5 w-5 shrink-0 text-stone-500 transition-transform ${className}`}>
@@ -127,11 +138,13 @@ function OrderOptionSelect({
   required,
   options,
   defaultValue,
+  onSelect,
 }: {
   label: string
   required?: boolean
   options: string[]
   defaultValue?: string
+  onSelect?: (value: string) => void
 }) {
   const [selected, setSelected] = useState(defaultValue ?? options[0])
   return (
@@ -139,7 +152,10 @@ function OrderOptionSelect({
       label={label}
       required={required}
       value={selected}
-      onChange={setSelected}
+      onChange={(value) => {
+        setSelected(value)
+        onSelect?.(value)
+      }}
       options={options.map((option) => ({ value: option, label: option }))}
     />
   )
@@ -306,6 +322,9 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
   const [selectedFabricSlug, setSelectedFabricSlug] = useState('')
   const [selectedFabricSwatchId, setSelectedFabricSwatchId] = useState('')
   const [quantity, setQuantity] = useState(1)
+  const [deliveryDelta, setDeliveryDelta] = useState(0)
+  const [blanketBoxDelta, setBlanketBoxDelta] = useState(0)
+  const [headboardDelta, setHeadboardDelta] = useState(0)
 
   const selectedFabricType = fabrics.find((f) => f.slug === selectedFabricSlug)
   const fabricSwatches = selectedFabricType?.swatches ?? []
@@ -313,7 +332,8 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
   const [activeImage, setActiveImage] = useState(product.images[0])
 
   const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
-  const price = selectedVariant?.price ?? product.basePrice ?? 0
+  const basePrice = selectedVariant?.price ?? product.basePrice ?? 0
+  const price = basePrice + deliveryDelta + blanketBoxDelta + headboardDelta
 
   // Drawer beds (Kendal, Luxe, Madison) ship with under-bed drawers built
   // in — there's nothing to opt into. Only ottoman-storage beds have this
@@ -426,6 +446,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                 'Room of Choice Drop Off (+£19.99)',
                 'Room of Choice Assembly (+£49.99)',
               ]}
+              onSelect={(value) => setDeliveryDelta(extractPriceDelta(value))}
             />
             <OrderOptionSelect
               label="Add a Matching Design Blanket Box"
@@ -436,6 +457,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                 'Yes 40" Storage Box (+£99.99)',
                 'Yes 60" Storage Box (+£139.99)',
               ]}
+              onSelect={(value) => setBlanketBoxDelta(extractPriceDelta(value))}
             />
             <OrderOptionSelect
               label="Awkward Staircase? Get a Split Head"
@@ -452,6 +474,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                 'High 60 Inches (+£79.99)',
                 'Bespoke / Floor-Ceiling (+£199.99)',
               ]}
+              onSelect={(value) => setHeadboardDelta(extractPriceDelta(value))}
             />
             <OrderOptionSelect
               label="Delay the Delivery?"

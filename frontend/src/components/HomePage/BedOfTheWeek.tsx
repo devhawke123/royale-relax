@@ -25,7 +25,7 @@ export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
   const savings = compareAtPrice && price !== undefined ? compareAtPrice - price : undefined
 
   return (
-    <section className="bg-[#f5f5f5] px-4 py-12 sm:px-6 sm:py-16 xl:px-8">
+    <section className="bg-[#f5f5f5] px-4 py-16 sm:px-6 sm:py-20 xl:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <p className="text-sm font-medium tracking-wide text-[#666] uppercase">Season Sale</p>
         <h2 className="mt-2 text-2xl font-bold text-black sm:text-4xl">Bed Of The Week</h2>

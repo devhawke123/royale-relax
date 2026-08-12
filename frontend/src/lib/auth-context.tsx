@@ -4,12 +4,16 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 
 const ACCESS_TOKEN_KEY = 'rr_access_token'
 const CUSTOMER_EMAIL_KEY = 'rr_customer_email'
+const SUBJECT_KEY = 'rr_subject'
+
+type Subject = 'customer' | 'admin'
 
 interface AuthContextValue {
   accessToken: string | null
   customerEmail: string | null
+  subject: Subject | null
   status: 'loading' | 'authenticated' | 'guest'
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<Subject>
   register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
   logout: () => Promise<void>
 }
@@ -24,6 +28,7 @@ async function parseError(res: Response, fallback: string) {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [customerEmail, setCustomerEmail] = useState<string | null>(null)
+  const [subject, setSubject] = useState<Subject | null>(null)
   const [status, setStatus] = useState<'loading' | 'authenticated' | 'guest'>('loading')
 
   // On mount, try to silently restore a session from the httpOnly refresh
@@ -38,13 +43,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!res.ok) {
           localStorage.removeItem(ACCESS_TOKEN_KEY)
           localStorage.removeItem(CUSTOMER_EMAIL_KEY)
+          localStorage.removeItem(SUBJECT_KEY)
           setStatus('guest')
           return
         }
         const data = await res.json()
         setAccessToken(data.accessToken)
+        setSubject(data.subject)
         localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken)
-        setCustomerEmail(localStorage.getItem(CUSTOMER_EMAIL_KEY))
+        localStorage.setItem(SUBJECT_KEY, data.subject)
+        setCustomerEmail(data.subject === 'customer' ? localStorage.getItem(CUSTOMER_EMAIL_KEY) : null)
         setStatus('authenticated')
       })
       .catch(() => {
@@ -56,21 +64,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  async function login(email: string, password: string) {
+  /**
+   * No `subject` is sent — the server resolves customer vs. admin by
+   * looking the email up in both tables. This is what lets the shared
+   * storefront login form also sign admins into /admin without a
+   * separate admin login screen.
+   */
+  async function login(email: string, password: string): Promise<Subject> {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, subject: 'customer' }),
+      body: JSON.stringify({ email, password }),
     })
     if (!res.ok) {
       throw new Error(await parseError(res, 'Invalid email or password.'))
     }
     const data = await res.json()
+    const resolvedSubject: Subject = data.subject
     setAccessToken(data.accessToken)
-    setCustomerEmail(email)
+    setSubject(resolvedSubject)
     localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken)
-    localStorage.setItem(CUSTOMER_EMAIL_KEY, email)
+    localStorage.setItem(SUBJECT_KEY, resolvedSubject)
+    if (resolvedSubject === 'customer') {
+      setCustomerEmail(email)
+      localStorage.setItem(CUSTOMER_EMAIL_KEY, email)
+    } else {
+      setCustomerEmail(null)
+      localStorage.removeItem(CUSTOMER_EMAIL_KEY)
+    }
     setStatus('authenticated')
+    return resolvedSubject
   }
 
   async function register(email: string, password: string, firstName: string, lastName: string) {
@@ -89,14 +112,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
     setAccessToken(null)
     setCustomerEmail(null)
+    setSubject(null)
     localStorage.removeItem(ACCESS_TOKEN_KEY)
     localStorage.removeItem(CUSTOMER_EMAIL_KEY)
+    localStorage.removeItem(SUBJECT_KEY)
     setStatus('guest')
   }
 
   const value = useMemo(
-    () => ({ accessToken, customerEmail, status, login, register, logout }),
-    [accessToken, customerEmail, status],
+    () => ({ accessToken, customerEmail, subject, status, login, register, logout }),
+    [accessToken, customerEmail, subject, status],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

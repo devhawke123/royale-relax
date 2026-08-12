@@ -271,77 +271,6 @@ function SearchPopover({
   )
 }
 
-/**
- * Signed-in state's account menu — same portal-anchored pattern as
- * SearchPopover, so it isn't clipped by the header's `overflow-hidden`.
- */
-function AccountPopover({
-  anchorRef,
-  onClose,
-}: {
-  anchorRef: React.RefObject<HTMLElement | null>
-  onClose: () => void
-}) {
-  const { customerEmail, logout } = useAuth()
-  const [coords, setCoords] = useState<{ top: number; right: number } | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  useLayoutEffect(() => {
-    const anchor = anchorRef.current
-    if (!anchor) return
-    const rect = anchor.getBoundingClientRect()
-    setCoords({ top: rect.bottom + 12, right: window.innerWidth - rect.right })
-  }, [anchorRef])
-
-  useEffect(() => {
-    function handlePointerDown(e: PointerEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node) &&
-        !anchorRef.current?.contains(e.target as Node)
-      ) {
-        onClose()
-      }
-    }
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose()
-    }
-    document.addEventListener('pointerdown', handlePointerDown)
-    document.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('scroll', onClose, { passive: true })
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDown)
-      document.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('scroll', onClose)
-    }
-  }, [onClose, anchorRef])
-
-  if (!coords) return null
-
-  return createPortal(
-    <div
-      ref={containerRef}
-      style={{ top: coords.top, right: coords.right }}
-      className="fixed z-[60] w-[calc(100vw-3rem)] max-w-[260px] rounded-[14px] border border-stone-200 bg-white p-3 shadow-xl"
-    >
-      {customerEmail && (
-        <p className="truncate px-1 pb-2 text-[13px] text-stone-500">Signed in as {customerEmail}</p>
-      )}
-      <button
-        type="button"
-        onClick={() => {
-          onClose()
-          logout()
-        }}
-        className="w-full rounded-lg px-1 py-2 text-left text-[14px] text-stone-900 hover:bg-stone-50"
-      >
-        Log out
-      </button>
-    </div>,
-    document.body,
-  )
-}
-
 // carrier.svg
 function CartIcon() {
   return (
@@ -382,7 +311,6 @@ function AccountIcon() {
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
-  const [accountOpen, setAccountOpen] = useState(false)
   const searchAnchorRef = useRef<HTMLDivElement>(null)
   const accountAnchorRef = useRef<HTMLDivElement>(null)
   const { status } = useAuth()
@@ -414,7 +342,6 @@ export function Header() {
 
   useEffect(() => {
     setSearchOpen(false)
-    setAccountOpen(false)
   }, [pathname])
 
   // Publish the header's real rendered height as a CSS var so pages with a
@@ -507,23 +434,13 @@ export function Header() {
                 )}
               </div>
               <div ref={accountAnchorRef}>
-                {status === 'authenticated' ? (
-                  <IconButton
-                    label={accountOpen ? 'Close account menu' : 'Account'}
-                    overlay={transparent}
-                    pressed={accountOpen}
-                    onClick={() => setAccountOpen((open) => !open)}
-                  >
-                    <AccountIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton label="Sign in" overlay={transparent} href="/login">
-                    <AccountIcon />
-                  </IconButton>
-                )}
-                {accountOpen && status === 'authenticated' && (
-                  <AccountPopover anchorRef={accountAnchorRef} onClose={() => setAccountOpen(false)} />
-                )}
+                <IconButton
+                  label={status === 'authenticated' ? 'Account' : 'Sign in'}
+                  overlay={transparent}
+                  href={status === 'authenticated' ? '/account' : '/login'}
+                >
+                  <AccountIcon />
+                </IconButton>
               </div>
               <IconButton label="Cart" badge={cartCount} overlay={transparent} href="/cart">
                 <CartIcon />

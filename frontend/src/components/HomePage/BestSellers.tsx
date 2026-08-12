@@ -11,7 +11,7 @@ export function BestSellers({ products }: BestSellersProps) {
   const bottomCards = rest.slice(2, 5)
 
   return (
-    <section className="bg-[#f5f5f5] px-6 py-16 xl:px-8">
+    <section className="bg-[#f5f5f5] px-6 py-16 sm:py-20 xl:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <h2 className="text-3xl font-bold text-[#222] capitalize sm:text-4xl">Best Selling Beds</h2>
         <p className="mt-4 text-stone-500">

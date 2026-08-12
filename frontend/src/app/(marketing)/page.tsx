@@ -30,7 +30,7 @@ const BEST_SELLER_SLUGS = [
 export default async function MarketingPage() {
   const [featuredProducts, latestProducts, bestSellerProducts, bedsProducts] = await Promise.all([
     getProductsBySlugsInOrder(FEATURED_SLUGS),
-    getFeaturedProducts(6),
+    getFeaturedProducts(3),
     getProductsBySlugsInOrder(BEST_SELLER_SLUGS),
     getProductsByCategory('BEDS'),
   ])

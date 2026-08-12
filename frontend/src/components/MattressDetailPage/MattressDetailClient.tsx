@@ -10,6 +10,7 @@ import {
   formatPrice,
   ChevronDownIcon,
   OrderOptionSelect,
+  extractPriceDelta,
   RatingStars,
   VisaBadge,
   MastercardBadge,
@@ -35,11 +36,13 @@ export function MattressDetailClient({ product, relatedProducts = [] }: Mattress
 
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id)
   const [quantity, setQuantity] = useState(1)
+  const [deliveryDelta, setDeliveryDelta] = useState(0)
 
   const [activeImage, setActiveImage] = useState(product.images[0])
 
   const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
-  const price = selectedVariant?.price ?? product.basePrice ?? 0
+  const basePrice = selectedVariant?.price ?? product.basePrice ?? 0
+  const price = basePrice + deliveryDelta
 
   const thumbnails = product.images
 
@@ -142,6 +145,7 @@ export function MattressDetailClient({ product, relatedProducts = [] }: Mattress
               required
               defaultValue="Drop Off (FREE)"
               options={['-- Please Select --', 'Drop Off (FREE)', 'Room of Choice Drop Off (+£19.99)']}
+              onSelect={(value) => setDeliveryDelta(extractPriceDelta(value))}
             />
             <OrderOptionSelect
               label="Delay the Delivery?"

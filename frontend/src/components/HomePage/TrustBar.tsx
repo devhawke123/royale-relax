@@ -13,7 +13,7 @@ interface TrustBarProps {
 export function TrustBar({ items }: TrustBarProps) {
   return (
     <section className="bg-[#f5f5f5]">
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-8 px-6 py-10 sm:grid-cols-3 xl:px-8">
+      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-8 px-6 py-8 sm:grid-cols-3 sm:py-10 xl:px-8">
         {items.map((item) => (
           <div
             key={item.title}

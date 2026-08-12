@@ -13,7 +13,11 @@ const faqIcons = ['🏅', '🎨', '📍', '💡']
 
 export function FaqAccordion() {
   return (
-    <section className="bg-[#f3f3f3] px-6 py-16 xl:px-8">
+    <section
+      id="faq"
+      className="bg-[#f3f3f3] px-6 py-16 sm:py-20 xl:px-8"
+      style={{ scrollMarginTop: 'var(--header-height, 180px)' }}
+    >
       <div className="mx-auto max-w-3xl text-center">
         <span className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-2 text-sm font-medium text-white">
           ✨ Frequently Asked Questions

@@ -11,6 +11,7 @@ const productWithColorsInclude = {
 
 export function getFeaturedProducts(limit: number) {
   return prisma.product.findMany({
+    where: { status: 'PUBLISHED' },
     take: limit,
     orderBy: { createdAt: 'desc' },
     include: productWithColorsInclude,

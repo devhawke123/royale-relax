@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
+import { ConditionalChrome } from '@/components/layout/ConditionalChrome'
 import { CartProvider } from '@/lib/cart-context'
 import { AuthProvider } from '@/lib/auth-context'
 import './globals.css'
@@ -20,9 +19,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <AuthProvider>
           <CartProvider>
-            <Header />
-            {children}
-            <Footer />
+            <ConditionalChrome>{children}</ConditionalChrome>
           </CartProvider>
         </AuthProvider>
       </body>
