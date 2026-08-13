@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/auth-context'
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: DashboardIcon },
   { href: '/admin/orders', label: 'Orders', icon: OrdersIcon },
+  { href: '/admin/bed-of-the-week', label: 'Bed of the Week', icon: BedIcon },
   { href: '/admin/settings', label: 'Settings', icon: SettingsIcon },
 ]
 
@@ -71,6 +72,20 @@ function OrdersIcon({ className }: { className?: string }) {
     <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
       <rect x="4" y="3" width="12" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
       <path d="M7 7h6M7 10.5h6M7 14h3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function BedIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
+      <path
+        d="M2.5 15.5V6a1 1 0 0 1 1-1h13a1 1 0 0 1 1 1v9.5M2.5 15.5v-2.75h15v2.75M2.5 12.75V9.75a1 1 0 0 1 1-1H9v3M17.5 12.75V9.75a1 1 0 0 0-1-1H9"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }

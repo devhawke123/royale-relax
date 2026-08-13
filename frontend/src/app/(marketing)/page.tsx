@@ -8,13 +8,13 @@ import { AboutSection } from '@/components/HomePage/AboutSection'
 import { BedOfTheWeek } from '@/components/HomePage/BedOfTheWeek'
 import { FaqAccordion } from '@/components/HomePage/FaqAccordion'
 import { Testimonials } from '@/components/HomePage/Testimonials'
-import { bedOfTheWeekEndsAt } from '@/data/mock-products'
 import {
   getFeaturedProducts,
-  getProductsByCategory,
+  getProductBySlug,
   getProductsBySlugsInOrder,
   toDisplayProduct,
 } from '@/lib/products'
+import { getStorefrontBedOfTheWeek } from '@/lib/bed-of-the-week'
 
 // Hand-curated picks (no isFeatured/isBestSeller signal in the DB yet).
 const FEATURED_SLUGS = ['versailles-bed', 'verona-bed', 'elan-bed']
@@ -28,16 +28,20 @@ const BEST_SELLER_SLUGS = [
 ]
 
 export default async function MarketingPage() {
-  const [featuredProducts, latestProducts, bestSellerProducts, bedsProducts] = await Promise.all([
+  const [featuredProducts, latestProducts, bestSellerProducts, bedOfTheWeekPromo] = await Promise.all([
     getProductsBySlugsInOrder(FEATURED_SLUGS),
     getFeaturedProducts(3),
     getProductsBySlugsInOrder(BEST_SELLER_SLUGS),
-    getProductsByCategory('BEDS'),
+    getStorefrontBedOfTheWeek(),
   ])
   const featured = featuredProducts.map(toDisplayProduct)
   const latest = latestProducts.map(toDisplayProduct)
   const bestSellers = bestSellerProducts.map(toDisplayProduct)
-  const bedOfTheWeek = bedsProducts[0] ? toDisplayProduct(bedsProducts[0]) : undefined
+
+  const bedOfTheWeekProductRow = bedOfTheWeekPromo
+    ? await getProductBySlug(bedOfTheWeekPromo.product.slug)
+    : null
+  const bedOfTheWeek = bedOfTheWeekProductRow ? toDisplayProduct(bedOfTheWeekProductRow) : undefined
 
   return (
     <main className="flex min-h-screen flex-col bg-stone-50 text-stone-900">
@@ -81,7 +85,14 @@ export default async function MarketingPage() {
 
       <AboutSection />
 
-      {bedOfTheWeek && <BedOfTheWeek product={bedOfTheWeek} endsAt={bedOfTheWeekEndsAt} />}
+      {bedOfTheWeek && bedOfTheWeekPromo && (
+        <BedOfTheWeek
+          product={bedOfTheWeek}
+          discountPercentage={bedOfTheWeekPromo.discountPercentage}
+          validUntil={bedOfTheWeekPromo.validUntil}
+          isPromotionLive={bedOfTheWeekPromo.isPromotionLive}
+        />
+      )}
 
       <FaqAccordion />
 

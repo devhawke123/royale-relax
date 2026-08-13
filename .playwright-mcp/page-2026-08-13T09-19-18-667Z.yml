@@ -1,0 +1,22 @@
+- generic [active] [ref=f2e1]:
+  - button "Open Next.js Dev Tools" [ref=f2e115] [cursor=pointer]
+  - alert [ref=f2e119]: Royale Relax
+  - generic [ref=f2e120]:
+    - complementary [ref=f2e121]:
+      - generic [ref=f2e122]:
+        - generic [ref=f2e123]: R
+        - generic [ref=f2e124]:
+          - generic [ref=f2e125]: ROYALE
+          - generic [ref=f2e126]: RELAX
+      - navigation [ref=f2e127]:
+        - link "Dashboard" [ref=f2e128] [cursor=pointer]:
+          - /url: /admin
+        - link "Orders" [ref=f2e134] [cursor=pointer]:
+          - /url: /admin/orders
+        - link "Settings" [ref=f2e138] [cursor=pointer]:
+          - /url: /admin/settings
+      - button "Logout" [ref=f2e143]
+    - main [ref=f2e146]:
+      - generic [ref=f2e147]:
+        - heading "Dashboard" [level=1] [ref=f2e148]
+        - paragraph [ref=f2e149]: Loading…

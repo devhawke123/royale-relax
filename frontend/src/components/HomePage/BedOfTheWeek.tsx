@@ -6,7 +6,10 @@ import { CountdownTimer } from '@/components/HomePage/CountdownTimer'
 
 interface BedOfTheWeekProps {
   product: Product
-  endsAt: string
+  discountPercentage: number
+  validUntil: string
+  /** false once the promotion has expired — price shows undiscounted and no badge/countdown renders. */
+  isPromotionLive: boolean
 }
 
 function formatPrice(amount: number, currency: string) {
@@ -17,11 +20,16 @@ function formatPrice(amount: number, currency: string) {
   }).format(amount)
 }
 
-export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
+export function BedOfTheWeek({ product, discountPercentage, validUntil, isPromotionLive }: BedOfTheWeekProps) {
   const variant = product.variants[0]
-  const price = variant?.price ?? product.basePrice
+  const originalPrice = variant?.price ?? product.basePrice
   const currency = product.currency ?? 'GBP'
-  const compareAtPrice = variant?.compareAtPrice
+  const hasDiscount = isPromotionLive && discountPercentage > 0
+  const price =
+    hasDiscount && originalPrice !== undefined
+      ? originalPrice * (1 - discountPercentage / 100)
+      : originalPrice
+  const compareAtPrice = hasDiscount ? originalPrice : undefined
   const savings = compareAtPrice && price !== undefined ? compareAtPrice - price : undefined
 
   return (
@@ -47,7 +55,7 @@ export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
 
         <div className="flex flex-col gap-3 sm:gap-4">
           <p className="flex items-center gap-2 text-sm font-medium tracking-wide text-[#b87333] uppercase sm:text-lg">
-            <span aria-hidden>🕐</span> Deal Of The Week
+            <span aria-hidden>🕐</span> {hasDiscount ? 'Deal Of The Week' : 'Bed Of The Week'}
           </p>
           <h3 className="text-2xl font-bold text-[#222] sm:text-4xl lg:text-5xl">{product.name}</h3>
           {product.description && (
@@ -66,6 +74,11 @@ export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
                   {formatPrice(compareAtPrice, currency)}
                 </span>
               )}
+              {hasDiscount && (
+                <span className="rounded-md bg-[#b87333] px-2.5 py-1 text-sm font-semibold text-white">
+                  {discountPercentage}% OFF
+                </span>
+              )}
               {savings && savings > 0 && (
                 <span className="text-sm font-bold text-[#00a63e]">
                   Save {formatPrice(savings, currency)}
@@ -74,10 +87,12 @@ export function BedOfTheWeek({ product, endsAt }: BedOfTheWeekProps) {
             </div>
           )}
 
-          <div>
-            <p className="mb-3 text-base text-[#222] sm:text-lg">Offer ends in:</p>
-            <CountdownTimer endsAt={endsAt} />
-          </div>
+          {hasDiscount && (
+            <div>
+              <p className="mb-3 text-base text-[#222] sm:text-lg">Offer ends in:</p>
+              <CountdownTimer endsAt={validUntil} />
+            </div>
+          )}
 
           <div className="flex flex-wrap gap-4 pt-2">
             <Button

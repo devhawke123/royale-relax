@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/lib/auth-context'
 import { MetricCard } from '@/components/admin/MetricCard'
 import { RevenueChart } from '@/components/admin/RevenueChart'
+import { RecentOrders } from '@/components/admin/RecentOrders'
 
 interface Overview {
   totalRevenue: number
@@ -12,6 +13,7 @@ interface Overview {
   revenueThisMonth: number
   ordersThisMonth: number
   revenueSeries: { date: string; revenue: number }[]
+  recentOrders: { id: string; orderNumber: string; firstName: string; lastName: string }[]
 }
 
 function formatCurrency(value: number): string {
@@ -61,9 +63,13 @@ export default function AdminDashboardPage() {
             <MetricCard label="Orders This Month" value={overview.ordersThisMonth.toLocaleString()} />
           </div>
 
-          <div className="rounded-xl border border-stone-200 bg-white p-6">
-            <h2 className="mb-4 text-base font-semibold text-stone-900">Revenue Overview — Last 30 Days</h2>
-            <RevenueChart data={overview.revenueSeries} />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="rounded-xl border border-stone-200 bg-white p-6 lg:col-span-2">
+              <h2 className="mb-4 text-base font-semibold text-stone-900">Revenue Overview — Last 30 Days</h2>
+              <RevenueChart data={overview.revenueSeries} />
+            </div>
+
+            <RecentOrders orders={overview.recentOrders} />
           </div>
         </>
       )}

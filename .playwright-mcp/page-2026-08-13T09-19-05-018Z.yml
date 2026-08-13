@@ -1,0 +1,121 @@
+- generic [active] [ref=f2e1]:
+  - banner [ref=f2e2]:
+    - generic [ref=f2e4]:
+      - generic [ref=f2e5]:
+        - link [ref=f2e6] [cursor=pointer]:
+          - /url: mailto:info@royalerelax.co.uk
+          - img "Email" [ref=f2e7]
+          - text: info@royalerelax.co.uk
+        - link [ref=f2e8] [cursor=pointer]:
+          - /url: tel:+447999371906
+          - img "Phone" [ref=f2e9]
+          - text: +44 7999 371906
+      - generic [ref=f2e10]: United Kingdom
+    - generic [ref=f2e12]:
+      - link "ROYALE RELAX" [ref=f2e13] [cursor=pointer]:
+        - /url: /
+        - img [ref=f2e15]:
+          - generic [ref=f2e17]: R
+        - generic [ref=f2e18]:
+          - generic [ref=f2e19]: ROYALE
+          - generic [ref=f2e20]: RELAX
+      - navigation [ref=f2e22]:
+        - link "Home" [ref=f2e23] [cursor=pointer]:
+          - /url: /
+        - link "Beds" [ref=f2e24] [cursor=pointer]:
+          - /url: /shop/beds
+        - link "Mattresses" [ref=f2e25] [cursor=pointer]:
+          - /url: /shop/mattresses
+        - link "Fabric Sample" [ref=f2e26] [cursor=pointer]:
+          - /url: /shop/fabrics
+        - link "About us" [ref=f2e27] [cursor=pointer]:
+          - /url: /about
+        - link "Contact" [ref=f2e28] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f2e30]:
+        - button "Search" [ref=f2e32]
+        - link "Sign in" [ref=f2e36] [cursor=pointer]:
+          - /url: /login
+        - link "Cart" [ref=f2e40] [cursor=pointer]:
+          - /url: /cart
+  - main [ref=f2e43]:
+    - generic [ref=f2e44]:
+      - generic [ref=f2e45]:
+        - heading "Sign In" [level=1] [ref=f2e46]
+        - paragraph [ref=f2e47]: Welcome back — sign in to your Royale Relax account.
+      - generic [ref=f2e48]:
+        - generic [ref=f2e49]:
+          - text: "Email:"
+          - textbox "Email:" [ref=f2e50]
+        - generic [ref=f2e51]:
+          - text: "Password:"
+          - generic [ref=f2e52]:
+            - 'textbox "Password: Show password" [ref=f2e53]'
+            - button "Show password" [ref=f2e54]
+        - button "Sign In" [ref=f2e58]
+      - paragraph [ref=f2e59]:
+        - text: Don't have an account?
+        - button "Create one" [ref=f2e60]
+  - contentinfo [ref=f2e61]:
+    - generic [ref=f2e62]:
+      - link [ref=f2e63] [cursor=pointer]:
+        - /url: /
+        - img "Royale Relax" [ref=f2e64]
+      - generic [ref=f2e65]:
+        - generic [ref=f2e66]:
+          - heading "Shop Highlights" [level=3] [ref=f2e67]
+          - list [ref=f2e68]:
+            - listitem [ref=f2e69]:
+              - link "Mattresses" [ref=f2e70] [cursor=pointer]:
+                - /url: /shop/mattresses
+            - listitem [ref=f2e71]:
+              - link "Storage Beds" [ref=f2e72] [cursor=pointer]:
+                - /url: /shop/beds
+            - listitem [ref=f2e73]:
+              - link "Drawer Beds" [ref=f2e74] [cursor=pointer]:
+                - /url: /shop/beds
+            - listitem [ref=f2e75]:
+              - link "Fabric Sample" [ref=f2e76] [cursor=pointer]:
+                - /url: /shop/fabrics
+        - generic [ref=f2e77]:
+          - heading "Quick Links" [level=3] [ref=f2e78]
+          - list [ref=f2e79]:
+            - listitem [ref=f2e80]:
+              - link "Home" [ref=f2e81] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=f2e82]:
+              - link "Shop" [ref=f2e83] [cursor=pointer]:
+                - /url: /shop/beds
+            - listitem [ref=f2e84]:
+              - link "About" [ref=f2e85] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f2e86]:
+              - link "Contact" [ref=f2e87] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=f2e88]:
+          - heading "Customer Services" [level=3] [ref=f2e89]
+          - list [ref=f2e90]:
+            - listitem [ref=f2e91]:
+              - link "My Account" [ref=f2e92] [cursor=pointer]:
+                - /url: /account
+            - listitem [ref=f2e93]:
+              - link "FAQ" [ref=f2e94] [cursor=pointer]:
+                - /url: /#faq
+        - generic [ref=f2e95]:
+          - heading "Contact Info" [level=3] [ref=f2e96]
+          - list [ref=f2e97]:
+            - listitem [ref=f2e98]: "Phone: +44 7999 371906"
+            - listitem [ref=f2e99]: "Address: United Kingdom"
+            - listitem [ref=f2e100]: "Email: info@royalerelax.co.uk"
+      - generic [ref=f2e101]:
+        - paragraph [ref=f2e102]: © Copyright 2026- Design & Developed by Royale Relax
+        - generic [ref=f2e103]:
+          - link "WhatsApp" [ref=f2e104] [cursor=pointer]:
+            - /url: https://wa.me/
+            - img "WhatsApp" [ref=f2e105]
+          - link "Instagram" [ref=f2e106] [cursor=pointer]:
+            - /url: https://instagram.com/
+            - img "Instagram" [ref=f2e107]
+          - link "Facebook" [ref=f2e108] [cursor=pointer]:
+            - /url: https://facebook.com/
+            - img "Facebook" [ref=f2e109]

@@ -35,24 +35,36 @@ export async function GET(request: Request) {
   seriesStart.setUTCHours(0, 0, 0, 0)
   const monthStart = startOfMonth(now)
 
-  const [totalRevenueAgg, totalOrders, totalCustomers, monthRevenueAgg, ordersThisMonth, paidOrdersInSeries] =
-    await Promise.all([
-      prisma.order.aggregate({
-        where: { paymentStatus: PaymentStatus.PAID },
-        _sum: { total: true },
-      }),
-      prisma.order.count(),
-      prisma.customer.count(),
-      prisma.order.aggregate({
-        where: { paymentStatus: PaymentStatus.PAID, createdAt: { gte: monthStart } },
-        _sum: { total: true },
-      }),
-      prisma.order.count({ where: { createdAt: { gte: monthStart } } }),
-      prisma.order.findMany({
-        where: { paymentStatus: PaymentStatus.PAID, createdAt: { gte: seriesStart } },
-        select: { createdAt: true, total: true },
-      }),
-    ])
+  const [
+    totalRevenueAgg,
+    totalOrders,
+    totalCustomers,
+    monthRevenueAgg,
+    ordersThisMonth,
+    paidOrdersInSeries,
+    recentOrders,
+  ] = await Promise.all([
+    prisma.order.aggregate({
+      where: { paymentStatus: PaymentStatus.PAID },
+      _sum: { total: true },
+    }),
+    prisma.order.count(),
+    prisma.customer.count(),
+    prisma.order.aggregate({
+      where: { paymentStatus: PaymentStatus.PAID, createdAt: { gte: monthStart } },
+      _sum: { total: true },
+    }),
+    prisma.order.count({ where: { createdAt: { gte: monthStart } } }),
+    prisma.order.findMany({
+      where: { paymentStatus: PaymentStatus.PAID, createdAt: { gte: seriesStart } },
+      select: { createdAt: true, total: true },
+    }),
+    prisma.order.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+      select: { id: true, orderNumber: true, firstName: true, lastName: true },
+    }),
+  ])
 
   const byDay = new Map<string, number>()
   for (const order of paidOrdersInSeries) {
@@ -75,5 +87,6 @@ export async function GET(request: Request) {
     revenueThisMonth: Number(monthRevenueAgg._sum.total ?? 0),
     ordersThisMonth,
     revenueSeries,
+    recentOrders,
   })
 }

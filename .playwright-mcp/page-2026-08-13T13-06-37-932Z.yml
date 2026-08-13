@@ -1,0 +1,386 @@
+- generic [active] [ref=f12e1]:
+  - generic [ref=f12e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f12e7]
+    - generic [ref=f12e11]:
+      - button "Open issues overlay" [ref=f12e12]:
+        - generic [ref=f12e13]:
+          - generic [ref=f12e14]: "0"
+          - generic [ref=f12e15]: "1"
+        - generic [ref=f12e16]: Issue
+      - button "Collapse issues badge" [ref=f12e17]
+  - banner [ref=f12e20]:
+    - generic [ref=f12e22]:
+      - generic [ref=f12e23]:
+        - link [ref=f12e24] [cursor=pointer]:
+          - /url: mailto:info@royalerelax.co.uk
+          - img "Email" [ref=f12e25]
+          - text: info@royalerelax.co.uk
+        - link [ref=f12e26] [cursor=pointer]:
+          - /url: tel:+447999371906
+          - img "Phone" [ref=f12e27]
+          - text: +44 7999 371906
+      - generic [ref=f12e28]: United Kingdom
+    - generic [ref=f12e30]:
+      - link [ref=f12e31] [cursor=pointer]:
+        - /url: /
+        - img "Royale Relax" [ref=f12e32]
+      - navigation [ref=f12e34]:
+        - link "Home" [ref=f12e35] [cursor=pointer]:
+          - /url: /
+        - link "Beds" [ref=f12e36] [cursor=pointer]:
+          - /url: /shop/beds
+        - link "Mattresses" [ref=f12e37] [cursor=pointer]:
+          - /url: /shop/mattresses
+        - link "Fabric Sample" [ref=f12e38] [cursor=pointer]:
+          - /url: /shop/fabrics
+        - link "About us" [ref=f12e39] [cursor=pointer]:
+          - /url: /about
+        - link "Contact" [ref=f12e40] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f12e42]:
+        - button "Search" [ref=f12e44]
+        - link "Sign in" [ref=f12e48] [cursor=pointer]:
+          - /url: /login
+        - link "Cart" [ref=f12e52] [cursor=pointer]:
+          - /url: /cart
+  - main [ref=f12e55]:
+    - generic [ref=f12e59]:
+      - generic [ref=f12e60]: PREMIUM SLEEP COLLECTION 2026
+      - heading "Sleep in Pure Luxury" [level=1] [ref=f12e62]: Sleep inPure Luxury
+      - paragraph [ref=f12e63]: Experience unparalleled comfort with our handcrafted bed collection. Each piece is designed to transform your bedroom into a sanctuary of rest and elegance.
+      - generic [ref=f12e64]:
+        - generic [ref=f12e67]:
+          - paragraph [ref=f12e68]: Premium Craftsmanship
+          - paragraph [ref=f12e69]: Handmade with care
+        - generic [ref=f12e72]:
+          - paragraph [ref=f12e73]: Sleep Guarantee
+          - paragraph [ref=f12e74]: Find your perfect rest, guaranteed
+      - generic [ref=f12e75]:
+        - link "SHOP NOW" [ref=f12e76] [cursor=pointer]:
+          - /url: /shop/beds
+          - text: SHOP NOW
+          - generic [ref=f12e77]: →
+        - link "CONTACT US" [ref=f12e78] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f12e79]:
+        - generic [ref=f12e80]:
+          - generic [ref=f12e81]: 20+
+          - generic [ref=f12e82]: Bed Models
+        - generic [ref=f12e83]:
+          - generic [ref=f12e84]: 4.9★
+          - generic [ref=f12e85]: Average Rating
+    - generic [ref=f12e87]:
+      - generic [ref=f12e89]:
+        - paragraph [ref=f12e90]: Express Delivery
+        - paragraph [ref=f12e91]: Uk & Highland
+      - generic [ref=f12e93]:
+        - paragraph [ref=f12e94]: Crafted With Love
+        - paragraph [ref=f12e95]: 12 Months warranty
+      - generic [ref=f12e97]:
+        - paragraph [ref=f12e98]: Support Services
+        - paragraph [ref=f12e99]: contact us anytime
+    - generic [ref=f12e102]:
+      - paragraph [ref=f12e103]: Royale Relax
+      - paragraph [ref=f12e104]: The New Standard in Luxury Sleep
+    - generic [ref=f12e105]:
+      - generic [ref=f12e106]:
+        - heading "Featured Products" [level=2] [ref=f12e107]
+        - paragraph [ref=f12e109]: Discover our handpicked selection of luxury beds designed to transform your bedroom
+      - generic [ref=f12e110]:
+        - generic [ref=f12e111]:
+          - img "Versailles Bed" [ref=f12e113]
+          - generic [ref=f12e114]:
+            - paragraph [ref=f12e115]: Versailles Bed
+            - generic [ref=f12e116]:
+              - generic [ref=f12e117]: £500
+              - link "View Details" [ref=f12e118] [cursor=pointer]:
+                - /url: /shop/beds
+        - generic [ref=f12e119]:
+          - img "Verona Bed" [ref=f12e121]
+          - generic [ref=f12e122]:
+            - paragraph [ref=f12e123]: Verona Bed
+            - generic [ref=f12e124]:
+              - generic [ref=f12e125]: £500
+              - link "View Details" [ref=f12e126] [cursor=pointer]:
+                - /url: /shop/beds
+        - generic [ref=f12e127]:
+          - img "Elan Bed" [ref=f12e129]
+          - generic [ref=f12e130]:
+            - paragraph [ref=f12e131]: Elan Bed
+            - generic [ref=f12e132]:
+              - generic [ref=f12e133]: £440
+              - link "View Details" [ref=f12e134] [cursor=pointer]:
+                - /url: /shop/beds
+    - generic [ref=f12e135]:
+      - generic [ref=f12e136]:
+        - heading "Latest Products" [level=2] [ref=f12e137]
+        - paragraph [ref=f12e138]: Discover our handpicked selection of luxury beds designed to transform your bedroom
+      - generic [ref=f12e139]:
+        - generic [ref=f12e141]:
+          - generic [ref=f12e142]:
+            - img "Presidential Hand-Stitched Pillow Top Mattress" [ref=f12e143]
+            - button "Add to cart" [ref=f12e144]: 🛒
+            - generic [ref=f12e145]: Mattresses
+          - generic [ref=f12e146]:
+            - paragraph [ref=f12e147]: Presidential Hand-Stitched Pillow Top Mattress
+            - generic [ref=f12e148]:
+              - generic [ref=f12e149]: £480
+              - link "View Details →" [ref=f12e150] [cursor=pointer]:
+                - /url: /shop/mattresses
+        - generic [ref=f12e152]:
+          - generic [ref=f12e153]:
+            - img "VIP Luxury 3000 Pocket Mattress" [ref=f12e154]
+            - button "Add to cart" [ref=f12e155]: 🛒
+            - generic [ref=f12e156]: Mattresses
+          - generic [ref=f12e157]:
+            - paragraph [ref=f12e158]: VIP Luxury 3000 Pocket Mattress
+            - generic [ref=f12e159]:
+              - generic [ref=f12e160]: £410
+              - link "View Details →" [ref=f12e161] [cursor=pointer]:
+                - /url: /shop/mattresses
+        - generic [ref=f12e163]:
+          - generic [ref=f12e164]:
+            - img "Royale Hybrid 3000 Pillow Top Mattress" [ref=f12e165]
+            - button "Add to cart" [ref=f12e166]: 🛒
+            - generic [ref=f12e167]: Mattresses
+          - generic [ref=f12e168]:
+            - paragraph [ref=f12e169]: Royale Hybrid 3000 Pillow Top Mattress
+            - generic [ref=f12e170]:
+              - generic [ref=f12e171]: £430
+              - link "View Details →" [ref=f12e172] [cursor=pointer]:
+                - /url: /shop/mattresses
+    - generic [ref=f12e173]:
+      - generic [ref=f12e174]:
+        - heading "Best Selling Beds" [level=2] [ref=f12e175]
+        - paragraph [ref=f12e176]: Discover our most popular beds, handpicked by thousands of satisfied customers
+      - generic [ref=f12e177]:
+        - generic [ref=f12e178]:
+          - generic [ref=f12e180]:
+            - img "Celestia Bed" [ref=f12e181]
+            - generic [ref=f12e183]:
+              - generic [ref=f12e184]:
+                - paragraph [ref=f12e185]: Celestia Bed
+                - paragraph [ref=f12e186]: £500
+              - link "View Details" [ref=f12e187] [cursor=pointer]:
+                - /url: /shop/beds
+          - generic [ref=f12e188]:
+            - generic [ref=f12e189]:
+              - img "Balmoral Bed" [ref=f12e191]
+              - link "Balmoral Bed £350" [ref=f12e193] [cursor=pointer]:
+                - /url: /shop/beds
+                - generic [ref=f12e194]: Balmoral Bed
+                - generic [ref=f12e195]: £350
+            - generic [ref=f12e196]:
+              - img "Grand Regent Bed" [ref=f12e198]
+              - link "Grand Regent Bed £550" [ref=f12e200] [cursor=pointer]:
+                - /url: /shop/beds
+                - generic [ref=f12e201]: Grand Regent Bed
+                - generic [ref=f12e202]: £550
+        - generic [ref=f12e203]:
+          - generic [ref=f12e204]:
+            - img "Harington Bed" [ref=f12e206]
+            - link "Harington Bed £390" [ref=f12e208] [cursor=pointer]:
+              - /url: /shop/beds
+              - generic [ref=f12e209]: Harington Bed
+              - generic [ref=f12e210]: £390
+          - generic [ref=f12e211]:
+            - img "Luxe Divan Bed" [ref=f12e213]
+            - link "Luxe Divan Bed £350" [ref=f12e215] [cursor=pointer]:
+              - /url: /shop/beds
+              - generic [ref=f12e216]: Luxe Divan Bed
+              - generic [ref=f12e217]: £350
+          - generic [ref=f12e218]:
+            - img "Harington Bed" [ref=f12e220]
+            - link "Harington Bed £390" [ref=f12e222] [cursor=pointer]:
+              - /url: /shop/beds
+              - generic [ref=f12e223]: Harington Bed
+              - generic [ref=f12e224]: £390
+    - generic [ref=f12e226]:
+      - generic [ref=f12e227]:
+        - paragraph [ref=f12e228]: About Us
+        - heading "Designing Spaces That Feel Like Home" [level=2] [ref=f12e229]
+        - paragraph [ref=f12e230]: Royale Relax the pinnacle of luxury sleep, proudly handcrafted in the heart of Yorkshire, UK. As an exclusive online destination with no physical stores, we dedicate ourselves to curating and delivering premium beds and mattresses directly to your doorstep, blending timeless British artistry with cutting-edge innovation.
+        - paragraph [ref=f12e231]: Each masterpiece is born from the hands of skilled artisans, using only the finest, sustainable materials to promise supreme comfort, lasting support, and outstanding durability. Whether you crave the plush embrace of a bespoke mattress or the sophisticated lines of a custom bed frame. By combining time-honoured techniques with modern innovation, we produce beds that don't just look beautiful they transform the way you rest.
+        - link [ref=f12e232] [cursor=pointer]:
+          - /url: /about
+          - button "More About Us" [ref=f12e233]
+      - generic [ref=f12e239]:
+        - button "Previous" [ref=f12e240]
+        - button "Next" [ref=f12e241]
+    - generic [ref=f12e242]:
+      - generic [ref=f12e243]:
+        - paragraph [ref=f12e244]: Season Sale
+        - heading "Bed Of The Week" [level=2] [ref=f12e245]
+        - paragraph [ref=f12e246]: Shop now and save big on your favorite brands and styles.
+      - generic [ref=f12e247]:
+        - img "Celestia Bed" [ref=f12e249]
+        - generic [ref=f12e250]:
+          - paragraph [ref=f12e251]:
+            - generic [ref=f12e252]: 🕐
+            - text: Deal Of The Week
+          - heading "Celestia Bed" [level=3] [ref=f12e253]
+          - paragraph [ref=f12e254]: "Elevate your bedroom with the sophisticated Celestia Bed, where modern elegance meets practical design. Showcasing clean vertical lines and finished with your choice of sleek Chrome or luxurious Gold trim on both headboard and footboard, this bed is crafted to impress. Its solid timber frame ensures reliable support, while the optional integrated ottoman storage allows you to maximise space without compromising on style. Premium Details: - Skilfully Made in Yorkshire: Built by expert craftsmen with a focus on quality and attention to detail. - Trim Finishes Available: Add a modern touch with either Gold or Chrome detailing to suit your décor. - 1-Year Warranty: Comes with a full manufacturer's guarantee for added peace of mind. - Vertically Padded Headboard & Footboard: Deep padding provides both comfort and a bold design statement. - Custom Fabric & Colour Options: Available in a variety of fabrics and shades to match your personal style. - Smart Ottoman Storage Option Available: Lift-up base reveals generous under-bed storage, perfect for keeping your room clutter-free. Why Choose the Celestia Bed? Step into a realm of contemporary luxury that seamlessly blends striking design with everyday functionality. Handcrafted in Yorkshire from robust materials, the Celestia promises lasting durability, personalized elegance with your choice of gold or chrome accents, and the clever option of spacious ottoman storage to banish clutter for good. It's more than a bed—it's a stylish sanctuary that supports better rest and transforms your space."
+          - generic [ref=f12e255]:
+            - generic [ref=f12e256]: £425
+            - generic [ref=f12e257]: £500
+            - generic [ref=f12e258]: 15% OFF
+            - generic [ref=f12e259]: Save £75
+          - generic [ref=f12e260]:
+            - paragraph [ref=f12e261]: "Offer ends in:"
+            - generic [ref=f12e262]:
+              - generic [ref=f12e263]:
+                - generic [ref=f12e264]: "06"
+                - generic [ref=f12e265]: Days
+              - generic [ref=f12e266]:
+                - generic [ref=f12e267]: "10"
+                - generic [ref=f12e268]: Hours
+              - generic [ref=f12e269]:
+                - generic [ref=f12e270]: "53"
+                - generic [ref=f12e271]: Minutes
+              - generic [ref=f12e272]:
+                - generic [ref=f12e273]: "22"
+                - generic [ref=f12e274]: Seconds
+          - generic [ref=f12e275]:
+            - button "Grab This Deal" [ref=f12e276]
+            - link [ref=f12e277] [cursor=pointer]:
+              - /url: /shop/beds
+              - button "Learn More" [ref=f12e278]
+    - generic [ref=f12e279]:
+      - generic [ref=f12e280]:
+        - generic [ref=f12e281]: ✨ Frequently Asked Questions
+        - heading "Why Choose Us" [level=2] [ref=f12e282]
+        - paragraph [ref=f12e283]: Here are the reasons why Royale Relax stands out as the ultimate choice in luxury sleeping solutions
+        - generic [ref=f12e284]:
+          - generic [ref=f12e285]:
+            - generic [ref=f12e286]: ✓
+            - text: 12 Month Warranty
+          - generic [ref=f12e287]:
+            - generic [ref=f12e288]: ✓
+            - text: UK Handcrafted
+          - generic [ref=f12e289]:
+            - generic [ref=f12e290]: ✓
+            - text: Premium Materials
+          - generic [ref=f12e291]:
+            - generic [ref=f12e292]: ✓
+            - text: Free Consultation
+      - generic [ref=f12e293]:
+        - group [ref=f12e294]:
+          - generic "🏅 What Makes Royale Relax Beds And Mattresses Unique? ⌄" [ref=f12e295] [cursor=pointer]:
+            - generic [ref=f12e296]: 🏅
+            - generic [ref=f12e297]: What Makes Royale Relax Beds And Mattresses Unique?
+            - generic [ref=f12e298]: ⌄
+        - group [ref=f12e299]:
+          - generic "🎨 Are Your Beds And Mattresses Customizable? ⌄" [ref=f12e300] [cursor=pointer]:
+            - generic [ref=f12e301]: 🎨
+            - generic [ref=f12e302]: Are Your Beds And Mattresses Customizable?
+            - generic [ref=f12e303]: ⌄
+        - group [ref=f12e304]:
+          - generic "📍 Where Are Royale Relax Products Made? ⌄" [ref=f12e305] [cursor=pointer]:
+            - generic [ref=f12e306]: 📍
+            - generic [ref=f12e307]: Where Are Royale Relax Products Made?
+            - generic [ref=f12e308]: ⌄
+        - group [ref=f12e309]:
+          - generic "💡 How Do I Choose The Right Mattress For Me? ⌄" [ref=f12e310] [cursor=pointer]:
+            - generic [ref=f12e311]: 💡
+            - generic [ref=f12e312]: How Do I Choose The Right Mattress For Me?
+            - generic [ref=f12e313]: ⌄
+      - generic [ref=f12e314]:
+        - heading "Still Have Questions?" [level=3] [ref=f12e315]
+        - paragraph [ref=f12e316]: Our expert team is here to help you find the perfect sleeping solution. Get in touch for personalized advice.
+        - link [ref=f12e317] [cursor=pointer]:
+          - /url: /contact
+          - button "Contact Our Experts" [ref=f12e318]
+    - generic [ref=f12e319]:
+      - heading "What Our Customers Are Saying" [level=2] [ref=f12e320]
+      - generic [ref=f12e321]:
+        - generic [ref=f12e322]:
+          - img "Josh H." [ref=f12e323]
+          - generic [ref=f12e325]:
+            - paragraph [ref=f12e326]: Josh H.
+            - paragraph [ref=f12e327]: Customer
+        - generic [ref=f12e328]:
+          - generic [ref=f12e329]:
+            - generic [ref=f12e330]: “
+            - generic [ref=f12e331]:
+              - generic [ref=f12e332]: ★★★★★
+              - generic [ref=f12e333]: "5.0"
+            - paragraph [ref=f12e334]: “The bed feels like it was made for our exact room — the fabric options made the whole process feel personal.”
+          - generic [ref=f12e335]:
+            - img "Emily Tan" [ref=f12e336]
+            - generic [ref=f12e338]:
+              - paragraph [ref=f12e339]: Emily Tan
+              - paragraph [ref=f12e340]: Customer
+        - generic [ref=f12e341]:
+          - generic [ref=f12e342]:
+            - button "Previous testimonial" [ref=f12e343]: ‹
+            - button "Next testimonial" [ref=f12e344]: ›
+          - generic [ref=f12e345]:
+            - img "Michael Rivera" [ref=f12e346]
+            - generic [ref=f12e348]:
+              - paragraph [ref=f12e349]: Michael Rivera
+              - paragraph [ref=f12e350]: Customer
+      - button "+ Add Review" [ref=f12e352]
+  - contentinfo [ref=f12e353]:
+    - generic [ref=f12e354]:
+      - link [ref=f12e355] [cursor=pointer]:
+        - /url: /
+        - img "Royale Relax" [ref=f12e356]
+      - generic [ref=f12e357]:
+        - generic [ref=f12e358]:
+          - heading "Shop Highlights" [level=3] [ref=f12e359]
+          - list [ref=f12e360]:
+            - listitem [ref=f12e361]:
+              - link "Mattresses" [ref=f12e362] [cursor=pointer]:
+                - /url: /shop/mattresses
+            - listitem [ref=f12e363]:
+              - link "Storage Beds" [ref=f12e364] [cursor=pointer]:
+                - /url: /shop/beds
+            - listitem [ref=f12e365]:
+              - link "Drawer Beds" [ref=f12e366] [cursor=pointer]:
+                - /url: /shop/beds
+            - listitem [ref=f12e367]:
+              - link "Fabric Sample" [ref=f12e368] [cursor=pointer]:
+                - /url: /shop/fabrics
+        - generic [ref=f12e369]:
+          - heading "Quick Links" [level=3] [ref=f12e370]
+          - list [ref=f12e371]:
+            - listitem [ref=f12e372]:
+              - link "Home" [ref=f12e373] [cursor=pointer]:
+                - /url: /
+            - listitem [ref=f12e374]:
+              - link "Shop" [ref=f12e375] [cursor=pointer]:
+                - /url: /shop/beds
+            - listitem [ref=f12e376]:
+              - link "About" [ref=f12e377] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=f12e378]:
+              - link "Contact" [ref=f12e379] [cursor=pointer]:
+                - /url: /contact
+        - generic [ref=f12e380]:
+          - heading "Customer Services" [level=3] [ref=f12e381]
+          - list [ref=f12e382]:
+            - listitem [ref=f12e383]:
+              - link "My Account" [ref=f12e384] [cursor=pointer]:
+                - /url: /account
+            - listitem [ref=f12e385]:
+              - link "FAQ" [ref=f12e386] [cursor=pointer]:
+                - /url: /#faq
+        - generic [ref=f12e387]:
+          - heading "Contact Info" [level=3] [ref=f12e388]
+          - list [ref=f12e389]:
+            - listitem [ref=f12e390]: "Phone: +44 7999 371906"
+            - listitem [ref=f12e391]: "Address: United Kingdom"
+            - listitem [ref=f12e392]: "Email: info@royalerelax.co.uk"
+      - generic [ref=f12e393]:
+        - paragraph [ref=f12e394]: © Copyright 2026- Design & Developed by Royale Relax
+        - generic [ref=f12e395]:
+          - link "WhatsApp" [ref=f12e396] [cursor=pointer]:
+            - /url: https://wa.me/
+            - img "WhatsApp" [ref=f12e397]
+          - link "Instagram" [ref=f12e398] [cursor=pointer]:
+            - /url: https://instagram.com/
+            - img "Instagram" [ref=f12e399]
+          - link "Facebook" [ref=f12e400] [cursor=pointer]:
+            - /url: https://facebook.com/
+            - img "Facebook" [ref=f12e401]
+  - alert [ref=f12e402]

@@ -145,6 +145,7 @@ model Product {
   addons           ProductAddon[]
   orderItems       OrderItem[]
   fabricColors     FabricColor[]
+  bedOfTheWeekEntries BedOfTheWeek[]
 }
 
 model ProductImage {
@@ -218,6 +219,26 @@ model FabricColor {
   orderItems  OrderItem[]
 
   @@index([productId])
+}
+
+/// A scheduled homepage promotion for a single product. Only one row may be
+/// `isActive: true` at a time — creating a new one flips the previous active
+/// row to inactive (see lib/bed-of-the-week.ts). Inactive rows form the
+/// "Previous Beds of the Week" history and are never deleted.
+model BedOfTheWeek {
+  id                 String   @id @default(uuid())
+  productId          String
+  product            Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  discountPercentage Decimal  @db.Decimal(5, 2)
+  validFrom          DateTime @default(now())
+  validUntil         DateTime
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+
+  @@index([productId])
+  @@index([isActive])
+  @@index([validFrom])
 }
 
 model Order {
