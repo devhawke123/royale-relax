@@ -322,6 +322,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
   const [selectedFabricSlug, setSelectedFabricSlug] = useState('')
   const [selectedFabricSwatchId, setSelectedFabricSwatchId] = useState('')
   const [quantity, setQuantity] = useState(1)
+  const [payInInstallments, setPayInInstallments] = useState(false)
   const [deliveryDelta, setDeliveryDelta] = useState(0)
   const [blanketBoxDelta, setBlanketBoxDelta] = useState(0)
   const [headboardDelta, setHeadboardDelta] = useState(0)
@@ -541,24 +542,27 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
         <div className="mx-auto mt-10 flex w-full max-w-3xl flex-col gap-4 border border-stone-100 p-6">
           <div className="flex items-center justify-between gap-4">
             <span className="text-[15.5px] font-bold text-black">Price:</span>
-            <div className="flex items-center gap-3">
-              <span className="text-[22px] font-bold text-[#0a8b0a]">{formatPrice(price * quantity)}</span>
-              <span className="text-[13px] text-black">
-                or 4 interest-free payments of {formatPrice((price * quantity) / 4)}
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-[22px] font-bold text-[#0a8b0a]">
+                {formatPrice(payInInstallments ? (price * quantity) / 4 : price * quantity)}
               </span>
+              <button
+                type="button"
+                onClick={() => setPayInInstallments((v) => !v)}
+                aria-pressed={payInInstallments}
+                className={`text-[13px] transition-colors ${
+                  payInInstallments ? 'font-semibold text-[#b87333] underline' : 'text-black hover:text-[#b87333]'
+                }`}
+              >
+                {payInInstallments
+                  ? `Paying today · 4 interest-free payments of ${formatPrice((price * quantity) / 4)}`
+                  : `or 4 interest-free payments of ${formatPrice((price * quantity) / 4)}`}
+              </button>
             </div>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-[15.5px] font-bold text-black">Quantity</span>
-              <QuantityStepper quantity={quantity} onChange={setQuantity} />
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-[22px] font-bold text-[#0a8b0a]">{formatPrice(price * quantity)}</span>
-              <span className="text-[13px] text-black">
-                or 4 interest-free payments of {formatPrice((price * quantity) / 4)}
-              </span>
-            </div>
+            <span className="text-[15.5px] font-bold text-black">Quantity</span>
+            <QuantityStepper quantity={quantity} onChange={setQuantity} />
           </div>
           <button
             type="button"

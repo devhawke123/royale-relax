@@ -1,8 +1,16 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/Button'
 import { CountdownTimer } from '@/components/HomePage/CountdownTimer'
+import { useCart } from '@/lib/cart-context'
+
+function categoryPath(category: Product['category']) {
+  return category === 'mattress' ? 'mattresses' : category === 'fabric' ? 'fabrics' : 'beds'
+}
 
 interface BedOfTheWeekProps {
   product: Product
@@ -21,6 +29,8 @@ function formatPrice(amount: number, currency: string) {
 }
 
 export function BedOfTheWeek({ product, discountPercentage, validUntil, isPromotionLive }: BedOfTheWeekProps) {
+  const router = useRouter()
+  const { addToCart } = useCart()
   const variant = product.variants[0]
   const originalPrice = variant?.price ?? product.basePrice
   const currency = product.currency ?? 'GBP'
@@ -98,10 +108,22 @@ export function BedOfTheWeek({ product, discountPercentage, validUntil, isPromot
             <Button
               variant="primary"
               className="flex-1 py-4 text-base font-medium sm:flex-none sm:px-10 sm:text-lg"
+              onClick={() => {
+                if (price === undefined) return
+                addToCart({
+                  productId: product.id,
+                  name: product.name,
+                  image: product.images[0],
+                  price,
+                  href: `/shop/${categoryPath(product.category)}/${product.slug}`,
+                  sizeId: variant?.id,
+                })
+                router.push('/cart')
+              }}
             >
               Grab This Deal
             </Button>
-            <Link href={`/shop/beds`} className="flex-1 sm:flex-none">
+            <Link href={`/shop/${categoryPath(product.category)}/${product.slug}`} className="flex-1 sm:flex-none">
               <Button
                 variant="secondary"
                 className="w-full rounded-none border-2 border-[#b87333] py-4 text-base font-medium text-[#b87333] hover:bg-[#b87333]/5 sm:px-10 sm:text-lg"

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
 import {
   updateActiveBedOfTheWeekDiscount,
@@ -28,6 +29,7 @@ export async function PATCH(request: Request) {
   try {
     const discount = assertValidDiscountPercentage(discountPercentage)
     const current = await updateActiveBedOfTheWeekDiscount(discount)
+    revalidatePath('/')
     return NextResponse.json({ current })
   } catch (err) {
     if (err instanceof BedOfTheWeekValidationError) {

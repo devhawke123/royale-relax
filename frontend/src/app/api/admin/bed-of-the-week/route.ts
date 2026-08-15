@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
 import {
   getAdminCurrentBedOfTheWeek,
@@ -58,6 +59,8 @@ export async function POST(request: Request) {
     }
     throw err
   }
+
+  revalidatePath('/')
 
   const [current, history] = await Promise.all([getAdminCurrentBedOfTheWeek(), getBedOfTheWeekHistory()])
 
