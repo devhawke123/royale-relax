@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/auth-context'
 const NAV_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: DashboardIcon },
   { href: '/admin/orders', label: 'Orders', icon: OrdersIcon },
+  { href: '/admin/products', label: 'Products', icon: ProductsIcon },
   { href: '/admin/bed-of-the-week', label: 'Bed of the Week', icon: BedIcon },
   { href: '/admin/settings', label: 'Settings', icon: SettingsIcon },
 ]
@@ -16,7 +17,7 @@ export function Sidebar() {
   const { logout } = useAuth()
 
   return (
-    <aside className="flex min-h-screen w-[224px] flex-col bg-gradient-to-b from-[#7c3f16] to-[#5a2c0f] text-white">
+    <aside className="flex h-full w-[224px] flex-shrink-0 flex-col bg-gradient-to-b from-[#7c3f16] to-[#5a2c0f] text-white">
       <div className="flex items-center gap-2 px-6 py-6">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#b87333] font-semibold">R</div>
         <div className="leading-tight">
@@ -25,7 +26,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href)
           return (
@@ -72,6 +73,20 @@ function OrdersIcon({ className }: { className?: string }) {
     <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
       <rect x="4" y="3" width="12" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
       <path d="M7 7h6M7 10.5h6M7 14h3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ProductsIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
+      <path
+        d="M10 2.5 17 6.25v7.5L10 17.5 3 13.75v-7.5L10 2.5Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <path d="M3 6.25 10 10l7-3.75M10 10v7.5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
     </svg>
   )
 }

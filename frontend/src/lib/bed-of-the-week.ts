@@ -103,7 +103,7 @@ export async function getStorefrontBedOfTheWeek(): Promise<StorefrontBedOfTheWee
       include: entryInclude,
     }))
 
-  if (!entry) return null
+  if (!entry || entry.product.deletedAt) return null
 
   const isPromotionLive = entry.isActive && entry.validUntil >= now
 
@@ -123,6 +123,7 @@ export async function searchBedProducts(query: string, limit = SEARCH_LIMIT): Pr
     where: {
       category: 'BEDS',
       status: 'PUBLISHED',
+      deletedAt: null,
       OR: [
         { name: { contains: term, mode: 'insensitive' } },
         { slug: { contains: term, mode: 'insensitive' } },

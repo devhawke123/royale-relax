@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
-import type { Product } from '@/types/product'
+import type { Product, ProductAddon } from '@/types/product'
 import { parseBedDescription } from '@/lib/bed-description'
-import { useCart } from '@/lib/cart-context'
+import { useCart, type CartAddonSelection } from '@/lib/cart-context'
 import { getDeliveryEstimate } from '@/lib/delivery-estimate'
 import { ProductCard } from '@/components/ui/ProductCard'
 
@@ -14,17 +14,6 @@ function formatPrice(price: number) {
     currency: 'GBP',
     maximumFractionDigits: 0,
   }).format(price)
-}
-
-/**
- * Option labels for these add-on fields embed their surcharge as e.g.
- * "Room of Choice Assembly (+£49.99)" — this pulls that number back out so
- * the selection can be added to the displayed/charged price. Options with no
- * "(+£...)" suffix (the free ones) resolve to 0.
- */
-function extractPriceDelta(optionLabel: string): number {
-  const match = optionLabel.match(/\(\+\s*£([\d,]+(?:\.\d+)?)\)/)
-  return match ? Number(match[1].replace(/,/g, '')) : 0
 }
 
 function ChevronDownIcon({ className = '' }: { className?: string }) {
@@ -127,37 +116,153 @@ function Listbox({
   )
 }
 
+/** State the customer has picked for one product.addons[] entry, keyed by addon.id. */
+type AddonSelection = { optionId?: string; toggleOn?: boolean; textValue?: string }
+type AddonSelections = Record<string, AddonSelection>
+
+function defaultAddonSelections(addons: ProductAddon[]): AddonSelections {
+  const initial: AddonSelections = {}
+  for (const addon of addons) {
+    if (addon.type === 'SELECT') {
+      initial[addon.id] = { optionId: addon.options[0]?.id }
+    } else if (addon.type === 'TOGGLE') {
+      initial[addon.id] = { toggleOn: false }
+    } else {
+      initial[addon.id] = { textValue: '' }
+    }
+  }
+  return initial
+}
+
+/** basePrice + variant modifier + whatever the customer currently has selected across product.addons. */
+function addonsPriceDelta(addons: ProductAddon[], selections: AddonSelections): number {
+  return addons.reduce((sum, addon) => {
+    const selection = selections[addon.id]
+    if (!selection) return sum
+    if (addon.type === 'SELECT') {
+      const option = addon.options.find((o) => o.id === selection.optionId)
+      return option ? sum + addon.price + option.priceModifier : sum
+    }
+    if (addon.type === 'TOGGLE') {
+      return selection.toggleOn ? sum + addon.price : sum
+    }
+    return sum
+  }, 0)
+}
+
 /**
- * The option lists here are static per the Figma design rather than sourced
- * from the product — these add-ons (delivery service, blanket box, staircase
- * split, headboard height, delivery delay) don't have a backing data model
- * yet. Wraps Listbox with its own uncontrolled selection state.
+ * The main price tag rounds to whole pounds (see formatPrice above), but a
+ * "(+£19.99)" surcharge needs its pence to survive — a rounded "(+£20)" would
+ * silently misquote the actual addon price.
  */
-function OrderOptionSelect({
-  label,
-  required,
-  options,
-  defaultValue,
-  onSelect,
+function formatAddonSurcharge(price: number) {
+  return new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(price)
+}
+
+function addonOptionLabel(label: string, priceModifier: number): string {
+  return priceModifier > 0 ? `${label} (+${formatAddonSurcharge(priceModifier)})` : label
+}
+
+/**
+ * Turns the customer's current addon picks into what the cart/checkout need:
+ * human-readable `options` for the order summary, and `selectedAddons` (real
+ * addon/option ids) that lib/checkout.ts uses to independently re-price and
+ * validate the order server-side — the client's `price` is display-only.
+ */
+function buildAddonCartData(
+  addons: ProductAddon[],
+  selections: AddonSelections,
+): { options: { label: string; value: string }[]; selectedAddons: CartAddonSelection[] } {
+  const options: { label: string; value: string }[] = []
+  const selectedAddons: CartAddonSelection[] = []
+
+  for (const addon of addons) {
+    const selection = selections[addon.id]
+    if (!selection) continue
+
+    if (addon.type === 'SELECT') {
+      const option = addon.options.find((o) => o.id === selection.optionId)
+      if (!option) continue
+      options.push({ label: addon.name, value: option.label })
+      selectedAddons.push({ addonId: addon.id, selectedOptionId: option.id })
+    } else if (addon.type === 'TOGGLE') {
+      if (!selection.toggleOn) continue
+      options.push({ label: addon.name, value: 'Yes' })
+      selectedAddons.push({ addonId: addon.id })
+    } else {
+      const textValue = selection.textValue?.trim()
+      if (!textValue) continue
+      options.push({ label: addon.name, value: textValue })
+      selectedAddons.push({ addonId: addon.id, textValue })
+    }
+  }
+
+  return { options, selectedAddons }
+}
+
+/**
+ * Renders one admin-configured option group (Ottoman Storage, Delivery
+ * Service, Blanket Box, Split Head, Headboard Height, Delay Delivery, ...) as
+ * a dropdown (SELECT), a Yes/No dropdown (TOGGLE), or a text field
+ * (TEXT_INPUT) — whatever the admin set up for this product.
+ */
+function AddonField({
+  addon,
+  selection,
+  onChange,
 }: {
-  label: string
-  required?: boolean
-  options: string[]
-  defaultValue?: string
-  onSelect?: (value: string) => void
+  addon: ProductAddon
+  selection: AddonSelection
+  onChange: (next: AddonSelection) => void
 }) {
-  const [selected, setSelected] = useState(defaultValue ?? options[0])
+  if (addon.type === 'SELECT') {
+    return (
+      <Listbox
+        label={addon.name}
+        required={addon.isRequired}
+        value={selection.optionId ?? ''}
+        onChange={(optionId) => onChange({ optionId })}
+        options={addon.options.map((option) => ({
+          value: option.id,
+          label: addonOptionLabel(option.label, option.priceModifier),
+        }))}
+      />
+    )
+  }
+
+  if (addon.type === 'TOGGLE') {
+    return (
+      <Listbox
+        label={addon.name}
+        required={addon.isRequired}
+        value={selection.toggleOn ? 'yes' : 'no'}
+        onChange={(value) => onChange({ toggleOn: value === 'yes' })}
+        options={[
+          { value: 'no', label: 'No' },
+          { value: 'yes', label: addonOptionLabel('Yes', addon.price) },
+        ]}
+      />
+    )
+  }
+
   return (
-    <Listbox
-      label={label}
-      required={required}
-      value={selected}
-      onChange={(value) => {
-        setSelected(value)
-        onSelect?.(value)
-      }}
-      options={options.map((option) => ({ value: option, label: option }))}
-    />
+    <label className="flex w-full flex-col gap-1 border border-[#71717a] px-3 py-2">
+      <span className="text-[11px] text-black/70">
+        {addon.name} {addon.isRequired && <span className="text-[#de3618]">*</span>}
+      </span>
+      <input
+        type="text"
+        required={addon.isRequired}
+        value={selection.textValue ?? ''}
+        onChange={(e) => onChange({ textValue: e.target.value })}
+        className="w-full bg-transparent text-[14px] text-[#353535] focus:outline-none"
+      />
+    </label>
   )
 }
 
@@ -317,15 +422,14 @@ interface BedDetailClientProps {
 export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedDetailClientProps) {
   const { addToCart } = useCart()
   const parsed = useMemo(() => parseBedDescription(product.description ?? ''), [product.description])
+  const addons = product.addons ?? []
 
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id)
   const [selectedFabricSlug, setSelectedFabricSlug] = useState('')
   const [selectedFabricSwatchId, setSelectedFabricSwatchId] = useState('')
   const [quantity, setQuantity] = useState(1)
   const [payInInstallments, setPayInInstallments] = useState(false)
-  const [deliveryDelta, setDeliveryDelta] = useState(0)
-  const [blanketBoxDelta, setBlanketBoxDelta] = useState(0)
-  const [headboardDelta, setHeadboardDelta] = useState(0)
+  const [addonSelections, setAddonSelections] = useState<AddonSelections>(() => defaultAddonSelections(addons))
 
   const selectedFabricType = fabrics.find((f) => f.slug === selectedFabricSlug)
   const fabricSwatches = selectedFabricType?.swatches ?? []
@@ -334,12 +438,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
 
   const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
   const basePrice = selectedVariant?.price ?? product.basePrice ?? 0
-  const price = basePrice + deliveryDelta + blanketBoxDelta + headboardDelta
-
-  // Drawer beds (Kendal, Luxe, Madison) ship with under-bed drawers built
-  // in — there's nothing to opt into. Only ottoman-storage beds have this
-  // as an add-on choice.
-  const hasOttomanOption = product.hasStorage
+  const price = basePrice + addonsPriceDelta(addons, addonSelections)
 
   const thumbnails = product.images
 
@@ -429,59 +528,16 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
               </label>
             )}
 
-            {hasOttomanOption && (
-              <OrderOptionSelect
-                label="Would you like to add ottoman storage to your bed?"
-                required
-                options={['No Storage', 'Yes — Add Ottoman Storage']}
+            {addons.map((addon) => (
+              <AddonField
+                key={addon.id}
+                addon={addon}
+                selection={addonSelections[addon.id] ?? {}}
+                onChange={(next) =>
+                  setAddonSelections((prev) => ({ ...prev, [addon.id]: { ...prev[addon.id], ...next } }))
+                }
               />
-            )}
-
-            <OrderOptionSelect
-              label="Delivery Service"
-              required
-              defaultValue="Downstairs Drop Off (FREE)"
-              options={[
-                '-- Please Select --',
-                'Downstairs Drop Off (FREE)',
-                'Room of Choice Drop Off (+£19.99)',
-                'Room of Choice Assembly (+£49.99)',
-              ]}
-              onSelect={(value) => setDeliveryDelta(extractPriceDelta(value))}
-            />
-            <OrderOptionSelect
-              label="Add a Matching Design Blanket Box"
-              defaultValue="No Thanks"
-              options={[
-                '-- Please Select --',
-                'No Thanks',
-                'Yes 40" Storage Box (+£99.99)',
-                'Yes 60" Storage Box (+£139.99)',
-              ]}
-              onSelect={(value) => setBlanketBoxDelta(extractPriceDelta(value))}
-            />
-            <OrderOptionSelect
-              label="Awkward Staircase? Get a Split Head"
-              options={['No, I have checked my staircase, 1 Part Headboard will fit', 'Yes, please split my headboard']}
-            />
-            <OrderOptionSelect
-              label="Choose Headboard Height"
-              defaultValue="Standard 48 Inches"
-              options={[
-                '-- Please Select --',
-                'Low 44 Inches',
-                'Standard 48 Inches',
-                'Medium 54 Inches',
-                'High 60 Inches (+£79.99)',
-                'Bespoke / Floor-Ceiling (+£199.99)',
-              ]}
-              onSelect={(value) => setHeadboardDelta(extractPriceDelta(value))}
-            />
-            <OrderOptionSelect
-              label="Delay the Delivery?"
-              defaultValue="No thanks"
-              options={['-- Please Select --', 'No thanks', 'Yes, hold until further instructions']}
-            />
+            ))}
 
             {fabrics.length > 0 && (
               <div className="flex flex-col gap-3">
@@ -568,6 +624,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
             type="button"
             onClick={() => {
               const selectedFabricSwatch = fabricSwatches.find((f) => f.id === selectedFabricSwatchId)
+              const addonCartData = buildAddonCartData(addons, addonSelections)
               addToCart(
                 {
                   productId: product.id,
@@ -577,6 +634,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                   href: `/shop/beds/${product.slug}`,
                   sizeId: selectedVariant?.id,
                   fabricColorId: selectedFabricSwatch?.id,
+                  selectedAddons: addonCartData.selectedAddons,
                   options: [
                     ...(selectedVariant?.size ? [{ label: 'Size', value: selectedVariant.size }] : []),
                     ...(selectedFabricType
@@ -585,6 +643,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                     ...(selectedFabricSwatch
                       ? [{ label: 'Colour', value: swatchLabel(selectedFabricSwatch) }]
                       : []),
+                    ...addonCartData.options,
                   ],
                 },
                 quantity,

@@ -7,6 +7,13 @@ export interface CartLineOption {
   value: string
 }
 
+/** Mirrors lib/checkout.ts's CartAddonSelection shape — kept independent so this client module never imports the server-only checkout file. */
+export interface CartAddonSelection {
+  addonId: string
+  selectedOptionId?: string
+  textValue?: string
+}
+
 export interface CartLineInput {
   productId: string
   name: string
@@ -19,6 +26,8 @@ export interface CartLineInput {
   sizeId?: string
   /** Real FabricColor.id — the upholstery/colourway chosen, if any. */
   fabricColorId?: string
+  /** Real ProductAddon selections — checkout re-derives their price server-side, never trusting `price` above. */
+  selectedAddons?: CartAddonSelection[]
 }
 
 export interface CartLine extends CartLineInput {

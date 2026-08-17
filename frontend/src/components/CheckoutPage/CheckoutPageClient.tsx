@@ -102,6 +102,7 @@ export function CheckoutPageClient() {
         sizeId: line.sizeId,
         fabricColorId: line.fabricColorId,
         quantity: line.quantity,
+        selectedAddons: line.selectedAddons,
       })),
     }
 

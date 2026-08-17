@@ -4,14 +4,18 @@ import { finalPrice } from '@/lib/pricing'
 import type { Product as DisplayProduct, ProductCategory } from '@/types/product'
 import type { Category } from '../../../generated/prisma/enums'
 
-const productWithColorsInclude = {
+export const productWithColorsInclude = {
   images: { orderBy: { sortOrder: 'asc' as const } },
   sizes: { orderBy: { sortOrder: 'asc' as const } },
+  addons: {
+    orderBy: { sortOrder: 'asc' as const },
+    include: { options: { orderBy: { sortOrder: 'asc' as const } } },
+  },
 }
 
 export function getFeaturedProducts(limit: number) {
   return prisma.product.findMany({
-    where: { status: 'PUBLISHED' },
+    where: { status: 'PUBLISHED', deletedAt: null },
     take: limit,
     orderBy: { createdAt: 'desc' },
     include: productWithColorsInclude,
@@ -20,7 +24,7 @@ export function getFeaturedProducts(limit: number) {
 
 export function getProductsByCategory(category: Category) {
   return prisma.product.findMany({
-    where: { category, status: 'PUBLISHED' },
+    where: { category, status: 'PUBLISHED', deletedAt: null },
     orderBy: { createdAt: 'desc' },
     include: productWithColorsInclude,
   })
@@ -38,6 +42,7 @@ export function searchProducts(query: string) {
   return prisma.product.findMany({
     where: {
       status: 'PUBLISHED',
+      deletedAt: null,
       OR: [
         { name: { contains: term, mode: 'insensitive' } },
         { shortDescription: { contains: term, mode: 'insensitive' } },
@@ -51,8 +56,8 @@ export function searchProducts(query: string) {
 
 
 export function getProductBySlug(slug: string) {
-  return prisma.product.findUnique({
-    where: { slug },
+  return prisma.product.findFirst({
+    where: { slug, deletedAt: null },
     include: productWithColorsInclude,
   })
 }
@@ -66,7 +71,7 @@ export function getProductBySlug(slug: string) {
 export async function getProductsBySlugsInOrder(slugs: string[]) {
   const uniqueSlugs = [...new Set(slugs)]
   const products = await prisma.product.findMany({
-    where: { slug: { in: uniqueSlugs } },
+    where: { slug: { in: uniqueSlugs }, deletedAt: null },
     include: productWithColorsInclude,
   })
   const bySlug = new Map(products.map((product) => [product.slug, product]))
@@ -105,6 +110,19 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
     inStock: s.isAvailable,
   })) ?? []
 
+  const addons = (product as any).addons?.map((a: any) => ({
+    id: a.id,
+    name: a.name,
+    type: a.type,
+    price: Number(a.price),
+    isRequired: a.isRequired,
+    options: a.options.map((o: any) => ({
+      id: o.id,
+      label: o.label,
+      priceModifier: Number(o.priceModifier),
+    })),
+  })) ?? []
+
   return {
     id: product.id,
     slug: product.slug,
@@ -113,6 +131,7 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
     description: (product as any).description ?? '',
     images: images.map((image) => getImageUrl(image.path)),
     variants,
+    addons,
     basePrice: Number((product as any).basePrice ?? 0),
     hasStorage: Boolean((product as any).hasStorage),
     hasDrawer: Boolean((product as any).hasDrawer),

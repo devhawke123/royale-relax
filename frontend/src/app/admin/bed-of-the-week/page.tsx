@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { useAuth } from '@/lib/auth-context'
 
 interface ProductSummary {
@@ -289,14 +290,12 @@ export default function BedOfTheWeekPage() {
                   </div>
 
                   <div className="mt-4 flex gap-3">
-                    <button
-                      type="button"
-                      disabled
-                      title="No admin product editor exists yet"
-                      className="h-11 flex-1 cursor-not-allowed rounded-lg border border-stone-200 text-sm font-medium text-stone-400"
+                    <Link
+                      href={`/admin/products/${current.product.id}/edit`}
+                      className="flex h-11 flex-1 items-center justify-center rounded-lg border border-stone-300 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
                     >
                       Edit Product
-                    </button>
+                    </Link>
                     <button
                       type="button"
                       onClick={openDiscountEditor}

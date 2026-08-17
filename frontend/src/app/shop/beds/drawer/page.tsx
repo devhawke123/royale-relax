@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { toDisplayProduct } from '@/lib/products'
+import { toDisplayProduct, productWithColorsInclude } from '@/lib/products'
 import { BedsPageClient } from '@/components/BedsPage/BedsPageClient'
 
 export const metadata = {
@@ -10,12 +10,9 @@ export const metadata = {
 
 export default async function DrawerBedsPage() {
   const rawProducts = await prisma.product.findMany({
-    where: { category: 'BEDS', status: 'PUBLISHED', hasDrawer: true },
+    where: { category: 'BEDS', status: 'PUBLISHED', hasDrawer: true, deletedAt: null },
     orderBy: { createdAt: 'desc' },
-    include: {
-      images: { orderBy: { sortOrder: 'asc' as const } },
-      sizes: { orderBy: { sortOrder: 'asc' as const } },
-    },
+    include: productWithColorsInclude,
   })
 
   const products = rawProducts.map(toDisplayProduct)
