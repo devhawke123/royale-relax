@@ -4,7 +4,13 @@ import Link from 'next/link'
 import { useRef, useState, type ChangeEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
-import { ProductConfigurationsTab, type SizeRow, type AddonRow } from '@/components/admin/ProductConfigurationsTab'
+import {
+  ProductConfigurationsTab,
+  PRESET_ADDON_GROUPS,
+  presetToAddonRow,
+  type SizeRow,
+  type AddonRow,
+} from '@/components/admin/ProductConfigurationsTab'
 
 type Tab = 'general' | 'pricing' | 'images' | 'colors' | 'configurations'
 
@@ -48,7 +54,9 @@ export default function NewProductPage() {
   const [images, setImages] = useState<NewImageRow[]>([])
   const [fabricColors, setFabricColors] = useState<NewFabricColorRow[]>([])
   const [sizes, setSizes] = useState<SizeRow[]>([])
-  const [addons, setAddons] = useState<AddonRow[]>([])
+  const [addons, setAddons] = useState<AddonRow[]>(() =>
+    PRESET_ADDON_GROUPS.map((preset, i) => presetToAddonRow(preset, i)),
+  )
   const [uploading, setUploading] = useState(false)
   const mainImageInputRef = useRef<HTMLInputElement>(null)
   const galleryInputRef = useRef<HTMLInputElement>(null)

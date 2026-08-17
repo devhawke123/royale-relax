@@ -48,7 +48,7 @@ function formatAddonTypeLabel(type: (typeof ADDON_TYPE_OPTIONS)[number]): string
   }
 }
 
-interface PresetAddonTemplate {
+export interface PresetAddonTemplate {
   name: string
   isRequired: boolean
   options: { label: string; priceModifier: number }[]
@@ -57,12 +57,14 @@ interface PresetAddonTemplate {
 /**
  * The 6 option groups every bed product page used to ship with hardcoded
  * (Ottoman Storage, Delivery Service, Blanket Box, Split Head, Headboard
- * Height, Delay Delivery). Now offered as ready-made templates an admin can
- * flip on per product — off by default — rather than typing them out by hand
- * each time. Flipping one on just appends a normal, fully editable addon row
- * pre-filled with these choices/prices; nothing here is otherwise special.
+ * Height, Delay Delivery). Now offered as ready-made templates, on by
+ * default for every bed product (new ones start with all 6 already applied;
+ * an admin can still flip any of them off, or edit their choices) rather
+ * than typing them out by hand. Flipping one on/off just adds/removes a
+ * normal, fully editable addon row pre-filled with these choices/prices;
+ * nothing here is otherwise special.
  */
-const PRESET_ADDON_GROUPS: PresetAddonTemplate[] = [
+export const PRESET_ADDON_GROUPS: PresetAddonTemplate[] = [
   {
     name: 'Would you like to add ottoman storage to your bed?',
     isRequired: true,
@@ -118,7 +120,7 @@ const PRESET_ADDON_GROUPS: PresetAddonTemplate[] = [
   },
 ]
 
-function presetToAddonRow(preset: PresetAddonTemplate, sortOrder: number): AddonRow {
+export function presetToAddonRow(preset: PresetAddonTemplate, sortOrder: number): AddonRow {
   return {
     name: preset.name,
     type: 'SELECT',
@@ -442,8 +444,8 @@ export function ProductConfigurationsTab({ sizes, onSizesChange, addons, onAddon
           <div>
             <h3 className="text-xs font-medium text-stone-700">Premade Groups</h3>
             <p className="text-xs text-stone-500">
-              Flip one on to add it pre-filled with its standard choices and prices — off by default on a new
-              product. Its choices stay editable right here once it&apos;s on.
+              On by default for every bed, pre-filled with standard choices and prices — flip any off, or edit their
+              choices right here.
             </p>
           </div>
           <div className="flex flex-col gap-3">

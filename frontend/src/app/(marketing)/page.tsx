@@ -16,6 +16,11 @@ import {
 } from '@/lib/products'
 import { getStorefrontBedOfTheWeek } from '@/lib/bed-of-the-week'
 
+// Prisma reads aren't fetch-tracked, so without this the route gets
+// statically cached on first request and admin edits (price, featured
+// picks, Bed of the Week, etc.) never show up until the next deploy.
+export const revalidate = 0
+
 // Hand-curated picks (no isFeatured/isBestSeller signal in the DB yet).
 const FEATURED_SLUGS = ['versailles-bed', 'verona-bed', 'elan-bed']
 const BEST_SELLER_SLUGS = [

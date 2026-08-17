@@ -126,14 +126,6 @@ export function CartPageClient() {
                             {line.options.map((o) => o.value).join(' // ')}
                           </span>
                         )}
-                        {line.href && (
-                          <Link
-                            href={line.href}
-                            className="mt-1 inline-flex w-fit items-center justify-center rounded-[5px] bg-[#b87333] px-4 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-[#9c5f28]"
-                          >
-                            Shop now
-                          </Link>
-                        )}
                       </div>
                     </div>
 

@@ -2,6 +2,10 @@ import { notFound } from 'next/navigation'
 import { getFabricBySlug, getFabricCatalog, toDisplayFabrics } from '@/lib/fabrics'
 import { FabricDetailClient } from '@/components/FabricDetailPage/FabricDetailClient'
 
+// getFabricBySlug isn't cached, but the page itself would still be
+// statically cached (Prisma reads aren't fetch-tracked) without this.
+export const revalidate = 0
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const fabric = await getFabricBySlug(slug)

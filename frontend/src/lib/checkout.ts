@@ -242,7 +242,7 @@ export async function createOrderFromCart(cart: Cart, billingDetails: BillingDet
       country: billingDetails.country,
       address: billingDetails.address,
       city: billingDetails.city,
-      county: billingDetails.county,
+      county: billingDetails.county ?? '',
       postcode: billingDetails.postcode,
       phone: billingDetails.phone,
       email: billingDetails.email,

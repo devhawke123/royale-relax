@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useAuth } from '@/lib/auth-context'
 
 interface AdminOrderItem {
   id: string
@@ -43,8 +44,40 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-export function OrdersTable({ orders }: { orders: AdminOrderRow[] }) {
+export function OrdersTable({
+  orders,
+  onDeleted,
+}: {
+  orders: AdminOrderRow[]
+  onDeleted: (id: string) => void
+}) {
+  const { accessToken } = useAuth()
   const [viewingOrder, setViewingOrder] = useState<AdminOrderRow | null>(null)
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [error, setError] = useState('')
+
+  async function confirmDelete(id: string) {
+    if (!accessToken) return
+    setDeletingId(id)
+    setError('')
+    try {
+      const res = await fetch(`/api/admin/orders/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => null)
+        throw new Error(data?.error ?? 'Could not delete order')
+      }
+      onDeleted(id)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong.')
+    } finally {
+      setDeletingId(null)
+      setPendingDeleteId(null)
+    }
+  }
 
   if (orders.length === 0) {
     return <p className="p-6 text-sm text-stone-500">No orders found.</p>
@@ -52,6 +85,8 @@ export function OrdersTable({ orders }: { orders: AdminOrderRow[] }) {
 
   return (
     <>
+      {error && <p className="px-6 pt-4 text-sm text-red-600">{error}</p>}
+
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-stone-200 text-xs font-medium tracking-wide text-stone-500 uppercase">
@@ -72,12 +107,20 @@ export function OrdersTable({ orders }: { orders: AdminOrderRow[] }) {
               <td className="px-6 py-4 text-stone-500">{formatDate(order.createdAt)}</td>
               <td className="px-6 py-4 font-medium text-stone-900">{formatCurrency(order.total)}</td>
               <td className="px-6 py-4">
-                <button
-                  onClick={() => setViewingOrder(order)}
-                  className="rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-50"
-                >
-                  View
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setViewingOrder(order)}
+                    className="rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-medium text-stone-700 transition-colors hover:bg-stone-50"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => setPendingDeleteId(order.id)}
+                    className="rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -87,7 +130,57 @@ export function OrdersTable({ orders }: { orders: AdminOrderRow[] }) {
       {viewingOrder && (
         <OrderDetailsModal order={viewingOrder} onClose={() => setViewingOrder(null)} />
       )}
+
+      {pendingDeleteId && (
+        <OrderDeleteConfirm
+          orderNumber={orders.find((o) => o.id === pendingDeleteId)?.orderNumber ?? ''}
+          deleting={deletingId === pendingDeleteId}
+          onCancel={() => setPendingDeleteId(null)}
+          onConfirm={() => confirmDelete(pendingDeleteId)}
+        />
+      )}
     </>
+  )
+}
+
+function OrderDeleteConfirm({
+  orderNumber,
+  deleting,
+  onCancel,
+  onConfirm,
+}: {
+  orderNumber: string
+  deleting: boolean
+  onCancel: () => void
+  onConfirm: () => void
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" onClick={onCancel}>
+      <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-lg font-semibold text-stone-900">Delete order?</h2>
+        <p className="mt-2 text-sm text-stone-500">
+          This will permanently remove order <span className="font-medium text-stone-700">#{orderNumber}</span>.
+          This action cannot be undone.
+        </p>
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={deleting}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-60"
+          >
+            {deleting ? 'Deleting…' : 'Delete'}
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }
 

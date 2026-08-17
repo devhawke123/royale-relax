@@ -2,6 +2,11 @@ import { prisma } from '@/lib/prisma'
 import { toDisplayProduct, productWithColorsInclude } from '@/lib/products'
 import { BedsPageClient } from '@/components/BedsPage/BedsPageClient'
 
+// Prisma reads aren't fetch-tracked, so without this the route gets
+// statically cached on first request and admin edits never show up until
+// the next deploy.
+export const revalidate = 0
+
 export const metadata = {
   title: 'Storage Beds | Royale Relax',
   description:

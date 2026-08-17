@@ -43,13 +43,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Cart is required and must contain at least one item' }, { status: 400 })
   }
 
+  // 'county' is intentionally not required — the checkout form labels it "(optional)".
   const requiredBillingFields: (keyof BillingDetails)[] = [
     'firstName',
     'lastName',
     'country',
     'address',
     'city',
-    'county',
     'postcode',
     'phone',
     'email',

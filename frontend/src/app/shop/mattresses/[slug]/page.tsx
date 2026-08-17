@@ -2,6 +2,11 @@ import { getProductBySlug, getProductsByCategory, toDisplayProduct } from '@/lib
 import { MattressDetailClient } from '@/components/MattressDetailPage/MattressDetailClient'
 import { notFound } from 'next/navigation'
 
+// Prisma reads aren't fetch-tracked, so without this the route gets
+// statically cached on first request and admin edits (price, etc.) never
+// show up until the next deploy.
+export const revalidate = 0
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const raw = await getProductBySlug(slug)

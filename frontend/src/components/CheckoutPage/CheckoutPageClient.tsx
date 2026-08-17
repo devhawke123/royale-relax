@@ -70,7 +70,6 @@ export function CheckoutPageClient() {
 
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [createAccount, setCreateAccount] = useState(false)
-  const [deliverToDifferentAddress, setDeliverToDifferentAddress] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
@@ -92,7 +91,6 @@ export function CheckoutPageClient() {
       postcode: field('postcode') ?? '',
       phone: field('phone') ?? '',
       email: field('email') ?? '',
-      deliverToDifferentAddress,
       orderNotes: field('orderNotes'),
     }
 
@@ -270,17 +268,6 @@ export function CheckoutPageClient() {
                   className="h-[17px] w-[17px] accent-black"
                 />
                 Create an account?
-              </label>
-
-              <label className="flex items-center gap-3 text-[15px] text-black">
-                <input
-                  type="checkbox"
-                  checked={deliverToDifferentAddress}
-                  onChange={(e) => setDeliverToDifferentAddress(e.target.checked)}
-                  className="h-[17px] w-[17px] accent-black"
-                />
-                Deliver to a different address? (This option might not work if you choose Dividebuy Finance as a
-                payment option.)
               </label>
 
               <label className="flex flex-col gap-2 text-[15px] text-[#6a6d70]">

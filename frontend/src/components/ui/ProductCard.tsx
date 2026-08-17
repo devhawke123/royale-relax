@@ -24,12 +24,9 @@ function priceLabel(price: number | undefined, currency: string | undefined) {
   return price !== undefined ? formatPrice(price, currency ?? 'GBP') : undefined
 }
 
-function hrefFor(product: Product) {
-  return `/shop/${product.category === 'mattress' ? 'mattresses' : product.category === 'fabric' ? 'fabrics' : 'beds'}`
-}
-
 function detailHrefFor(product: Product) {
-  return `${hrefFor(product)}/${product.slug}`
+  const category = product.category === 'mattress' ? 'mattresses' : product.category === 'fabric' ? 'fabrics' : 'beds'
+  return `/shop/${category}/${product.slug}`
 }
 
 export function ProductCard({
@@ -40,7 +37,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const primaryVariant = product.variants[0]
   const price = priceLabel(primaryVariant?.price ?? product.basePrice, product.currency)
-  const href = hrefFor(product)
+  const href = detailHrefFor(product)
   const { addToCart } = useCart()
 
   if (variant === 'hero') {

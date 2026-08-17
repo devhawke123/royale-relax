@@ -84,7 +84,19 @@ export default function AdminOrdersPage() {
           <p className="p-6 text-sm text-stone-500">Loading…</p>
         ) : (
           <>
-            <OrdersTable orders={data.orders} />
+            <OrdersTable
+              orders={data.orders}
+              onDeleted={(id) =>
+                setData((prev) =>
+                  prev
+                    ? {
+                        orders: prev.orders.filter((order) => order.id !== id),
+                        pagination: { ...prev.pagination, total: prev.pagination.total - 1 },
+                      }
+                    : prev,
+                )
+              }
+            />
             <div className="flex items-center justify-between border-t border-stone-200 px-6 py-4 text-sm text-stone-500">
               <span>
                 Showing {(data.pagination.page - 1) * data.pagination.pageSize + 1}–
