@@ -24,7 +24,7 @@ export function ProductCarousel({ items, title, description }: ProductCarouselPr
           {description && <p className="mt-4 text-stone-500">{description}</p>}
         </div>
       )}
-      <div className="mx-auto mt-10 flex max-w-7xl snap-x justify-center gap-6 overflow-x-auto pb-2">
+      <div className="mx-auto mt-10 flex max-w-7xl snap-x justify-start gap-6 overflow-x-auto pb-2 lg:justify-center">
         {items.map((product) => (
           <div key={product.id} className="w-64 shrink-0 snap-start sm:w-72">
             <ProductCard
