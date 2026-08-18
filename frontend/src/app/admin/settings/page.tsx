@@ -13,6 +13,7 @@ export default function AdminSettingsPage() {
   const { accessToken } = useAuth()
   const [settings, setSettings] = useState<StoreSettings | null>(null)
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [saved, setSaved] = useState(false)
@@ -120,14 +121,25 @@ export default function AdminSettingsPage() {
 
           <label className="flex flex-col gap-2 text-sm text-stone-700">
             Password
-            <input
-              type="password"
-              placeholder="Leave blank to keep current password"
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="h-11 rounded-lg border border-stone-300 px-3 text-sm outline-none focus:border-[#b87333]"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Leave blank to keep current password"
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-11 w-full rounded-lg border border-stone-300 px-3 pr-11 text-sm outline-none focus:border-[#b87333]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+                className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-stone-400 hover:text-stone-600"
+              >
+                {showPassword ? <EyeOffIcon className="h-4.5 w-4.5" /> : <EyeIcon className="h-4.5 w-4.5" />}
+              </button>
+            </div>
           </label>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -143,5 +155,34 @@ export default function AdminSettingsPage() {
         </form>
       )}
     </div>
+  )
+}
+
+function EyeIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
+      <path
+        d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6-8.5-6-8.5-6Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="10" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  )
+}
+
+function EyeOffIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className={className} aria-hidden>
+      <path
+        d="M2.5 2.5l15 15M8.35 4.2A9.3 9.3 0 0 1 10 4c5.5 0 8.5 6 8.5 6a15 15 0 0 1-2.36 3.14M11.9 11.9a2.25 2.25 0 0 1-3.18-3.18M6.2 6.16C3.53 7.86 1.5 10 1.5 10s3 6 8.5 6a8.6 8.6 0 0 0 3.66-.82"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }

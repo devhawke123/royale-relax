@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { ConditionalChrome } from '@/components/layout/ConditionalChrome'
 import { CartProvider } from '@/lib/cart-context'
 import { AuthProvider } from '@/lib/auth-context'
+import { getStoreSettings } from '@/lib/store-settings'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -9,17 +10,19 @@ export const metadata: Metadata = {
   description: 'Bespoke beds, mattresses, and fabrics for a calm, elevated bedroom.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const { phone } = await getStoreSettings()
+
   return (
     <html lang="en" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
         <AuthProvider>
           <CartProvider>
-            <ConditionalChrome>{children}</ConditionalChrome>
+            <ConditionalChrome phone={phone}>{children}</ConditionalChrome>
           </CartProvider>
         </AuthProvider>
       </body>

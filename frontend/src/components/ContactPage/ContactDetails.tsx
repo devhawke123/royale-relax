@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ContactForm } from './ContactForm'
+import { getStoreSettings } from '@/lib/store-settings'
 
 const socialLinks = [
   { href: 'https://wa.me/', label: 'WhatsApp', icon: '/icons/ic_outline-whatsapp.svg' },
@@ -8,7 +9,9 @@ const socialLinks = [
   { href: 'https://facebook.com/', label: 'Facebook', icon: '/icons/facebook.svg' },
 ]
 
-export function ContactDetails() {
+export async function ContactDetails() {
+  const { email, phone } = await getStoreSettings()
+
   return (
     <section className="bg-white px-6 py-16 sm:px-10 lg:px-20">
       <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-2 lg:gap-8">
@@ -27,7 +30,7 @@ export function ContactDetails() {
             </span>
             <div>
               <p className="text-2xl text-[#110d0a]">Mail</p>
-              <p className="text-base text-[#6a6d70]">info@royalerelax.co.uk</p>
+              <p className="text-base text-[#6a6d70]">{email}</p>
             </div>
           </div>
 
@@ -37,7 +40,7 @@ export function ContactDetails() {
             </span>
             <div>
               <p className="text-2xl text-[#110d0a]">Phone</p>
-              <p className="text-base text-[#6a6d70]">+44 7999 371906</p>
+              <p className="text-base text-[#6a6d70]">{phone}</p>
             </div>
           </div>
 

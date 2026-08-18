@@ -1,4 +1,7 @@
-const faqs = [
+import { getStoreSettings } from '@/lib/store-settings'
+
+function buildFaqs(phone: string) {
+  return [
   {
     question: 'How Long Does Delivery Take Once I Have Placed My Order?',
     answer:
@@ -11,8 +14,7 @@ const faqs = [
   },
   {
     question: 'Can I Place My Order Over The Phone?',
-    answer:
-      'Absolutely. Call us on +44 7999 371906 and a member of our team will help you place your order and answer any questions.',
+    answer: `Absolutely. Call us on ${phone} and a member of our team will help you place your order and answer any questions.`,
   },
   {
     question: 'Where Are Your Products Manufactured?',
@@ -39,9 +41,13 @@ const faqs = [
     answer:
       'Delivery timelines vary by product but typically range from 2-4 weeks. We will keep you updated throughout the process.',
   },
-]
+  ]
+}
 
-export function ContactFaq() {
+export async function ContactFaq() {
+  const { phone } = await getStoreSettings()
+  const faqs = buildFaqs(phone)
+
   return (
     <section className="bg-white px-6 py-16 sm:px-10 lg:px-20">
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-12">

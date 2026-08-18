@@ -8,6 +8,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Nav, MobileNav } from '@/components/layout/Nav'
 import { useCart } from '@/lib/cart-context'
 import { useAuth } from '@/lib/auth-context'
+import { phoneHref } from '@/lib/phone'
 import type { Product } from '@/types/product'
 
 function hrefForProduct(product: Product) {
@@ -308,7 +309,7 @@ function AccountIcon() {
   )
 }
 
-export function Header() {
+export function Header({ phone }: { phone: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const searchAnchorRef = useRef<HTMLDivElement>(null)
@@ -393,7 +394,7 @@ export function Header() {
               info@royalerelax.co.uk
             </a>
             <a
-              href="tel:+447999371906"
+              href={phoneHref(phone)}
               className="hidden items-center gap-2 hover:opacity-90 sm:flex"
             >
               <Image
@@ -403,7 +404,7 @@ export function Header() {
                 height={16}
                 className="h-4 w-4 shrink-0"
               />
-              +44 7999 371906
+              {phone}
             </a>
           </div>
           <span>United Kingdom</span>

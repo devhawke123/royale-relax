@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
 import { hashPassword } from '@/lib/auth/password'
@@ -62,6 +63,7 @@ export async function PUT(request: Request) {
     update: { storeName: storeName.trim(), email: email.trim(), phone: phone.trim() },
     create: { id: SETTINGS_ID, storeName: storeName.trim(), email: email.trim(), phone: phone.trim() },
   })
+  revalidateTag('store-settings', { expire: 0 })
 
   if (password) {
     const passwordHash = await hashPassword(password)
