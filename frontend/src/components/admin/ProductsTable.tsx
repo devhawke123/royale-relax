@@ -88,11 +88,15 @@ export function ProductsTable({
               </td>
               <td className="px-6 py-4 text-stone-500">{product.sku ?? '—'}</td>
               <td className="px-6 py-4 font-medium text-stone-900">
-                {formatCurrency(product.basePrice)}
-                {product.onSale && product.salePrice !== null && (
-                  <span className="ml-2 text-xs font-normal text-stone-400 line-through">
+                {product.onSale && product.salePrice !== null ? (
+                  <>
                     {formatCurrency(product.salePrice)}
-                  </span>
+                    <span className="ml-2 text-xs font-normal text-stone-400 line-through">
+                      {formatCurrency(product.basePrice)}
+                    </span>
+                  </>
+                ) : (
+                  formatCurrency(product.basePrice)
                 )}
               </td>
               <td className="px-6 py-4 text-stone-700">{product.discountPercent > 0 ? `${product.discountPercent}%` : '0%'}</td>

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { revalidateTag } from 'next/cache'
+import { randomUUID } from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { getImageUrl } from '@/lib/media'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
@@ -68,6 +69,7 @@ function serialize(
       name: addon.name,
       type: addon.type,
       price: Number(addon.price),
+      noPrice: Number(addon.noPrice),
       isRequired: addon.isRequired,
       sortOrder: addon.sortOrder,
       options: addon.options.map((option) => ({
@@ -145,6 +147,7 @@ interface AddonInput {
   name: string
   type: 'TOGGLE' | 'SELECT' | 'TEXT_INPUT'
   price?: number
+  noPrice?: number
   isRequired?: boolean
   sortOrder: number
   options?: AddonOptionInput[]
@@ -310,31 +313,40 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     }
 
     if (addonInputs !== undefined) {
+      // Batched as two createMany calls (pre-generating ids client-side, same as
+      // Prisma's own @default(uuid()) would) instead of one tx.productAddon.create()
+      // per addon+options — a per-addon loop of individually awaited creates was
+      // slow enough over the pooled connection to blow the 5s interactive
+      // transaction timeout on products with many configuration groups.
       await tx.productAddon.deleteMany({ where: { productId: id } })
-      for (let i = 0; i < addonInputs.length; i++) {
-        const addon = addonInputs[i]
-        await tx.productAddon.create({
-          data: {
-            productId: id,
-            name: addon.name.trim(),
-            type: addon.type as AddonType,
-            price: addon.price ?? 0,
-            isRequired: addon.isRequired ?? false,
-            sortOrder: i,
-            options: addon.options?.length
-              ? {
-                  create: addon.options.map((option, j) => ({
-                    label: option.label.trim(),
-                    priceModifier: option.priceModifier ?? 0,
-                    sortOrder: j,
-                  })),
-                }
-              : undefined,
-          },
-        })
+      if (addonInputs.length > 0) {
+        const addonRows = addonInputs.map((addon, i) => ({
+          id: randomUUID(),
+          productId: id,
+          name: addon.name.trim(),
+          type: addon.type as AddonType,
+          price: addon.price ?? 0,
+          noPrice: addon.noPrice ?? 0,
+          isRequired: addon.isRequired ?? false,
+          sortOrder: i,
+        }))
+        await tx.productAddon.createMany({ data: addonRows })
+
+        const optionRows = addonInputs.flatMap((addon, i) =>
+          (addon.options ?? []).map((option, j) => ({
+            id: randomUUID(),
+            addonId: addonRows[i].id,
+            label: option.label.trim(),
+            priceModifier: option.priceModifier ?? 0,
+            sortOrder: j,
+          })),
+        )
+        if (optionRows.length > 0) {
+          await tx.productAddonOption.createMany({ data: optionRows })
+        }
       }
     }
-  })
+  }, { timeout: 20000 })
 
   const updated = await loadProduct(id)
 

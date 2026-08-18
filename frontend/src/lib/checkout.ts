@@ -7,6 +7,8 @@ export type CartAddonSelection = {
   addonId: string
   selectedOptionId?: string
   textValue?: string
+  /** TOGGLE addons only: which branch (Yes/No) the customer picked — both can carry a price now. */
+  toggleOn?: boolean
 }
 
 export type CartItem = {
@@ -155,6 +157,8 @@ async function resolveCartItem(item: CartItem): Promise<ResolvedLineItem> {
 
     switch (addon.type) {
       case AddonType.TOGGLE:
+        selectedLabel = selection.toggleOn ? 'Yes' : 'No'
+        priceAtOrder = selection.toggleOn ? addon.price : addon.noPrice
         break
 
       case AddonType.SELECT: {

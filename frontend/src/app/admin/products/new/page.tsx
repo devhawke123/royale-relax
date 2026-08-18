@@ -14,6 +14,9 @@ import {
 
 type Tab = 'general' | 'pricing' | 'images' | 'colors' | 'configurations'
 
+/** Marks an error message as written for the admin to read, vs. an unexpected JS error. */
+class ProductSaveError extends Error {}
+
 const CATEGORY_OPTIONS = ['BEDS', 'MATTRESSES', 'FABRICS'] as const
 const STATUS_OPTIONS = ['DRAFT', 'PUBLISHED', 'ARCHIVED'] as const
 const FABRIC_COLOR_STATUS_OPTIONS = ['ACTIVE', 'DISCONTINUED'] as const
@@ -203,20 +206,21 @@ export default function NewProductPage() {
         return
       }
     }
+    const enabledAddons = addons.filter((a) => a.enabled)
     if (category === 'BEDS') {
       if (sizes.some((s) => !s.label.trim())) {
         setSaveError('Each size needs a label.')
         return
       }
-      if (addons.some((a) => !a.name.trim())) {
+      if (enabledAddons.some((a) => !a.name.trim())) {
         setSaveError('Each configuration group needs a name.')
         return
       }
-      if (addons.some((a) => a.type === 'SELECT' && a.options.length === 0)) {
+      if (enabledAddons.some((a) => a.type === 'SELECT' && a.options.length === 0)) {
         setSaveError('Every dropdown-choices group needs at least one choice.')
         return
       }
-      if (addons.some((a) => a.type === 'SELECT' && a.options.some((o) => !o.label.trim()))) {
+      if (enabledAddons.some((a) => a.type === 'SELECT' && a.options.some((o) => !o.label.trim()))) {
         setSaveError('Each choice needs a label.')
         return
       }
@@ -240,16 +244,18 @@ export default function NewProductPage() {
           saleEndsAt: saleEndsAt || null,
           images,
           ...(category === 'FABRICS' ? { fabricColors } : {}),
-          ...(category === 'BEDS' ? { sizes, addons } : {}),
+          ...(category === 'BEDS' ? { sizes, addons: enabledAddons } : {}),
         }),
       })
       if (!res.ok) {
         const data = await res.json().catch(() => null)
-        throw new Error(data?.error ?? 'Could not create product')
+        throw new ProductSaveError(data?.error ?? 'Could not create product')
       }
       router.push('/admin/products')
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : 'Something went wrong.')
+      // Only a ProductSaveError carries a message meant for the admin to read — anything
+      // else (a bug in this form) should surface as a generic message, not a raw stack trace.
+      setSaveError(err instanceof ProductSaveError ? err.message : 'Something went wrong. Please try again.')
     } finally {
       setSaving(false)
     }

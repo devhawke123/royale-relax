@@ -144,7 +144,7 @@ function addonsPriceDelta(addons: ProductAddon[], selections: AddonSelections): 
       return option ? sum + addon.price + option.priceModifier : sum
     }
     if (addon.type === 'TOGGLE') {
-      return selection.toggleOn ? sum + addon.price : sum
+      return sum + (selection.toggleOn ? addon.price : addon.noPrice)
     }
     return sum
   }, 0)
@@ -191,9 +191,8 @@ function buildAddonCartData(
       options.push({ label: addon.name, value: option.label })
       selectedAddons.push({ addonId: addon.id, selectedOptionId: option.id })
     } else if (addon.type === 'TOGGLE') {
-      if (!selection.toggleOn) continue
-      options.push({ label: addon.name, value: 'Yes' })
-      selectedAddons.push({ addonId: addon.id })
+      options.push({ label: addon.name, value: selection.toggleOn ? 'Yes' : 'No' })
+      selectedAddons.push({ addonId: addon.id, toggleOn: Boolean(selection.toggleOn) })
     } else {
       const textValue = selection.textValue?.trim()
       if (!textValue) continue
@@ -243,7 +242,7 @@ function AddonField({
         value={selection.toggleOn ? 'yes' : 'no'}
         onChange={(value) => onChange({ toggleOn: value === 'yes' })}
         options={[
-          { value: 'no', label: 'No' },
+          { value: 'no', label: addonOptionLabel('No', addon.noPrice) },
           { value: 'yes', label: addonOptionLabel('Yes', addon.price) },
         ]}
       />
@@ -439,6 +438,9 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
   const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
   const basePrice = selectedVariant?.price ?? product.basePrice ?? 0
   const price = basePrice + addonsPriceDelta(addons, addonSelections)
+  // Sizes show what they add over the cheapest size, not their absolute price — a
+  // £0 modifier now reads as "no extra cost" instead of a confusing flat number.
+  const cheapestVariantPrice = product.variants.length ? Math.min(...product.variants.map((v) => v.price)) : 0
 
   const thumbnails = product.images
 
@@ -517,7 +519,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                   >
                     {product.variants.map((v) => (
                       <option key={v.id} value={v.id}>
-                        {v.size} — {formatPrice(v.price)}
+                        {addonOptionLabel(v.size ?? '', v.price - cheapestVariantPrice)}
                       </option>
                     ))}
                   </select>

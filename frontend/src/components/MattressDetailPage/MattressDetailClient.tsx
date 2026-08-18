@@ -116,7 +116,7 @@ export function MattressDetailClient({ product, relatedProducts = [] }: Mattress
               <h1 className="text-[24px] font-bold text-black">{product.name}</h1>
             </div>
 
-            <p className="text-[40px] font-bold text-[#b87333]">{formatPrice(price)}</p>
+            <p className="text-[40px] font-bold text-[#b87333]">{formatPrice(price * quantity)}</p>
 
             {product.variants.length > 0 && (
               <label className="flex flex-col gap-2">

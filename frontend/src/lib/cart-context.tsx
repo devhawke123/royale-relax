@@ -12,6 +12,8 @@ export interface CartAddonSelection {
   addonId: string
   selectedOptionId?: string
   textValue?: string
+  /** TOGGLE addons only: which branch (Yes/No) the customer picked — both can carry a price now. */
+  toggleOn?: boolean
 }
 
 export interface CartLineInput {

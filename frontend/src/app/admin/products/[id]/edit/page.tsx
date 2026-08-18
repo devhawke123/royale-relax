@@ -8,6 +8,9 @@ import { ProductConfigurationsTab, type SizeRow, type AddonRow } from '@/compone
 
 type Tab = 'general' | 'pricing' | 'images' | 'colors' | 'configurations'
 
+/** Marks an error message as written for the admin to read, vs. an unexpected JS error. */
+class ProductSaveError extends Error {}
+
 const CATEGORY_OPTIONS = ['BEDS', 'MATTRESSES', 'FABRICS'] as const
 const STATUS_OPTIONS = ['DRAFT', 'PUBLISHED', 'ARCHIVED'] as const
 const FABRIC_COLOR_STATUS_OPTIONS = ['ACTIVE', 'DISCONTINUED'] as const
@@ -46,8 +49,8 @@ interface ProductDetail {
   mainImage: string | null
   images: ProductImageRow[]
   fabricColors: FabricColorRow[]
-  sizes: SizeRow[]
-  addons: AddonRow[]
+  sizes: (Omit<SizeRow, 'sku'> & { sku: string | null })[]
+  addons: Omit<AddonRow, 'enabled'>[]
 }
 
 export default function EditProductPage() {
@@ -123,8 +126,8 @@ export default function EditProductPage() {
         setSaleEndsAt(product.saleEndsAt ?? '')
         setImages(product.images)
         setFabricColors(product.fabricColors)
-        setSizes(product.sizes)
-        setAddons(product.addons)
+        setSizes(product.sizes.map((size) => ({ ...size, sku: size.sku ?? '' })))
+        setAddons(product.addons.map((addon) => ({ ...addon, enabled: true })))
       })
       .catch((err) => {
         if (!cancelled) setLoadError(err instanceof Error ? err.message : 'Something went wrong.')
@@ -263,20 +266,21 @@ export default function EditProductPage() {
         return
       }
     }
+    const enabledAddons = addons.filter((a) => a.enabled)
     if (category === 'BEDS') {
       if (sizes.some((s) => !s.label.trim())) {
         setSaveError('Each size needs a label.')
         return
       }
-      if (addons.some((a) => !a.name.trim())) {
+      if (enabledAddons.some((a) => !a.name.trim())) {
         setSaveError('Each configuration group needs a name.')
         return
       }
-      if (addons.some((a) => a.type === 'SELECT' && a.options.length === 0)) {
+      if (enabledAddons.some((a) => a.type === 'SELECT' && a.options.length === 0)) {
         setSaveError('Every dropdown-choices group needs at least one choice.')
         return
       }
-      if (addons.some((a) => a.type === 'SELECT' && a.options.some((o) => !o.label.trim()))) {
+      if (enabledAddons.some((a) => a.type === 'SELECT' && a.options.some((o) => !o.label.trim()))) {
         setSaveError('Each choice needs a label.')
         return
       }
@@ -322,11 +326,12 @@ export default function EditProductPage() {
                   isAvailable: s.isAvailable,
                   sortOrder: i,
                 })),
-                addons: addons.map((a, i) => ({
+                addons: enabledAddons.map((a, i) => ({
                   id: a.id,
                   name: a.name.trim(),
                   type: a.type,
                   price: a.price,
+                  noPrice: a.noPrice,
                   isRequired: a.isRequired,
                   sortOrder: i,
                   options: a.options.map((o, j) => ({
@@ -342,11 +347,13 @@ export default function EditProductPage() {
       })
       if (!res.ok) {
         const data = await res.json().catch(() => null)
-        throw new Error(data?.error ?? 'Could not update product')
+        throw new ProductSaveError(data?.error ?? 'Could not update product')
       }
       router.push('/admin/products')
     } catch (err) {
-      setSaveError(err instanceof Error ? err.message : 'Something went wrong.')
+      // Only a ProductSaveError carries a message meant for the admin to read — anything
+      // else (a bug in this form) should surface as a generic message, not a raw stack trace.
+      setSaveError(err instanceof ProductSaveError ? err.message : 'Something went wrong. Please try again.')
     } finally {
       setSaving(false)
     }

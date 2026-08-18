@@ -33,9 +33,16 @@ export function isSaleActive(product: PricedProduct, now: Date = new Date()): bo
   return true
 }
 
+/**
+ * Same basePrice + priceModifier (or priceOverride) formula as listPrice,
+ * but with salePrice standing in for basePrice while a sale is active — a
+ * size's modifier must still apply on top of the sale, otherwise every size
+ * of an on-sale product prices identically at the flat salePrice.
+ */
 export function finalPrice(product: PricedProduct, size: PricedSize, now: Date = new Date()): Prisma.Decimal {
+  if (size.priceOverride !== null) return size.priceOverride
   if (isSaleActive(product, now)) {
-    return product.salePrice as Prisma.Decimal
+    return (product.salePrice as Prisma.Decimal).plus(size.priceModifier)
   }
-  return listPrice(product, size)
+  return product.basePrice.plus(size.priceModifier)
 }

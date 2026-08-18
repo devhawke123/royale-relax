@@ -140,7 +140,7 @@ export function FabricDetailClient({ fabric, relatedFabrics = [] }: FabricDetail
 
             <RatingStars rating={4.9} reviewCount={150} />
 
-            <p className="text-[40px] font-bold text-[#b87333]">{formatSamplePrice(SAMPLE_PRICE)}</p>
+            <p className="text-[40px] font-bold text-[#b87333]">{formatSamplePrice(SAMPLE_PRICE * quantity)}</p>
 
             {fabric.swatches.length > 0 && (
               <div className="flex flex-col gap-3">

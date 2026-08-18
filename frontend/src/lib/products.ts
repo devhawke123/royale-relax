@@ -115,6 +115,7 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
     name: a.name,
     type: a.type,
     price: Number(a.price),
+    noPrice: Number(a.noPrice),
     isRequired: a.isRequired,
     options: a.options.map((o: any) => ({
       id: o.id,

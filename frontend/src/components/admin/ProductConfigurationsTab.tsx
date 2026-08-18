@@ -23,10 +23,15 @@ export interface AddonRow {
   id?: string
   name: string
   type: (typeof ADDON_TYPE_OPTIONS)[number]
+  /** TOGGLE: surcharge for "Yes". SELECT/TEXT_INPUT: unused. */
   price: number
+  /** TOGGLE only: surcharge for "No" (usually 0). */
+  noPrice: number
   isRequired: boolean
   sortOrder: number
   options: AddonOptionRow[]
+  /** On/off switch, same as a Premade Group's — off keeps the group's data in the form (for a later re-enable) but leaves it out of what gets saved. */
+  enabled: boolean
 }
 
 export function emptySizeRow(sortOrder: number): SizeRow {
@@ -34,7 +39,7 @@ export function emptySizeRow(sortOrder: number): SizeRow {
 }
 
 export function emptyAddonRow(sortOrder: number): AddonRow {
-  return { name: '', type: 'SELECT', price: 0, isRequired: false, sortOrder, options: [] }
+  return { name: '', type: 'SELECT', price: 0, noPrice: 0, isRequired: false, sortOrder, options: [], enabled: true }
 }
 
 function formatAddonTypeLabel(type: (typeof ADDON_TYPE_OPTIONS)[number]): string {
@@ -125,9 +130,11 @@ export function presetToAddonRow(preset: PresetAddonTemplate, sortOrder: number)
     name: preset.name,
     type: 'SELECT',
     price: 0,
+    noPrice: 0,
     isRequired: preset.isRequired,
     sortOrder,
     options: preset.options.map((option, i) => ({ label: option.label, priceModifier: option.priceModifier, sortOrder: i })),
+    enabled: true,
   }
 }
 
@@ -151,6 +158,20 @@ function ToggleSwitch({ checked, onChange }: { checked: boolean; onChange: (next
 
 function addonOptionPreviewLabel(option: { label: string; priceModifier: number }): string {
   return option.priceModifier > 0 ? `${option.label} (+£${option.priceModifier})` : option.label
+}
+
+/** Summary line shown for a custom group while its toggle is off — mirrors what a Premade Group shows. */
+function customAddonPreviewLabel(addon: AddonRow): string {
+  if (addon.type === 'SELECT') {
+    return addon.options.length ? addon.options.map(addonOptionPreviewLabel).join(' · ') : 'No choices yet'
+  }
+  if (addon.type === 'TOGGLE') {
+    return [
+      addonOptionPreviewLabel({ label: 'No', priceModifier: addon.noPrice }),
+      addonOptionPreviewLabel({ label: 'Yes', priceModifier: addon.price }),
+    ].join(' · ')
+  }
+  return addon.price > 0 ? `Free text (+£${addon.price})` : 'Free text'
 }
 
 /**
@@ -178,7 +199,15 @@ function AddonGroupEditor({
 }) {
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-stone-200 p-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[2fr_1fr_1fr_auto_auto]">
+      <div
+        className={`grid grid-cols-1 gap-3 ${
+          addon.type === 'TOGGLE'
+            ? 'sm:grid-cols-[2fr_1fr_1fr_1fr_auto_auto]'
+            : addon.type === 'TEXT_INPUT'
+              ? 'sm:grid-cols-[2fr_1fr_1fr_auto_auto]'
+              : 'sm:grid-cols-[2fr_1fr_auto_auto]'
+        }`}
+      >
         <label className="flex flex-col gap-1 text-xs text-stone-500">
           Group Name
           <input
@@ -203,12 +232,36 @@ function AddonGroupEditor({
             ))}
           </select>
         </label>
-        {addon.type !== 'SELECT' && (
+        {addon.type === 'TOGGLE' && (
+          <>
+            <label className="flex flex-col gap-1 text-xs text-stone-500">
+              No Price (£)
+              <input
+                type="number"
+                step="1"
+                value={addon.noPrice}
+                onChange={(e) => onUpdate({ noPrice: Number(e.target.value) || 0 })}
+                className="h-9 rounded-md border border-stone-300 px-2 text-sm text-stone-900 outline-none focus:border-[#b87333]"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-stone-500">
+              Yes Price (£)
+              <input
+                type="number"
+                step="1"
+                value={addon.price}
+                onChange={(e) => onUpdate({ price: Number(e.target.value) || 0 })}
+                className="h-9 rounded-md border border-stone-300 px-2 text-sm text-stone-900 outline-none focus:border-[#b87333]"
+              />
+            </label>
+          </>
+        )}
+        {addon.type === 'TEXT_INPUT' && (
           <label className="flex flex-col gap-1 text-xs text-stone-500">
             Price (£)
             <input
               type="number"
-              step="0.01"
+              step="1"
               value={addon.price}
               onChange={(e) => onUpdate({ price: Number(e.target.value) || 0 })}
               className="h-9 rounded-md border border-stone-300 px-2 text-sm text-stone-900 outline-none focus:border-[#b87333]"
@@ -259,7 +312,7 @@ function AddonGroupEditor({
                 />
                 <input
                   type="number"
-                  step="0.01"
+                  step="1"
                   value={option.priceModifier}
                   onChange={(e) => onUpdateOption(optionIndex, { priceModifier: Number(e.target.value) || 0 })}
                   placeholder="Price (£)"
@@ -384,7 +437,7 @@ export function ProductConfigurationsTab({ sizes, onSizesChange, addons, onAddon
                   Price Modifier (£)
                   <input
                     type="number"
-                    step="0.01"
+                    step="1"
                     value={size.priceModifier}
                     onChange={(e) => updateSize(index, { priceModifier: Number(e.target.value) || 0 })}
                     className="h-9 rounded-md border border-stone-300 px-2 text-sm text-stone-900 outline-none focus:border-[#b87333]"
@@ -423,21 +476,12 @@ export function ProductConfigurationsTab({ sizes, onSizesChange, addons, onAddon
 
       {/* ── Option Groups (addons) ── */}
       <div className="flex flex-col gap-4 rounded-xl border border-stone-200 bg-white p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-medium text-stone-900">Option Groups</h2>
-            <p className="text-xs text-stone-500">
-              e.g. Ottoman Storage, Delivery Service, Blanket Box, Split Head, Headboard Height, Delay Delivery. Add
-              or remove groups and choices freely — nothing here is fixed.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={addAddon}
-            className="h-9 shrink-0 rounded-lg bg-[#b87333] px-4 text-xs font-medium text-white transition-colors hover:bg-[#a3662e]"
-          >
-            Add Group
-          </button>
+        <div>
+          <h2 className="text-sm font-medium text-stone-900">Option Groups</h2>
+          <p className="text-xs text-stone-500">
+            e.g. Ottoman Storage, Delivery Service, Blanket Box, Split Head, Headboard Height, Delay Delivery. Add
+            or remove groups and choices freely — nothing here is fixed.
+          </p>
         </div>
 
         <div className="flex flex-col gap-3">
@@ -482,24 +526,44 @@ export function ProductConfigurationsTab({ sizes, onSizesChange, addons, onAddon
         <div className="flex flex-col gap-2 border-t border-stone-100 pt-4">
           <h3 className="text-xs font-medium text-stone-700">Custom Groups</h3>
           {customAddonIndexes.length === 0 ? (
-            <p className="text-sm text-stone-500">
-              No custom option groups yet — use &quot;Add Group&quot; above for anything not covered by a premade one.
-            </p>
+            <p className="text-sm text-stone-500">No custom option groups yet — use &quot;Add Group&quot; below for anything not covered by a premade one.</p>
           ) : (
             <div className="flex flex-col gap-5">
-              {customAddonIndexes.map((addonIndex) => (
-                <AddonGroupEditor
-                  key={addons[addonIndex].id ?? addonIndex}
-                  addon={addons[addonIndex]}
-                  onUpdate={(patch) => updateAddon(addonIndex, patch)}
-                  onRemove={() => removeAddon(addonIndex)}
-                  onAddOption={() => addOption(addonIndex)}
-                  onUpdateOption={(optionIndex, patch) => updateOption(addonIndex, optionIndex, patch)}
-                  onRemoveOption={(optionIndex) => removeOption(addonIndex, optionIndex)}
-                />
-              ))}
+              {customAddonIndexes.map((addonIndex) => {
+                const addon = addons[addonIndex]
+                return (
+                  <div key={addon.id ?? addonIndex} className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between gap-4 rounded-lg border border-stone-200 px-4 py-3">
+                      <span className="text-sm text-stone-700">{addon.name || 'Untitled group'}</span>
+                      <ToggleSwitch checked={addon.enabled} onChange={(next) => updateAddon(addonIndex, { enabled: next })} />
+                    </div>
+                    {addon.enabled ? (
+                      <AddonGroupEditor
+                        addon={addon}
+                        onUpdate={(patch) => updateAddon(addonIndex, patch)}
+                        onRemove={() => removeAddon(addonIndex)}
+                        onAddOption={() => addOption(addonIndex)}
+                        onUpdateOption={(optionIndex, patch) => updateOption(addonIndex, optionIndex, patch)}
+                        onRemoveOption={(optionIndex) => removeOption(addonIndex, optionIndex)}
+                      />
+                    ) : (
+                      <p className="px-1 text-xs text-stone-400">{customAddonPreviewLabel(addon)}</p>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           )}
+        </div>
+
+        <div className="flex justify-end border-t border-stone-100 pt-4">
+          <button
+            type="button"
+            onClick={addAddon}
+            className="h-9 shrink-0 rounded-lg bg-[#b87333] px-4 text-xs font-medium text-white transition-colors hover:bg-[#a3662e]"
+          >
+            Add Group
+          </button>
         </div>
       </div>
     </div>

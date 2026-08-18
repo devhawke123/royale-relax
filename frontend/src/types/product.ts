@@ -41,14 +41,16 @@ export type ProductAddonType = 'TOGGLE' | 'SELECT' | 'TEXT_INPUT'
 /**
  * Admin-configurable option group on a product (e.g. "Delivery Service",
  * "Choose Headboard Height"). SELECT groups render as a dropdown of
- * `options`; TOGGLE groups render as a Yes/No dropdown charging `price` when
- * selected; TEXT_INPUT groups collect free text with no price impact.
+ * `options`; TOGGLE groups render as a Yes/No dropdown charging `price` for
+ * "Yes" and `noPrice` for "No"; TEXT_INPUT groups collect free text with no
+ * price impact.
  */
 export interface ProductAddon {
   id: string
   name: string
   type: ProductAddonType
   price: number
+  noPrice: number
   isRequired: boolean
   options: ProductAddonOption[]
 }

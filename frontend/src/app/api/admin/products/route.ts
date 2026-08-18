@@ -144,6 +144,7 @@ interface AddonInput {
   name: string
   type: 'TOGGLE' | 'SELECT' | 'TEXT_INPUT'
   price?: number
+  noPrice?: number
   isRequired?: boolean
   sortOrder: number
   options?: AddonOptionInput[]
@@ -275,6 +276,7 @@ export async function POST(request: Request) {
               name: addon.name.trim(),
               type: addon.type as AddonType,
               price: addon.price ?? 0,
+              noPrice: addon.noPrice ?? 0,
               isRequired: addon.isRequired ?? false,
               sortOrder: i,
               options: addon.options?.length
