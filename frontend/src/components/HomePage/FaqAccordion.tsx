@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { mockFaqs } from '@/data/mock-faqs'
@@ -9,7 +10,7 @@ const trustPoints = [
   'Free Consultation',
 ]
 
-const faqIcons = ['🏅', '🎨', '📍', '💡']
+const faqIcons = ['/icons/faq1.svg', '/icons/faq2.svg', '/icons/faq3.svg', '/icons/faq4.svg']
 
 export function FaqAccordion() {
   return (
@@ -48,8 +49,8 @@ export function FaqAccordion() {
             className="group rounded-2xl bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1),0_4px_6px_-4px_rgba(0,0,0,0.1)]"
           >
             <summary className="flex cursor-pointer list-none items-center gap-4 px-6 py-6 marker:content-none">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[#b87333] text-lg text-white shadow">
-                {faqIcons[index % faqIcons.length]}
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-[#b87333] shadow">
+                <Image src={faqIcons[index % faqIcons.length]} alt="" width={20} height={20} />
               </span>
               <span className="flex-1 text-lg text-[#101828]">{faq.question}</span>
               <span className="shrink-0 text-stone-400 transition-transform group-open:rotate-180">

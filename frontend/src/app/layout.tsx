@@ -15,14 +15,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const { phone } = await getStoreSettings()
+  const { phone, email } = await getStoreSettings()
 
   return (
     <html lang="en" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
         <AuthProvider>
           <CartProvider>
-            <ConditionalChrome phone={phone}>{children}</ConditionalChrome>
+            <ConditionalChrome phone={phone} email={email}>{children}</ConditionalChrome>
           </CartProvider>
         </AuthProvider>
       </body>

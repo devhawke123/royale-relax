@@ -7,7 +7,7 @@ import { ProductCarousel } from '@/components/HomePage/ProductCarousel'
 import { AboutSection } from '@/components/HomePage/AboutSection'
 import { BedOfTheWeek } from '@/components/HomePage/BedOfTheWeek'
 import { FaqAccordion } from '@/components/HomePage/FaqAccordion'
-import { Testimonials } from '@/components/HomePage/Testimonials'
+// import { Testimonials } from '@/components/HomePage/Testimonials'
 import {
   getFeaturedProducts,
   getProductBySlug,
@@ -101,7 +101,7 @@ export default async function MarketingPage() {
 
       <FaqAccordion />
 
-      <Testimonials />
+      {/* <Testimonials /> */}
     </main>
   )
 }

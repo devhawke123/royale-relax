@@ -309,7 +309,7 @@ function AccountIcon() {
   )
 }
 
-export function Header({ phone }: { phone: string }) {
+export function Header({ phone, email }: { phone: string; email: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const searchAnchorRef = useRef<HTMLDivElement>(null)
@@ -381,7 +381,7 @@ export function Header({ phone }: { phone: string }) {
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2 text-sm xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
           <div className="flex items-center gap-6">
             <a
-              href="mailto:info@royalerelax.co.uk"
+              href={`mailto:${email}`}
               className="flex items-center gap-2 hover:opacity-90"
             >
               <Image
@@ -391,7 +391,7 @@ export function Header({ phone }: { phone: string }) {
                 height={16}
                 className="h-4 w-4 shrink-0"
               />
-              info@royalerelax.co.uk
+              {email}
             </a>
             <a
               href={phoneHref(phone)}

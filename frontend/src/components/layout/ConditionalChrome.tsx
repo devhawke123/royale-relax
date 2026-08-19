@@ -12,7 +12,15 @@ import { CartToast } from './CartToast'
  * CartProvider — so the storefront Header/Footer are opted out here by
  * path rather than by splitting into a second root layout.
  */
-export function ConditionalChrome({ children, phone }: { children: ReactNode; phone: string }) {
+export function ConditionalChrome({
+  children,
+  phone,
+  email,
+}: {
+  children: ReactNode
+  phone: string
+  email: string
+}) {
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith('/admin')
 
@@ -22,9 +30,9 @@ export function ConditionalChrome({ children, phone }: { children: ReactNode; ph
 
   return (
     <>
-      <Header phone={phone} />
+      <Header phone={phone} email={email} />
       {children}
-      <Footer phone={phone} />
+      <Footer phone={phone} email={email} />
       <CartToast />
     </>
   )

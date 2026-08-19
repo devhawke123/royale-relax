@@ -1,3 +1,4 @@
+/*
 import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { mockTestimonials } from '@/data/mock-testimonials'
@@ -33,7 +34,7 @@ export function Testimonials() {
           <div className="flex flex-1 flex-col gap-6 rounded-2xl bg-[#f3f3f3] p-8 lg:flex-row lg:items-center lg:p-10">
             <div className="flex flex-1 flex-col gap-5">
               <span aria-hidden className="text-5xl leading-none text-stone-800">
-                “
+                "
               </span>
               <div className="flex items-center gap-1">
                 <span className="text-amber-400">{'★'.repeat(quote.rating)}</span>
@@ -107,3 +108,4 @@ export function Testimonials() {
     </section>
   )
 }
+*/

@@ -20,7 +20,7 @@ const customerServices = [
   { href: '/#faq', label: 'FAQ' },
 ]
 
-export function Footer({ phone }: { phone: string }) {
+export function Footer({ phone, email }: { phone: string; email: string }) {
   return (
     <footer className="bg-[#f3f3f3]">
       <div className="mx-auto w-full max-w-7xl px-6 py-10 xl:px-8">
@@ -73,7 +73,7 @@ export function Footer({ phone }: { phone: string }) {
             <ul className="mt-6 space-y-2 text-sm text-[#6a6d70]">
               <li>Phone: {phone}</li>
               <li>Address: United Kingdom</li>
-              <li>Email: info@royalerelax.co.uk</li>
+              <li>Email: {email}</li>
             </ul>
           </div>
         </div>
