@@ -1,6 +1,11 @@
 import { getFabricCatalog, toDisplayFabrics } from '@/lib/fabrics'
 import { FabricsPageClient } from '@/components/FabricsPage/FabricsPageClient'
 
+// Prisma reads aren't fetch-tracked, so without this the route gets
+// statically prerendered at build time — which fails on Vercel because the
+// database isn't reachable during the build (same guard as the beds page).
+export const revalidate = 0
+
 export const metadata = {
   title: 'Fabric Samples | Royale Relax',
   description:

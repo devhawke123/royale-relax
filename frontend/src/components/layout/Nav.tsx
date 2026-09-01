@@ -38,13 +38,13 @@ export function Nav({ overlay }: { overlay?: boolean }) {
 
 export function MobileNav({ overlay, onNavigate }: { overlay?: boolean; onNavigate?: () => void }) {
   return (
-    <nav className="flex flex-col gap-1">
+    <nav className="flex flex-col divide-y divide-black/5">
       {links.map((link) => (
         <Link
           key={link.href}
           href={link.href}
           onClick={onNavigate}
-          className={`px-2 py-3 text-base font-medium ${
+          className={`px-2 py-3.5 text-lg font-medium ${
             overlay ? 'text-white hover:text-amber-300' : 'text-stone-800 hover:text-amber-600'
           }`}
         >

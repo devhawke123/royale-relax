@@ -85,7 +85,7 @@ function Listbox({
         aria-expanded={open}
         className="flex w-full items-center justify-between gap-2 bg-transparent text-left text-[14px] text-[#353535] focus:outline-none"
       >
-        <span className="truncate">{selectedLabel}</span>
+        <span className="min-w-0 flex-1 truncate">{selectedLabel}</span>
         <ChevronDownIcon className={open ? 'rotate-180' : ''} />
       </button>
 
@@ -335,9 +335,9 @@ function DeliveryTimeline() {
 
   return (
     <div className="w-full">
-      <div className="flex items-end gap-2">
-        <span className="text-[28px] leading-none text-black">{estimate.estimatedArrivalLabel}</span>
-        <span className="pb-0.5 text-[16px] text-black">Estimated arrival</span>
+      <div className="flex flex-wrap items-end gap-x-2 gap-y-1">
+        <span className="text-[24px] leading-none text-black sm:text-[28px]">{estimate.estimatedArrivalLabel}</span>
+        <span className="pb-0.5 text-[15px] text-black sm:text-[16px]">Estimated arrival</span>
       </div>
       <div className="mt-8 flex items-center">
         <span className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-black">
@@ -446,10 +446,10 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-10 xl:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 xl:px-8">
         <div className="grid gap-12 lg:grid-cols-[3fr_2fr]">
           {/* ── Left column: gallery + description ── */}
-          <div className="flex flex-col gap-6">
+          <div className="flex min-w-0 flex-col gap-6">
             {/* Gallery */}
             <div className="flex gap-3 rounded-[3px] border border-stone-100 bg-white p-2">
               <div className="flex max-h-[500px] flex-col gap-2 overflow-y-auto">
@@ -501,7 +501,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
           </div>
 
           {/* ── Right column: purchase panel ── */}
-          <div className="flex flex-col gap-4">
+          <div className="flex min-w-0 flex-col gap-4">
             <div className="flex items-start justify-between gap-4 border-b border-stone-100 pb-6">
               <h1 className="text-[24px] font-bold text-black">{product.name}</h1>
             </div>
@@ -515,7 +515,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                   <select
                     value={selectedVariantId}
                     onChange={(e) => setSelectedVariantId(e.target.value)}
-                    className="w-full appearance-none bg-transparent px-3 py-2 text-[14px] text-[#09090a] focus:outline-none"
+                    className="w-full appearance-none truncate bg-transparent py-2 pr-9 pl-3 text-[14px] text-[#09090a] focus:outline-none"
                   >
                     {product.variants.map((v) => (
                       <option key={v.id} value={v.id}>
@@ -556,7 +556,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                   ]}
                 />
                 {fabricSwatches.length > 0 ? (
-                  <div className="grid grid-cols-5 gap-x-4 gap-y-4">
+                  <div className="grid grid-cols-3 gap-3 xs:grid-cols-4 sm:grid-cols-5">
                     {fabricSwatches.map((f) => (
                       <button
                         key={f.id}
@@ -565,11 +565,11 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                         className="flex flex-col items-start gap-1"
                       >
                         <span
-                          className={`relative h-[78px] w-[76px] overflow-hidden ${
+                          className={`relative aspect-square w-full overflow-hidden ${
                             selectedFabricSwatchId === f.id ? 'ring-2 ring-[#b87333]' : ''
                           }`}
                         >
-                          <Image src={f.image} alt={swatchLabel(f)} fill sizes="76px" className="object-cover" />
+                          <Image src={f.image} alt={swatchLabel(f)} fill sizes="80px" className="object-cover" />
                         </span>
                         <span className="text-[10px] text-black">{swatchLabel(f)}</span>
                       </button>
@@ -586,10 +586,10 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
         {/* ── Why Choose banner (full width, above the purchase bar) ── */}
         {parsed.whyBody && (
           <div
-            className="mt-12 rounded-[12px] px-10 py-10 text-center shadow-[0px_25px_25px_rgba(0,0,0,0.25)]"
+            className="mt-12 rounded-[12px] px-5 py-8 text-center shadow-[0px_25px_25px_rgba(0,0,0,0.25)] sm:px-10 sm:py-10"
             style={{ backgroundImage: 'linear-gradient(90deg, #b87333 0%, #faf5f5 51%, #b87333 100%)' }}
           >
-            <h3 className="text-[32px] font-bold text-[#7d4614]">
+            <h3 className="text-2xl font-bold text-[#7d4614] sm:text-[32px]">
               {parsed.whyHeading ?? `Why Choose ${product.name}?`}
             </h3>
             <p className="mx-auto mt-4 max-w-3xl text-[16px] text-black">{parsed.whyBody}</p>
@@ -597,7 +597,7 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
         )}
 
         {/* ── Final purchase bar: price, quantity, add to cart, payment badges, delivery estimate ── */}
-        <div className="mx-auto mt-10 flex w-full max-w-3xl flex-col gap-4 border border-stone-100 p-6">
+        <div className="mx-auto mt-10 flex w-full max-w-3xl flex-col gap-4 border border-stone-100 p-4 sm:p-6">
           <div className="flex items-center justify-between gap-4">
             <span className="text-[15.5px] font-bold text-black">Price:</span>
             <div className="flex flex-col items-end gap-1">

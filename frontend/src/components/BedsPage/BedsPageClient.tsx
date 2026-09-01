@@ -64,8 +64,8 @@ function BedCard({ product }: { product: Product }) {
       </div>
 
       {/* Info row */}
-      <div className="flex items-end justify-between border-t border-stone-200 px-6 py-4">
-        <span className="text-[15px] font-normal text-[#222]">
+      <div className="flex items-end justify-between gap-3 border-t border-stone-200 px-5 py-4 sm:px-6">
+        <span className="min-w-0 text-[15px] font-normal text-[#222]">
           <span className="inline-block border-b border-stone-300 pb-1">{product.name}</span>
         </span>
         {priceLabel && (
@@ -158,7 +158,7 @@ export function BedsPageClient({ products, initialFilter, serverFiltered }: Beds
             <p className="text-lg">No beds found in this category.</p>
           </div>
         ) : (
-          <div className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-x-6 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
             {visible.map((product) => (
               <BedCard key={product.id} product={product} />
             ))}

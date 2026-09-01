@@ -130,9 +130,9 @@ export function ProductCard({
         </div>
         <div className="flex flex-col gap-2 p-5">
           <p className="text-lg font-medium text-[#222]">{product.name}</p>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
             {price ? <span className="text-xl font-bold text-[#b87333]">{price}</span> : <span />}
-            <Link href={href} className="text-sm font-medium text-[#222] hover:text-[#b87333]">
+            <Link href={href} className="shrink-0 text-sm font-medium whitespace-nowrap text-[#222] hover:text-[#b87333]">
               View Details →
             </Link>
           </div>
@@ -186,13 +186,13 @@ export function ProductCard({
           className="object-cover"
         />
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-6">
-        <p className="text-xl font-normal text-[#222]">{product.name}</p>
-        <div className="mt-auto flex items-center justify-between pt-4">
-          {price ? <span className="text-2xl font-bold text-[#110d0a]">{price}</span> : <span />}
+      <div className="flex flex-1 flex-col gap-2 p-5 sm:p-6">
+        <p className="text-lg font-normal text-[#222] sm:text-xl">{product.name}</p>
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-3 pt-4">
+          {price ? <span className="text-xl font-bold text-[#110d0a] sm:text-2xl">{price}</span> : <span />}
           <Link
             href={href}
-            className="inline-flex items-center rounded-md bg-[#b87333] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#a3662e]"
+            className="inline-flex shrink-0 items-center rounded-md bg-[#b87333] px-5 py-2.5 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-[#a3662e]"
           >
             View Details
           </Link>

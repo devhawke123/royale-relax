@@ -26,7 +26,7 @@ function Logo({ overlay }: { overlay?: boolean }) {
           alt="Royale Relax"
           width={290}
           height={161}
-          className="h-24 w-auto sm:h-28"
+          className="h-16 w-auto xs:h-20 sm:h-24 lg:h-28"
           priority
         />
       </Link>
@@ -34,9 +34,9 @@ function Logo({ overlay }: { overlay?: boolean }) {
   }
 
   return (
-    <Link href="/" className="flex items-center gap-3">
-      <span className="flex h-11 w-11 items-center justify-center text-stone-900">
-        <svg viewBox="0 0 44 44" fill="none" className="h-11 w-11" aria-hidden>
+    <Link href="/" className="flex items-center gap-2.5 sm:gap-3">
+      <span className="flex h-12 w-12 items-center justify-center text-stone-900 sm:h-11 sm:w-11">
+        <svg viewBox="0 0 44 44" fill="none" className="h-12 w-12 sm:h-11 sm:w-11" aria-hidden>
           <path
             d="M22 2L38 11V33L22 42L6 33V11L22 2Z"
             stroke="currentColor"
@@ -58,7 +58,9 @@ function Logo({ overlay }: { overlay?: boolean }) {
       </span>
       <span className="flex flex-col leading-none">
         <span className="text-base font-semibold tracking-wide text-stone-900">ROYALE</span>
-        <span className="text-xs tracking-[0.3em] text-stone-500">RELAX</span>
+        <span className="text-[0.7rem] tracking-[0.28em] text-stone-500 sm:text-xs sm:tracking-[0.3em]">
+          RELAX
+        </span>
       </span>
     </Link>
   )
@@ -81,7 +83,7 @@ function IconButton({
   onClick?: () => void
   children: React.ReactNode
 }) {
-  const className = `relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-300 ease-out ${
+  const className = `relative flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-300 ease-out sm:h-9 sm:w-9 ${
     overlay ? 'text-white hover:bg-white/10' : 'text-stone-700 hover:bg-black/5 hover:text-amber-600'
   } ${pressed ? (overlay ? 'bg-white/10' : 'bg-black/5 text-amber-600') : ''}`
   const badgeEl = typeof badge === 'number' && badge > 0 && (
@@ -378,8 +380,8 @@ export function Header({ phone, email }: { phone: string; email: string }) {
         }
       >
       <div className="bg-[#B87333] text-white">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-2 text-sm xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
-          <div className="flex items-center gap-6">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-x-6 gap-y-0.5 px-4 py-1.5 text-xs sm:flex-row sm:justify-between sm:px-6 sm:py-2 sm:text-sm xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-0.5 sm:gap-6">
             <a
               href={`mailto:${email}`}
               className="flex items-center gap-2 hover:opacity-90"
@@ -412,15 +414,15 @@ export function Header({ phone, email }: { phone: string; email: string }) {
       </div>
 
       <div className={transparent ? '' : 'border-b border-stone-200'}>
-        <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-4 xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
+        <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
           <Logo overlay={transparent} />
 
           <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
             <Nav overlay={transparent} />
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 rounded-full bg-black/[0.08] px-6 py-2 transition-colors duration-300 ease-out">
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-0.5 rounded-full bg-black/[0.08] px-2 py-1.5 transition-colors duration-300 ease-out sm:gap-1 sm:px-6 sm:py-2">
               <div ref={searchAnchorRef}>
                 <IconButton
                   label={searchOpen ? 'Close search' : 'Search'}
@@ -452,7 +454,7 @@ export function Header({ phone, email }: { phone: string; email: string }) {
               type="button"
               aria-label="Open menu"
               aria-expanded={menuOpen}
-              className={`ml-1 flex h-9 w-9 items-center justify-center rounded-full lg:hidden ${
+              className={`ml-0.5 flex h-10 w-10 items-center justify-center rounded-full text-xl leading-none sm:ml-1 sm:h-9 sm:w-9 sm:text-lg lg:hidden ${
                 transparent ? 'text-white hover:bg-white/10' : 'text-stone-700 hover:bg-stone-100'
               }`}
               onClick={() => setMenuOpen((open) => !open)}
@@ -465,7 +467,7 @@ export function Header({ phone, email }: { phone: string; email: string }) {
 
       {menuOpen && (
         <div
-          className={`border-b px-6 py-4 lg:hidden ${
+          className={`border-b px-4 py-3 sm:px-6 sm:py-4 lg:hidden ${
             transparent ? 'border-white/20 bg-stone-950/95 text-white' : 'border-stone-200 bg-white'
           }`}
         >

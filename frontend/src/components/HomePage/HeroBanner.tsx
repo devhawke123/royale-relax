@@ -47,7 +47,7 @@ export function HeroBanner({
       <div className="absolute inset-0 bg-gradient-to-r from-stone-950/75 via-stone-950/35 to-stone-950/10" />
       <div className="absolute inset-0 bg-gradient-to-t from-stone-950/50 via-transparent to-stone-950/20" />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3.5 px-6 pt-32 pb-10 sm:gap-4 sm:pt-36 sm:pb-12 lg:gap-5 xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3.5 px-6 pb-10 pt-[calc(var(--header-height,132px)+1.5rem)] sm:gap-4 sm:pb-12 sm:pt-[calc(var(--header-height,150px)+2rem)] lg:gap-5 xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
         <span className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-3.5 py-1 text-xs font-medium tracking-wide text-stone-800">
           <Image
             src="/icons/premium-sleep-collec.svg"
