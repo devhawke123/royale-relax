@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { finalPrice } from '@/lib/pricing'
-import { Prisma } from '../../../generated/prisma/client'
-import { AddonType } from '../../../generated/prisma/enums'
+import { Prisma } from '../../generated/prisma/client'
+import { AddonType } from '../../generated/prisma/enums'
 
 export type CartAddonSelection = {
   addonId: string

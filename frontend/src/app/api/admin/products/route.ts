@@ -3,7 +3,7 @@ import { revalidateTag } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { getImageUrl } from '@/lib/media'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
-import { Category, ProductStatus, AddonType } from '../../../../../../generated/prisma/enums'
+import { Category, ProductStatus, AddonType } from '../../../../../generated/prisma/enums'
 
 const MAX_PAGE_SIZE = 100
 const DEFAULT_PAGE_SIZE = 25

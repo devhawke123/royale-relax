@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { Prisma } from '../../../generated/prisma/client'
+import { Prisma } from '../../generated/prisma/client'
 
 let cachedClient: Stripe | null = null
 

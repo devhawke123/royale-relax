@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { getImageUrl } from '@/lib/media'
 import { finalPrice } from '@/lib/pricing'
 import type { Product as DisplayProduct, ProductCategory } from '@/types/product'
-import type { Category } from '../../../generated/prisma/enums'
+import type { Category } from '../../generated/prisma/enums'
 
 export const productWithColorsInclude = {
   images: { orderBy: { sortOrder: 'asc' as const } },

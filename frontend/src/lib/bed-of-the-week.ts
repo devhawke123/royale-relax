@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { getImageUrl } from '@/lib/media'
-import { Prisma } from '../../../generated/prisma/client'
+import { Prisma } from '../../generated/prisma/client'
 
 const HISTORY_LIMIT = 20
 const SEARCH_LIMIT = 8

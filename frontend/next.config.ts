@@ -3,8 +3,10 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // This app is its own project root. Pin it so Next.js does not walk up and
+  // pick a stray lockfile from an ancestor directory as the workspace root.
   turbopack: {
-    root: path.join(__dirname, '..'),
+    root: path.join(__dirname),
   },
   images: {
     remotePatterns: [

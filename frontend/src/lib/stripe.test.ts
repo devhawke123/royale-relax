@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { Prisma } from '../../../generated/prisma/client'
+import { Prisma } from '../../generated/prisma/client'
 import { toStripeAmount } from './stripe'
 
 const decimal = (value: string) => new Prisma.Decimal(value)

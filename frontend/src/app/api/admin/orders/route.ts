@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
-import { OrderStatus, PaymentStatus } from '../../../../../../generated/prisma/enums'
+import { OrderStatus, PaymentStatus } from '../../../../../generated/prisma/enums'
 
 const MAX_PAGE_SIZE = 100
 const DEFAULT_PAGE_SIZE = 25

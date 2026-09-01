@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
-import { PaymentStatus } from '../../../../../../generated/prisma/enums'
+import { PaymentStatus } from '../../../../../generated/prisma/enums'
 
 const SERIES_DAYS = 30
 

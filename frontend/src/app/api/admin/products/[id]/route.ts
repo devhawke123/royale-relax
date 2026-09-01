@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { getImageUrl } from '@/lib/media'
 import { requireAuth, AuthError } from '@/lib/auth/require-auth'
-import { Category, ProductStatus, AddonType } from '../../../../../../../generated/prisma/enums'
+import { Category, ProductStatus, AddonType } from '../../../../../../generated/prisma/enums'
 
 const productInclude = {
   images: { orderBy: { sortOrder: 'asc' as const } },
