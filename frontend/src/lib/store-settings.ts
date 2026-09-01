@@ -3,12 +3,26 @@ import { prisma } from '@/lib/prisma'
 
 const SETTINGS_ID = 'default'
 
+const DEFAULT_SETTINGS = {
+  storeName: 'Royale Relax',
+  email: 'info@royalerelax.co.uk',
+  phone: '+44 7999 371906',
+}
+
 async function fetchStoreSettings() {
-  const settings = await prisma.storeSettings.findUnique({ where: { id: SETTINGS_ID } })
-  return {
-    storeName: settings?.storeName ?? 'Royale Relax',
-    email: settings?.email || 'info@royalerelax.co.uk',
-    phone: settings?.phone || '+44 7999 371906',
+  try {
+    const settings = await prisma.storeSettings.findUnique({ where: { id: SETTINGS_ID } })
+    return {
+      storeName: settings?.storeName ?? DEFAULT_SETTINGS.storeName,
+      email: settings?.email || DEFAULT_SETTINGS.email,
+      phone: settings?.phone || DEFAULT_SETTINGS.phone,
+    }
+  } catch (error) {
+    // The DB may be unreachable at build time (e.g. prerendering /_not-found on
+    // Vercel). Fall back to defaults so the build doesn't fail; real requests
+    // will hit the DB again once the cache entry expires / is revalidated.
+    console.error('getStoreSettings: falling back to defaults', error)
+    return DEFAULT_SETTINGS
   }
 }
 
