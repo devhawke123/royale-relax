@@ -38,7 +38,7 @@ export async function GET(request: Request) {
   const where = {
     ...(statusParam ? { status: statusParam as OrderStatus } : {}),
     ...(paymentStatusParam ? { paymentStatus: paymentStatusParam as PaymentStatus } : {}),
-    ...(email ? { email: { contains: email, mode: 'insensitive' as const } } : {}),
+    ...(email ? { email: { contains: email } } : {}),
   }
 
   const [orders, total] = await Promise.all([

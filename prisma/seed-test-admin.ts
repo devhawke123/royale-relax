@@ -1,12 +1,20 @@
 import 'dotenv/config'
-import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { PrismaClient } from '../generated/prisma/client'
 import bcrypt from 'bcryptjs'
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+const url = new URL(process.env.DATABASE_URL ?? 'mysql://root:test@localhost:3306/myapp')
+const adapter = new PrismaMariaDb({
+  host: url.hostname,
+  port: url.port ? Number(url.port) : 3306,
+  user: decodeURIComponent(url.username),
+  password: decodeURIComponent(url.password),
+  database: url.pathname.replace(/^\//, ''),
+  allowPublicKeyRetrieval: true,
+})
 const prisma = new PrismaClient({ adapter })
 
-const TEST_ADMIN_EMAIL = 'admin@royalerelax.com'
+const TEST_ADMIN_EMAIL = 'admin@royalerelax.co.uk'
 const TEST_ADMIN_PASSWORD = 'RoyaleAdmin123!'
 
 async function main() {

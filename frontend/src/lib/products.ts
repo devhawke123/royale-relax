@@ -44,9 +44,9 @@ export function searchProducts(query: string) {
       status: 'PUBLISHED',
       deletedAt: null,
       OR: [
-        { name: { contains: term, mode: 'insensitive' } },
-        { shortDescription: { contains: term, mode: 'insensitive' } },
-        { description: { contains: term, mode: 'insensitive' } },
+        { name: { contains: term } },
+        { shortDescription: { contains: term } },
+        { description: { contains: term } },
       ],
     },
     orderBy: { createdAt: 'desc' },

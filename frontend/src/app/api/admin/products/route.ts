@@ -45,8 +45,8 @@ export async function GET(request: Request) {
     ...(search
       ? {
           OR: [
-            { name: { contains: search, mode: 'insensitive' as const } },
-            { sizes: { some: { sku: { contains: search, mode: 'insensitive' as const } } } },
+            { name: { contains: search } },
+            { sizes: { some: { sku: { contains: search } } } },
           ],
         }
       : {}),

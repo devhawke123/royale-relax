@@ -1,4 +1,4 @@
-import { generateRefreshToken, hashToken } from './tokens'
+import { generateOpaqueToken, hashToken } from './tokens'
 
 export type RefreshSubject = 'CUSTOMER' | 'ADMIN'
 
@@ -70,7 +70,7 @@ export async function issueRefreshToken(
   ownerId: string,
   userAgent: string | null = null,
 ): Promise<IssuedRefreshToken> {
-  const raw = generateRefreshToken()
+  const raw = generateOpaqueToken()
   const row = await delegate.create({
     data: {
       tokenHash: hashToken(raw),

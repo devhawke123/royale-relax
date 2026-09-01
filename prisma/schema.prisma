@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 enum Category {
@@ -95,8 +95,8 @@ model Product {
   id               String           @id @default(uuid())
   slug             String           @unique
   name             String
-  shortDescription String           @default("")
-  description      String           @default("")
+  shortDescription String           @default(dbgenerated("('')")) @db.Text
+  description      String           @default(dbgenerated("('')")) @db.Text
   category         Category
   basePrice        Decimal          @db.Decimal(10, 2)
   isFeatured       Boolean          @default(false)
@@ -111,7 +111,7 @@ model Product {
 
   // --- bed attributes (null for mattresses) ---
   bedStyle         BedStyle?
-  frameMaterial    String?
+  frameMaterial    String?          @db.Text
 
   // --- mattress attributes (null for beds) ---
   mattressType     MattressType?
@@ -122,8 +122,8 @@ model Product {
   stockPolicy      StockPolicy      @default(MADE_TO_ORDER)
   leadTimeDays     Int?
   warrantyMonths   Int?
-  careInstructions String?
-  specSheetUrl     String?
+  careInstructions String?          @db.Text
+  specSheetUrl     String?          @db.Text
 
   // --- denormalised review aggregates ---
   ratingAvg        Decimal?         @db.Decimal(3, 2)
@@ -131,7 +131,7 @@ model Product {
 
   // --- SEO ---
   metaTitle        String?
-  metaDescription  String?
+  metaDescription  String?          @db.Text
 
   status           ProductStatus    @default(DRAFT)
   sortOrder        Int              @default(0)
@@ -151,7 +151,7 @@ model Product {
 model ProductImage {
   id        String   @id @default(uuid())
   productId String
-  path      String
+  path      String   @db.LongText
   isMain    Boolean  @default(false)
   sortOrder Int      @default(0)
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -212,8 +212,8 @@ model FabricColor {
   productId   String
   code        String       @unique
   colorName   String
-  imagePath   String
-  description String       @default("")
+  imagePath   String       @db.LongText
+  description String       @default(dbgenerated("('')")) @db.Text
   stockQty    Int          @default(0)
   status      FabricStatus @default(ACTIVE)
   sortOrder   Int          @default(0)
@@ -263,7 +263,7 @@ model Order {
   phone                      String
   email                      String
   deliverToDifferentAddress  Boolean       @default(false)
-  orderNotes                 String?
+  orderNotes                 String?       @db.Text
   subtotal                   Decimal       @db.Decimal(10, 2)
   shippingFee                Decimal       @db.Decimal(10, 2)
   total                      Decimal       @db.Decimal(10, 2)
@@ -302,7 +302,7 @@ model OrderItem {
   fabricCode    String?
   fabricName    String?
   sku           String?
-  imagePath     String?
+  imagePath     String?          @db.LongText
   unitPrice     Decimal          @db.Decimal(10, 2)
   quantity      Int
   lineTotal     Decimal          @db.Decimal(10, 2)
@@ -363,6 +363,23 @@ model AdminUser {
   updatedAt     DateTime       @default(now()) @updatedAt
 
   refreshTokens RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+/// A single-use admin password-reset grant. Only the SHA-256 of the token is
+/// stored; the raw token lives only in the emailed link. Short-lived and
+/// consumed on first successful reset — see lib/auth/password-reset.ts.
+model PasswordResetToken {
+  id          String    @id @default(uuid())
+  tokenHash   String    @unique
+  adminUserId String
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([adminUserId])
+  @@index([expiresAt])
 }
 
 /// Backs JWT auth for BOTH customers and admins. Access tokens are short-lived
@@ -382,7 +399,7 @@ model RefreshToken {
   /// Set when this token was exchanged for a new one, pointing at its
   /// replacement. A token used twice after rotation is theft, not a race.
   replacedById String?
-  userAgent    String?
+  userAgent    String?       @db.Text
   createdAt    DateTime      @default(now())
 
   customer     Customer?     @relation(fields: [customerId], references: [id], onDelete: Cascade)

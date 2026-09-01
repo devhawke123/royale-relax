@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import jwt from 'jsonwebtoken'
-import { generateRefreshToken, hashToken, signAccessToken, verifyAccessToken } from './tokens'
+import { generateOpaqueToken, hashToken, signAccessToken, verifyAccessToken } from './tokens'
 
 beforeAll(() => {
   process.env.JWT_SECRET = 'test-secret-do-not-use-in-prod'
@@ -45,14 +45,14 @@ describe('signAccessToken / verifyAccessToken', () => {
   })
 })
 
-describe('generateRefreshToken', () => {
+describe('generateOpaqueToken', () => {
   it('generates a base64url string with no padding/slashes/plus', () => {
-    const token = generateRefreshToken()
+    const token = generateOpaqueToken()
     expect(token).toMatch(/^[A-Za-z0-9_-]+$/)
   })
 
   it('generates a different value each call', () => {
-    expect(generateRefreshToken()).not.toBe(generateRefreshToken())
+    expect(generateOpaqueToken()).not.toBe(generateOpaqueToken())
   })
 })
 

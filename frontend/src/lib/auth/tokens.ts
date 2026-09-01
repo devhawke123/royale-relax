@@ -45,8 +45,11 @@ export function verifyAccessToken(token: string): AccessTokenClaims {
   return { sub, subject, role: typeof role === 'string' ? role : undefined }
 }
 
-/** 32 random bytes, base64url-encoded. The raw value handed to the client — never stored. */
-export function generateRefreshToken(): string {
+/**
+ * 32 random bytes, base64url-encoded. The raw value handed to the client — never
+ * stored. Used for refresh tokens and for admin password-reset tokens.
+ */
+export function generateOpaqueToken(): string {
   return crypto.randomBytes(32).toString('base64url')
 }
 

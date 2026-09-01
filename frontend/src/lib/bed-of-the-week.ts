@@ -125,9 +125,9 @@ export async function searchBedProducts(query: string, limit = SEARCH_LIMIT): Pr
       status: 'PUBLISHED',
       deletedAt: null,
       OR: [
-        { name: { contains: term, mode: 'insensitive' } },
-        { slug: { contains: term, mode: 'insensitive' } },
-        { sizes: { some: { sku: { contains: term, mode: 'insensitive' } } } },
+        { name: { contains: term } },
+        { slug: { contains: term } },
+        { sizes: { some: { sku: { contains: term } } } },
       ],
     },
     take: limit,
