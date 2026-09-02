@@ -98,7 +98,7 @@ export default function AdminSettingsPage() {
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-stone-700">
-            Email
+            Login Email
             <input
               type="email"
               required
@@ -106,6 +106,9 @@ export default function AdminSettingsPage() {
               onChange={(e) => setSettings({ ...settings, email: e.target.value })}
               className="h-11 rounded-lg border border-stone-300 px-3 text-sm outline-none focus:border-[#b87333]"
             />
+            <span className="text-xs text-stone-400">
+              Used to sign in to this admin panel. Not shown on the storefront.
+            </span>
           </label>
 
           <label className="flex flex-col gap-2 text-sm text-stone-700">
