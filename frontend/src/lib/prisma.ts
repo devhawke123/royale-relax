@@ -19,6 +19,11 @@ const adapter = new PrismaMariaDb({
   // MySQL 8.4 defaults to caching_sha2_password; a cold-cache auth over an
   // unencrypted local connection needs the server's public key. Local dev only.
   allowPublicKeyRetrieval: true,
+  // Pin the connection charset/collation. Without this the driver binds string
+  // params as utf8mb4_bin, which collides with the utf8mb4_unicode_ci columns on
+  // any LIKE query ("Illegal mix of collations", MySQL error 1267).
+  charset: 'utf8mb4',
+  collation: 'utf8mb4_unicode_ci',
 })
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })

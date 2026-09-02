@@ -1,9 +1,0 @@
-{
-  "name": "backend",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Placeholder for the future backend/API service. Shares the root Prisma schema and generated client at ../generated/prisma.",
-  "scripts": {
-    "typecheck": "echo \"No backend code yet\""
-  }
-}
