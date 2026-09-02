@@ -20,8 +20,6 @@ const adapter = new PrismaMariaDb(
     // MySQL 8.4 defaults to caching_sha2_password; a cold-cache auth over an
     // unencrypted local connection needs the server's public key. Local dev only.
     allowPublicKeyRetrieval: true,
-    charset: 'utf8mb4',
-    collation: 'utf8mb4_unicode_ci',
   },
   {
     // Use the text protocol so string params are inlined as literals with the
