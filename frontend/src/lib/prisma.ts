@@ -19,11 +19,12 @@ const adapter = new PrismaMariaDb({
   // MySQL 8.4 defaults to caching_sha2_password; a cold-cache auth over an
   // unencrypted local connection needs the server's public key. Local dev only.
   allowPublicKeyRetrieval: true,
-  // The searchable columns (Product.name/slug, ProductSize.sku) are utf8mb4_bin.
-  // Pin the connection collation to match so the `'%'` literals Prisma wraps
-  // around LIKE params agree with the bound param — otherwise the CONCAT result
-  // is "conflicted" and MySQL throws 1267 even when the names match.
-  collation: 'utf8mb4_bin',
+  // Force character_set_client, _connection and _results to one collation on
+  // every connection. Without this they disagree, so the `CONCAT('%', ?, '%')`
+  // Prisma builds for `contains` mixes collations and MySQL throws
+  // "Illegal mix of collations" (1267) on every LIKE query. Must match the
+  // column collation (utf8mb4_unicode_ci).
+  initSql: "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
 })
 
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
