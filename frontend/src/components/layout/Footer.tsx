@@ -80,7 +80,7 @@ export function Footer({ phone, email }: { phone: string; email: string }) {
 
         <div className="mt-8 flex flex-col items-center gap-4 border-t border-stone-300 pt-6 sm:flex-row sm:justify-between">
           <p className="text-sm text-[#6a6d70]">
-            © Copyright {new Date().getFullYear()} - Design &amp; Developed by Royale Relax
+            © Copyright {new Date().getFullYear()} - Design &amp; Developed by Blue Hawke
           </p>
           <div className="flex items-center gap-3">
             <Link
