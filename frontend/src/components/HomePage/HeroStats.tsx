@@ -10,7 +10,6 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { target: 20, suffix: '+', label: 'Bed Models' },
   { target: 4.9, decimals: 1, suffix: '★', label: 'Average Rating' },
 ]
 
