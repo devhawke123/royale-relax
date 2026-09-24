@@ -1,5 +1,6 @@
 import { getProductBySlug, getProductsByCategory, toDisplayProduct } from '@/lib/products'
 import { getFabricCatalog, toDisplayFabrics } from '@/lib/fabrics'
+import { getStorefrontBedOfTheWeek } from '@/lib/bed-of-the-week'
 import { BedDetailClient } from '@/components/BedDetailPage/BedDetailClient'
 import { notFound } from 'next/navigation'
 
@@ -34,5 +35,19 @@ export default async function BedDetailPage({ params }: { params: Promise<{ slug
     .slice(0, 4)
     .map(toDisplayProduct)
 
-  return <BedDetailClient product={product} fabrics={fabrics} relatedProducts={relatedProducts} />
+  // Bed of the Week's discount follows the promoted bed onto its own product
+  // page, applying across every size/variant — not just the single variant
+  // shown in the homepage promo card.
+  const bedOfTheWeek = await getStorefrontBedOfTheWeek()
+  const discountPercentage =
+    bedOfTheWeek?.isPromotionLive && bedOfTheWeek.product.slug === slug ? bedOfTheWeek.discountPercentage : 0
+
+  return (
+    <BedDetailClient
+      product={product}
+      fabrics={fabrics}
+      relatedProducts={relatedProducts}
+      discountPercentage={discountPercentage}
+    />
+  )
 }

@@ -78,7 +78,7 @@ export function HeroBanner({
           />
           <FeatureCallout
             icon="/icons/sleepwell.svg"
-            title="Sleep Guarantee"
+            title="Designed for Rest"
             subtitle="Find your perfect rest, guaranteed"
           />
         </div>

@@ -193,8 +193,24 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { name, sku, description, category, status, basePrice, onSale, salePrice, saleStartsAt, saleEndsAt, images, fabricColors, sizes, addons } =
-    body
+  const {
+    name,
+    sku,
+    description,
+    category,
+    status,
+    basePrice,
+    onSale,
+    salePrice,
+    saleStartsAt,
+    saleEndsAt,
+    images,
+    fabricColors,
+    sizes,
+    addons,
+    hasStorage,
+    hasDrawer,
+  } = body
 
   if (typeof name !== 'string' || !name.trim()) {
     return NextResponse.json({ error: 'name is required' }, { status: 400 })
@@ -249,6 +265,8 @@ export async function POST(request: Request) {
       basePrice,
       onSale: Boolean(onSale),
       salePrice: salePrice ?? null,
+      hasStorage: Boolean(hasStorage),
+      hasDrawer: Boolean(hasDrawer),
       saleStartsAt: saleStartsAt ? new Date(saleStartsAt as string) : null,
       saleEndsAt: saleEndsAt ? new Date(saleEndsAt as string) : null,
       images: imageInputs.length

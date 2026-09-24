@@ -8,6 +8,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'Royale Relax',
   description: 'Bespoke beds, mattresses, and fabrics for a calm, elevated bedroom.',
+  icons: {
+    icon: '/icons/browser-logo.svg',
+  },
 }
 
 export default async function RootLayout({

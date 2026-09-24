@@ -1,5 +1,5 @@
 import { HeroBanner } from '@/components/HomePage/HeroBanner'
-import { TrustBar } from '@/components/HomePage/TrustBar'
+import { WhyChooseRoyaleRelax } from '@/components/AboutPage/WhyChooseRoyaleRelax'
 import { BrandStrip } from '@/components/HomePage/BrandStrip'
 import { FeaturedProducts } from '@/components/HomePage/FeaturedProducts'
 import { BestSellers } from '@/components/HomePage/BestSellers'
@@ -22,14 +22,13 @@ import { getStorefrontBedOfTheWeek } from '@/lib/bed-of-the-week'
 export const revalidate = 0
 
 // Hand-curated picks (no isFeatured/isBestSeller signal in the DB yet).
-const FEATURED_SLUGS = ['versailles-bed', 'verona-bed', 'elan-bed']
+const FEATURED_SLUGS = ['elan-bed', 'balmoral-bed', 'velvet-dawn-bed']
 const BEST_SELLER_SLUGS = [
   'celestia-bed',
-  'balmoral-bed',
   'grand-regent-bed',
-  'harington-bed',
-  'luxe-divan-bed',
-  'harington-bed',
+  'majestic-bed',
+  'valencia-wing-bed',
+  'velvet-dawn-bed',
 ]
 
 export default async function MarketingPage() {
@@ -59,25 +58,7 @@ export default async function MarketingPage() {
         primaryCta={{ label: 'SHOP NOW', href: '/shop/beds' }}
         secondaryCta={{ label: 'CONTACT US', href: '/contact' }}
       />
-      <TrustBar
-        items={[
-          {
-            icon: '/icons/express-delivery.png',
-            title: 'Express Delivery',
-            subtitle: 'Uk & Highland',
-          },
-          {
-            icon: '/icons/crafted-with-love.png',
-            title: 'Crafted With Love',
-            subtitle: '12 Months warranty',
-          },
-          {
-            icon: '/icons/suport-services.png',
-            title: 'Support Services',
-            subtitle: 'contact us anytime',
-          },
-        ]}
-      />
+      <WhyChooseRoyaleRelax />
       <BrandStrip />
       <FeaturedProducts products={featured} />
       <ProductCarousel

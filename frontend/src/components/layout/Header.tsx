@@ -17,7 +17,7 @@ function hrefForProduct(product: Product) {
   return `/shop/${section}/${product.slug}`
 }
 
-function Logo({ overlay }: { overlay?: boolean }) {
+function Logo({ overlay, dark }: { overlay?: boolean; dark?: boolean }) {
   if (overlay) {
     return (
       <Link href="/" className="flex items-center">
@@ -28,6 +28,20 @@ function Logo({ overlay }: { overlay?: boolean }) {
           height={161}
           className="h-16 w-auto xs:h-20 sm:h-24 lg:h-28"
           priority
+        />
+      </Link>
+    )
+  }
+
+  if (dark) {
+    return (
+      <Link href="/" className="flex items-center">
+        <Image
+          src="/icons/dark-logo.svg"
+          alt="Royale Relax"
+          width={279}
+          height={145}
+          className="h-16 w-auto sm:h-20"
         />
       </Link>
     )
@@ -340,6 +354,9 @@ export function Header({ phone, email }: { phone: string; email: string }) {
   const isContactPage = pathname.startsWith('/contact')
   const isOverlayPage =
     isHome || isBedsPage || isFabricsPage || isMattressesPage || isAboutPage || isContactPage
+  // The cart and login pages use the dark full wordmark instead of the small
+  // inline mark the rest of the non-hero pages share.
+  const isDarkLogoPage = pathname === '/cart' || pathname === '/login'
   const { cartCount } = useCart()
   const headerRef = useRef<HTMLElement>(null)
 
@@ -415,7 +432,7 @@ export function Header({ phone, email }: { phone: string; email: string }) {
 
       <div className={transparent ? '' : 'border-b border-stone-200'}>
         <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
-          <Logo overlay={transparent} />
+          <Logo overlay={transparent} dark={isDarkLogoPage} />
 
           <div className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
             <Nav overlay={transparent} />

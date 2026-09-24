@@ -48,7 +48,7 @@ export function WhyChooseRoyaleRelax() {
           Discover the perfect blend of British craftsmanship, innovation, and luxury
         </p>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-3">
+        <div className="mt-16 grid gap-6 md:grid-cols-3">
           {REASONS.map((reason) => (
             <div
               key={reason.number}

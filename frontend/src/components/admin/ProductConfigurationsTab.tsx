@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 const ADDON_TYPE_OPTIONS = ['SELECT', 'TOGGLE', 'TEXT_INPUT'] as const
 
 export interface SizeRow {
@@ -75,7 +77,8 @@ export const PRESET_ADDON_GROUPS: PresetAddonTemplate[] = [
     isRequired: true,
     options: [
       { label: 'No Storage', priceModifier: 0 },
-      { label: 'Yes — Add Ottoman Storage', priceModifier: 0 },
+      { label: 'Slatted Ottoman Storage', priceModifier: 129.99 },
+      { label: 'Solid Divan Ottoman Storage', priceModifier: 229.99 },
     ],
   },
   {
@@ -101,7 +104,7 @@ export const PRESET_ADDON_GROUPS: PresetAddonTemplate[] = [
     isRequired: false,
     options: [
       { label: 'No, I have checked my staircase, 1 Part Headboard will fit', priceModifier: 0 },
-      { label: 'Yes, please split my headboard', priceModifier: 0 },
+      { label: 'Yes, Make My Headboard in 2 parts', priceModifier: 50 },
     ],
   },
   {
@@ -111,7 +114,8 @@ export const PRESET_ADDON_GROUPS: PresetAddonTemplate[] = [
       { label: 'Standard 48 Inches', priceModifier: 0 },
       { label: 'Low 44 Inches', priceModifier: 0 },
       { label: 'Medium 54 Inches', priceModifier: 0 },
-      { label: 'High 60 Inches', priceModifier: 79.99 },
+      { label: 'High 60 Inches', priceModifier: 69.99 },
+      { label: 'Extra High 70 Inches', priceModifier: 99.99 },
       { label: 'Bespoke / Floor-Ceiling', priceModifier: 199.99 },
     ],
   },
@@ -349,6 +353,20 @@ interface ProductConfigurationsTabProps {
  * it can be freely added/removed per product, nothing is a fixed list.
  */
 export function ProductConfigurationsTab({ sizes, onSizesChange, addons, onAddonsChange }: ProductConfigurationsTabProps) {
+  // Premade Groups default to "on" for every bed — including older products
+  // saved before a given preset existed, or one that's missing for any other
+  // reason. Runs whenever `addons` changes (converges immediately: once every
+  // preset is present, there's nothing left to add and this is a no-op).
+  useEffect(() => {
+    const presentNames = new Set(addons.map((addon) => addon.name))
+    const missingPresets = PRESET_ADDON_GROUPS.filter((preset) => !presentNames.has(preset.name))
+    if (missingPresets.length === 0) return
+    onAddonsChange([
+      ...addons,
+      ...missingPresets.map((preset, i) => presetToAddonRow(preset, addons.length + i)),
+    ])
+  }, [addons, onAddonsChange])
+
   function addSize() {
     onSizesChange([...sizes, emptySizeRow(sizes.length)])
   }

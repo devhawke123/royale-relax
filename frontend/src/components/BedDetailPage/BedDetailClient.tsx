@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import type { Product, ProductAddon } from '@/types/product'
 import { parseBedDescription } from '@/lib/bed-description'
@@ -166,6 +167,60 @@ function formatAddonSurcharge(price: number) {
 
 function addonOptionLabel(label: string, priceModifier: number): string {
   return priceModifier > 0 ? `${label} (+${formatAddonSurcharge(priceModifier)})` : label
+}
+
+/** Matches the Split Head addon's "yes" choice regardless of its exact price suffix. */
+const SPLIT_HEADBOARD_OPTION_MATCH = 'Make My Headboard in 2 parts'
+
+/** Matches the Headboard Height addon's bespoke choice — prompts for an exact measurement. */
+const BESPOKE_HEIGHT_OPTION_MATCH = 'Bespoke / Floor-Ceiling'
+const BESPOKE_HEIGHT_MAX_LENGTH = 300
+
+/**
+ * The Ottoman Storage addon's "no" choice is always labelled exactly this,
+ * across both the original preset and any admin-customised variants (e.g.
+ * "Slatted Ottoman Storage" / "Solid Divan Ottoman Storage") — so any other
+ * selected option means storage was added.
+ */
+const OTTOMAN_STORAGE_ADDON_NAME = 'Would you like to add ottoman storage to your bed?'
+const OTTOMAN_STORAGE_NO_OPTION = 'No Storage'
+
+/**
+ * Fullscreen click-to-enlarge preview. Rendered via a portal into
+ * document.body so it always sits above the rest of the page regardless of
+ * where it's triggered from.
+ */
+function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onClose])
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label="Close"
+        className="absolute top-4 right-4 text-3xl leading-none text-white hover:text-stone-300"
+      >
+        ×
+      </button>
+      <img
+        src={src}
+        alt={alt}
+        className="max-h-full max-w-full rounded-lg object-contain"
+        onClick={(e) => e.stopPropagation()}
+      />
+    </div>,
+    document.body,
+  )
 }
 
 /**
@@ -416,9 +471,16 @@ interface BedDetailClientProps {
   product: Product
   fabrics: FabricType[]
   relatedProducts?: Product[]
+  /** Bed of the Week discount, if this product is the current live deal — applies to every size. */
+  discountPercentage?: number
 }
 
-export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedDetailClientProps) {
+export function BedDetailClient({
+  product,
+  fabrics,
+  relatedProducts = [],
+  discountPercentage = 0,
+}: BedDetailClientProps) {
   const { addToCart } = useCart()
   const parsed = useMemo(() => parseBedDescription(product.description ?? ''), [product.description])
   const addons = product.addons ?? []
@@ -429,15 +491,28 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
   const [quantity, setQuantity] = useState(1)
   const [payInInstallments, setPayInInstallments] = useState(false)
   const [addonSelections, setAddonSelections] = useState<AddonSelections>(() => defaultAddonSelections(addons))
+  const [lightboxSrc, setLightboxSrc] = useState<{ src: string; alt: string } | null>(null)
+  const [bespokeHeightCm, setBespokeHeightCm] = useState('')
 
   const selectedFabricType = fabrics.find((f) => f.slug === selectedFabricSlug)
   const fabricSwatches = selectedFabricType?.swatches ?? []
+
+  const isBespokeHeightSelected = addons.some((addon) => {
+    if (addon.type !== 'SELECT') return false
+    const selection = addonSelections[addon.id]
+    const selectedOption = addon.options.find((o) => o.id === selection?.optionId)
+    return selectedOption?.label.includes(BESPOKE_HEIGHT_OPTION_MATCH) ?? false
+  })
 
   const [activeImage, setActiveImage] = useState(product.images[0])
 
   const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0]
   const basePrice = selectedVariant?.price ?? product.basePrice ?? 0
-  const price = basePrice + addonsPriceDelta(addons, addonSelections)
+  const fullPrice = basePrice + addonsPriceDelta(addons, addonSelections)
+  const hasDiscount = discountPercentage > 0
+  // Bed of the Week discount applies to whichever size/variant is currently
+  // selected, not just the one variant shown on the homepage promo card.
+  const price = hasDiscount ? fullPrice * (1 - discountPercentage / 100) : fullPrice
   // Sizes show what they add over the cheapest size, not their absolute price — a
   // £0 modifier now reads as "no extra cost" instead of a confusing flat number.
   const cheapestVariantPrice = product.variants.length ? Math.min(...product.variants.map((v) => v.price)) : 0
@@ -506,7 +581,17 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
               <h1 className="text-[24px] font-bold text-black">{product.name}</h1>
             </div>
 
-            <p className="text-[40px] font-bold text-[#b87333]">{formatPrice(price)}</p>
+            <div className="flex flex-wrap items-baseline gap-3">
+              <p className="text-[40px] font-bold text-[#b87333]">{formatPrice(price)}</p>
+              {hasDiscount && (
+                <>
+                  <span className="text-lg text-stone-400 line-through">{formatPrice(fullPrice)}</span>
+                  <span className="rounded-md bg-[#b87333] px-2.5 py-1 text-sm font-semibold text-white">
+                    {discountPercentage}% OFF
+                  </span>
+                </>
+              )}
+            </div>
 
             {product.variants.length > 0 && (
               <label className="flex flex-col gap-1">
@@ -530,16 +615,96 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
               </label>
             )}
 
-            {addons.map((addon) => (
-              <AddonField
-                key={addon.id}
-                addon={addon}
-                selection={addonSelections[addon.id] ?? {}}
-                onChange={(next) =>
-                  setAddonSelections((prev) => ({ ...prev, [addon.id]: { ...prev[addon.id], ...next } }))
-                }
+            {addons.map((addon) => {
+              const selection = addonSelections[addon.id] ?? {}
+              const selectedOption =
+                addon.type === 'SELECT' ? addon.options.find((o) => o.id === selection.optionId) : undefined
+              const showSplitHeadboardPreview = selectedOption?.label.includes(SPLIT_HEADBOARD_OPTION_MATCH) ?? false
+              const showBespokeHeightField = (selectedOption?.label.includes(BESPOKE_HEIGHT_OPTION_MATCH) ?? false)
+              const showOttomanStoragePreview =
+                addon.name === OTTOMAN_STORAGE_ADDON_NAME &&
+                !!selectedOption &&
+                selectedOption.label !== OTTOMAN_STORAGE_NO_OPTION
+
+              return (
+                <div key={addon.id} className="flex flex-col gap-3">
+                  <AddonField
+                    addon={addon}
+                    selection={selection}
+                    onChange={(next) =>
+                      setAddonSelections((prev) => ({ ...prev, [addon.id]: { ...prev[addon.id], ...next } }))
+                    }
+                  />
+                  {showSplitHeadboardPreview && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setLightboxSrc({
+                          src: '/splitheadboard.png',
+                          alt: 'Split headboard — delivered and assembled in 2 parts',
+                        })
+                      }
+                      className="relative h-40 w-40 cursor-zoom-in overflow-hidden rounded-md border border-stone-200"
+                    >
+                      <Image
+                        src="/splitheadboard.png"
+                        alt="Split headboard — delivered and assembled in 2 parts"
+                        fill
+                        sizes="160px"
+                        className="object-cover"
+                      />
+                    </button>
+                  )}
+                  {showOttomanStoragePreview && selectedOption && (
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setLightboxSrc({ src: '/ottomonstorage.png', alt: selectedOption.label })
+                        }
+                        className="relative h-40 w-40 shrink-0 cursor-zoom-in overflow-hidden rounded-md border border-stone-200"
+                      >
+                        <Image
+                          src="/ottomonstorage.png"
+                          alt={selectedOption.label}
+                          fill
+                          sizes="160px"
+                          className="object-cover"
+                        />
+                      </button>
+                      {selectedOption.priceModifier > 0 && (
+                        <span className="text-sm font-bold text-[#b87333]">
+                          +{formatAddonSurcharge(selectedOption.priceModifier)}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {showBespokeHeightField && (
+                    <label className="flex flex-col gap-1">
+                      <span className="text-sm font-bold text-[#09090a]">Exact Height Required (CM)</span>
+                      <input
+                        type="text"
+                        value={bespokeHeightCm}
+                        onChange={(e) => setBespokeHeightCm(e.target.value.slice(0, BESPOKE_HEIGHT_MAX_LENGTH))}
+                        maxLength={BESPOKE_HEIGHT_MAX_LENGTH}
+                        className="h-11 rounded-md border border-stone-300 px-3 text-sm text-stone-900 outline-none focus:border-[#b87333]"
+                      />
+                      <span className="text-xs text-stone-400">
+                        Characters left: {BESPOKE_HEIGHT_MAX_LENGTH - bespokeHeightCm.length}
+                      </span>
+                    </label>
+                  )}
+                </div>
+              )
+            })}
+
+            {lightboxSrc && (
+              <ImageLightbox
+                src={lightboxSrc.src}
+                alt={lightboxSrc.alt}
+                onClose={() => setLightboxSrc(null)}
               />
-            ))}
+            )}
 
             {fabrics.length > 0 && (
               <div className="flex flex-col gap-3">
@@ -646,6 +811,9 @@ export function BedDetailClient({ product, fabrics, relatedProducts = [] }: BedD
                       ? [{ label: 'Colour', value: swatchLabel(selectedFabricSwatch) }]
                       : []),
                     ...addonCartData.options,
+                    ...(isBespokeHeightSelected && bespokeHeightCm.trim()
+                      ? [{ label: 'Exact Height Required (CM)', value: bespokeHeightCm.trim() }]
+                      : []),
                   ],
                 },
                 quantity,

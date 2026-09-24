@@ -14,6 +14,10 @@ class ProductSaveError extends Error {}
 const CATEGORY_OPTIONS = ['BEDS', 'MATTRESSES', 'FABRICS'] as const
 const STATUS_OPTIONS = ['DRAFT', 'PUBLISHED', 'ARCHIVED'] as const
 const FABRIC_COLOR_STATUS_OPTIONS = ['ACTIVE', 'DISCONTINUED'] as const
+// Storefront sub-category for a bed — backed by the product's hasStorage/hasDrawer
+// flags, which /shop/beds/storage and /shop/beds/drawer each filter on.
+const BED_TYPE_OPTIONS = ['NONE', 'STORAGE', 'DRAWER'] as const
+type BedType = (typeof BED_TYPE_OPTIONS)[number]
 
 interface ProductImageRow {
   id?: string
@@ -42,6 +46,8 @@ interface ProductDetail {
   category: (typeof CATEGORY_OPTIONS)[number]
   status: (typeof STATUS_OPTIONS)[number]
   basePrice: number
+  hasStorage: boolean
+  hasDrawer: boolean
   onSale: boolean
   salePrice: number | null
   saleStartsAt: string | null
@@ -68,6 +74,7 @@ export default function EditProductPage() {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState<(typeof CATEGORY_OPTIONS)[number]>('BEDS')
+  const [bedType, setBedType] = useState<BedType>('NONE')
   const [status, setStatus] = useState<(typeof STATUS_OPTIONS)[number]>('DRAFT')
   const [basePrice, setBasePrice] = useState('')
   const [onSale, setOnSale] = useState(false)
@@ -118,6 +125,7 @@ export default function EditProductPage() {
         setName(product.name)
         setDescription(product.description)
         setCategory(product.category)
+        setBedType(product.hasStorage ? 'STORAGE' : product.hasDrawer ? 'DRAWER' : 'NONE')
         setStatus(product.status)
         setBasePrice(String(product.basePrice))
         setOnSale(product.onSale)
@@ -302,6 +310,9 @@ export default function EditProductPage() {
           saleStartsAt: saleStartsAt || null,
           saleEndsAt: saleEndsAt || null,
           images: images.map((img, i) => ({ id: img.id, path: img.path, isMain: img.isMain, sortOrder: i })),
+          ...(category === 'BEDS'
+            ? { hasStorage: bedType === 'STORAGE', hasDrawer: bedType === 'DRAWER' }
+            : {}),
           ...(category === 'FABRICS'
             ? {
                 fabricColors: fabricColors.map((c, i) => ({
@@ -450,6 +461,21 @@ export default function EditProductPage() {
                   ))}
                 </select>
               </label>
+
+              {category === 'BEDS' && (
+                <label className="flex flex-col gap-2 text-sm text-stone-700">
+                  Bed Type
+                  <select
+                    value={bedType}
+                    onChange={(e) => setBedType(e.target.value as BedType)}
+                    className="h-11 rounded-lg border border-stone-300 px-3 text-sm outline-none focus:border-[#b87333]"
+                  >
+                    <option value="NONE">None</option>
+                    <option value="STORAGE">Storage Bed</option>
+                    <option value="DRAWER">Drawer Bed</option>
+                  </select>
+                </label>
+              )}
 
               <label className="flex flex-col gap-2 text-sm text-stone-700">
                 Status

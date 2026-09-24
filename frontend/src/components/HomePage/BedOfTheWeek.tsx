@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import type { Product } from '@/types/product'
 import { Button } from '@/components/ui/Button'
 import { CountdownTimer } from '@/components/HomePage/CountdownTimer'
-import { useCart } from '@/lib/cart-context'
 
 function categoryPath(category: Product['category']) {
   return category === 'mattress' ? 'mattresses' : category === 'fabric' ? 'fabrics' : 'beds'
@@ -30,7 +29,6 @@ function formatPrice(amount: number, currency: string) {
 
 export function BedOfTheWeek({ product, discountPercentage, validUntil, isPromotionLive }: BedOfTheWeekProps) {
   const router = useRouter()
-  const { addToCart } = useCart()
   const variant = product.variants[0]
   const originalPrice = variant?.price ?? product.basePrice
   const currency = product.currency ?? 'GBP'
@@ -108,18 +106,7 @@ export function BedOfTheWeek({ product, discountPercentage, validUntil, isPromot
             <Button
               variant="primary"
               className="flex-1 py-4 text-base font-medium sm:flex-none sm:px-10 sm:text-lg"
-              onClick={() => {
-                if (price === undefined) return
-                addToCart({
-                  productId: product.id,
-                  name: product.name,
-                  image: product.images[0],
-                  price,
-                  href: `/shop/${categoryPath(product.category)}/${product.slug}`,
-                  sizeId: variant?.id,
-                })
-                router.push('/cart')
-              }}
+              onClick={() => router.push(`/shop/${categoryPath(product.category)}/${product.slug}`)}
             >
               Grab This Deal
             </Button>

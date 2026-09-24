@@ -33,6 +33,8 @@ function serialize(
     category: product.category,
     status: product.status,
     basePrice: Number(product.basePrice),
+    hasStorage: product.hasStorage,
+    hasDrawer: product.hasDrawer,
     onSale: product.onSale,
     salePrice: product.salePrice ? Number(product.salePrice) : null,
     saleStartsAt: product.saleStartsAt ? product.saleStartsAt.toISOString().slice(0, 10) : null,
@@ -199,8 +201,23 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { name, description, category, status, basePrice, onSale, salePrice, saleStartsAt, saleEndsAt, images, fabricColors, sizes, addons } =
-    body
+  const {
+    name,
+    description,
+    category,
+    status,
+    basePrice,
+    onSale,
+    salePrice,
+    saleStartsAt,
+    saleEndsAt,
+    images,
+    fabricColors,
+    sizes,
+    addons,
+    hasStorage,
+    hasDrawer,
+  } = body
 
   if (category !== undefined && !(Object.values(Category) as string[]).includes(category as string)) {
     return NextResponse.json({ error: `Invalid category: ${category}` }, { status: 400 })
@@ -252,6 +269,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         ...(category !== undefined ? { category: category as Category } : {}),
         ...(status !== undefined ? { status: status as ProductStatus } : {}),
         ...(basePrice !== undefined ? { basePrice: basePrice as number } : {}),
+        ...(hasStorage !== undefined ? { hasStorage: Boolean(hasStorage) } : {}),
+        ...(hasDrawer !== undefined ? { hasDrawer: Boolean(hasDrawer) } : {}),
         ...(onSale !== undefined ? { onSale: onSale as boolean } : {}),
         ...(salePrice !== undefined ? { salePrice: salePrice as number | null } : {}),
         ...(saleStartsAt !== undefined
