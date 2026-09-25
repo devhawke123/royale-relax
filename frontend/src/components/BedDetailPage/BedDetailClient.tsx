@@ -513,9 +513,6 @@ export function BedDetailClient({
   // Bed of the Week discount applies to whichever size/variant is currently
   // selected, not just the one variant shown on the homepage promo card.
   const price = hasDiscount ? fullPrice * (1 - discountPercentage / 100) : fullPrice
-  // Sizes show what they add over the cheapest size, not their absolute price — a
-  // £0 modifier now reads as "no extra cost" instead of a confusing flat number.
-  const cheapestVariantPrice = product.variants.length ? Math.min(...product.variants.map((v) => v.price)) : 0
 
   const thumbnails = product.images
 
@@ -604,7 +601,7 @@ export function BedDetailClient({
                   >
                     {product.variants.map((v) => (
                       <option key={v.id} value={v.id}>
-                        {addonOptionLabel(v.size ?? '', v.price - cheapestVariantPrice)}
+                        {v.size} ({formatPrice(v.price)})
                       </option>
                     ))}
                   </select>

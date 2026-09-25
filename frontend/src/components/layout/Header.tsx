@@ -397,8 +397,8 @@ export function Header({ phone, email }: { phone: string; email: string }) {
         }
       >
       <div className="bg-[#B87333] text-white">
-        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-x-6 gap-y-0.5 px-4 py-1.5 text-xs sm:flex-row sm:justify-between sm:px-6 sm:py-2 sm:text-sm xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-0.5 sm:gap-6">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-x-6 gap-y-0.5 px-4 py-1.5 text-xs md:flex-row md:justify-between md:px-6 md:py-2 md:text-sm xl:px-8 2xl:max-w-[1600px] 2xl:px-12">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-0.5 md:gap-6">
             <a
               href={`mailto:${email}`}
               className="flex items-center gap-2 hover:opacity-90"
@@ -414,7 +414,7 @@ export function Header({ phone, email }: { phone: string; email: string }) {
             </a>
             <a
               href={phoneHref(phone)}
-              className="hidden items-center gap-2 hover:opacity-90 sm:flex"
+              className="hidden items-center gap-2 hover:opacity-90 md:flex"
             >
               <Image
                 src="/icons/phone.svg"
