@@ -11,6 +11,10 @@ export const productWithColorsInclude = {
     orderBy: { sortOrder: 'asc' as const },
     include: { options: { orderBy: { sortOrder: 'asc' as const } } },
   },
+  // Fabric products (e.g. "Teddy") often have no ProductImage of their own —
+  // their photo lives on the first colourway instead. Included here so
+  // toDisplayProduct can fall back to it, matching the admin product list.
+  fabricColors: { orderBy: { sortOrder: 'asc' as const } },
 }
 
 export function getFeaturedProducts(limit: number) {
@@ -100,6 +104,9 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
   const images = mainImage
     ? [mainImage, ...productImages.filter((image) => image !== mainImage)]
     : productImages
+  // Fabric products (e.g. "Teddy") don't always have their own ProductImage —
+  // fall back to the first colourway's photo, same as the admin product list.
+  const fallbackImagePath = images.length === 0 ? (product as any).fabricColors?.[0]?.imagePath : undefined
 
   const variants = (product as any).sizes?.map((s: any) => ({
     id: s.id,
@@ -130,7 +137,7 @@ export function toDisplayProduct(product: ProductWithImages): DisplayProduct {
     name: product.name,
     category: categoryToDisplay[product.category],
     description: (product as any).description ?? '',
-    images: images.map((image) => getImageUrl(image.path)),
+    images: images.length > 0 ? images.map((image) => getImageUrl(image.path)) : fallbackImagePath ? [getImageUrl(fallbackImagePath)] : [],
     variants,
     addons,
     basePrice: Number((product as any).basePrice ?? 0),

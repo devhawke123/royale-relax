@@ -354,9 +354,19 @@ export function Header({ phone, email }: { phone: string; email: string }) {
   const isContactPage = pathname.startsWith('/contact')
   const isOverlayPage =
     isHome || isBedsPage || isFabricsPage || isMattressesPage || isAboutPage || isContactPage
-  // The cart and login pages use the dark full wordmark instead of the small
-  // inline mark the rest of the non-hero pages share.
-  const isDarkLogoPage = pathname === '/cart' || pathname === '/login'
+  // Product detail pages (as opposed to their listing pages above, which
+  // have a hero banner and use the overlay logo instead).
+  const isBedDetailPage = pathname.startsWith('/shop/beds/') && !isBedsPage
+  const isFabricDetailPage = pathname.startsWith('/shop/fabrics/') && !isFabricsPage
+  const isMattressDetailPage = pathname.startsWith('/shop/mattresses/') && !isMattressesPage
+  // The cart, login, and product detail pages use the dark full wordmark
+  // instead of the small inline mark the rest of the non-hero pages share.
+  const isDarkLogoPage =
+    pathname === '/cart' ||
+    pathname === '/login' ||
+    isBedDetailPage ||
+    isFabricDetailPage ||
+    isMattressDetailPage
   const { cartCount } = useCart()
   const headerRef = useRef<HTMLElement>(null)
 
