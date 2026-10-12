@@ -44,27 +44,28 @@ function BedCard({ product }: { product: Product }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col overflow-hidden rounded-[28px] border border-stone-200/70 bg-white shadow-sm transition duration-300 hover:shadow-md"
+      className="group flex flex-col overflow-hidden rounded-[12px] border border-stone-200/70 bg-white shadow-sm transition duration-300 hover:shadow-md"
     >
       {/* Image */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#e8e4e0]">
+      <div className="w-full overflow-hidden bg-[#e8e4e0]">
         {imageSrc ? (
           <Image
             src={imageSrc}
             alt={product.name}
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            width={0}
+            height={0}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            style={{ width: '100%', height: 'auto' }}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-[#e8e4e0]">
+          <div className="flex aspect-square w-full items-center justify-center bg-[#e8e4e0]">
             <span className="text-4xl text-stone-400">🛏</span>
           </div>
         )}
       </div>
 
       {/* Info row */}
-      <div className="flex items-end justify-between gap-3 border-t border-stone-200 px-5 py-4 sm:px-6">
+      <div className="flex items-end justify-between gap-3 border-t border-stone-200 px-4 py-3">
         <span className="min-w-0 text-[15px] font-normal text-[#222]">
           <span className="inline-block border-b border-stone-300 pb-1">{product.name}</span>
         </span>
@@ -158,7 +159,7 @@ export function BedsPageClient({ products, initialFilter, serverFiltered }: Beds
             <p className="text-lg">No beds found in this category.</p>
           </div>
         ) : (
-          <div className="grid gap-x-6 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-x-6 gap-y-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {visible.map((product) => (
               <BedCard key={product.id} product={product} />
             ))}

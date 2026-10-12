@@ -523,8 +523,8 @@ export function BedDetailClient({
           {/* ── Left column: gallery + description ── */}
           <div className="flex min-w-0 flex-col gap-6">
             {/* Gallery */}
-            <div className="flex gap-3 rounded-[3px] border border-stone-100 bg-white p-2">
-              <div className="flex max-h-[500px] flex-col gap-2 overflow-y-auto">
+            <div className="flex flex-col gap-3 rounded-[3px] border border-stone-100 bg-white p-2">
+              <div className="order-2 flex gap-2 overflow-x-auto pb-1">
                 {(thumbnails.length > 0 ? thumbnails : product.images).map((src, i) => (
                   <button
                     key={`${src}-${i}`}
@@ -538,11 +538,11 @@ export function BedDetailClient({
                   </button>
                 ))}
               </div>
-              <div className="relative aspect-square w-full overflow-hidden rounded-[2px] bg-[#e8e4e0]">
+              <div className="relative order-1 w-full min-w-0 overflow-hidden rounded-[2px] bg-[#e8e4e0]">
                 {activeImage ? (
-                  <Image src={activeImage} alt={product.name} fill sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover" priority />
+                  <Image src={activeImage} alt={product.name} width={0} height={0} sizes="(max-width: 1024px) 100vw, 60vw" style={{ width: '100%', height: 'auto' }} priority />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-6xl text-stone-400">🛏</div>
+                  <div className="flex aspect-square w-full items-center justify-center text-6xl text-stone-400">🛏</div>
                 )}
               </div>
             </div>
