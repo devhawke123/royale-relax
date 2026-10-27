@@ -44,28 +44,27 @@ function BedCard({ product }: { product: Product }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col overflow-hidden rounded-[12px] border border-stone-200/70 bg-white shadow-sm transition duration-300 hover:shadow-md"
+      className="group flex h-full flex-col overflow-hidden rounded-[12px] border border-stone-200/70 bg-white shadow-sm transition duration-300 hover:shadow-md"
     >
       {/* Image */}
-      <div className="w-full overflow-hidden bg-[#e8e4e0]">
+      <div className="relative aspect-[641/560] w-full overflow-hidden bg-[#e8e4e0]">
         {imageSrc ? (
           <Image
             src={imageSrc}
             alt={product.name}
-            width={0}
-            height={0}
+            fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            style={{ width: '100%', height: 'auto' }}
+            className="object-contain"
           />
         ) : (
-          <div className="flex aspect-square w-full items-center justify-center bg-[#e8e4e0]">
+          <div className="flex h-full w-full items-center justify-center bg-[#e8e4e0]">
             <span className="text-4xl text-stone-400">🛏</span>
           </div>
         )}
       </div>
 
       {/* Info row */}
-      <div className="flex items-end justify-between gap-3 border-t border-stone-200 px-4 py-3">
+      <div className="flex min-h-[58px] items-center justify-between gap-3 border-t border-stone-200 px-4 py-3">
         <span className="min-w-0 text-[15px] font-normal text-[#222]">
           <span className="inline-block border-b border-stone-300 pb-1">{product.name}</span>
         </span>
