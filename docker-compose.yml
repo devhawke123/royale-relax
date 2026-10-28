@@ -1,15 +1,19 @@
 services:
-  postgres:
-    image: postgres:16-alpine
+  mysql:
+    image: mysql:8.4
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Postgres
-      POSTGRES_DB: royale_relax
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: myapp
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - royale_relax_pgdata:/var/lib/postgresql/data
+      - royale_relax_mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-ptest"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
 volumes:
-  royale_relax_pgdata:
+  royale_relax_mysqldata:

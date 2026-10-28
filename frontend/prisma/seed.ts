@@ -1,10 +1,18 @@
 import 'dotenv/config'
 import fs from 'node:fs'
-import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaMariaDb } from '@prisma/adapter-mariadb'
 import { PrismaClient } from '../generated/prisma/client'
 import { Category, ProductStatus } from '../generated/prisma/enums'
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+const url = new URL(process.env.DATABASE_URL ?? 'mysql://root:test@localhost:3306/myapp')
+const adapter = new PrismaMariaDb({
+  host: url.hostname,
+  port: url.port ? Number(url.port) : 3306,
+  user: decodeURIComponent(url.username),
+  password: decodeURIComponent(url.password),
+  database: url.pathname.replace(/^\//, ''),
+  allowPublicKeyRetrieval: true,
+})
 const prisma = new PrismaClient({ adapter })
 
 type ManifestImage = {
@@ -25,7 +33,7 @@ function normalizeImagePath(path: string) {
 }
 
 async function main() {
-  const manifest: Manifest = JSON.parse(fs.readFileSync('./frontend/data/products-manifest.json', 'utf-8'))
+  const manifest: Manifest = JSON.parse(fs.readFileSync('./data/products-manifest.json', 'utf-8'))
 
   await prisma.product.deleteMany({
     where: { slug: { in: Object.values(manifest).flat().map((product) => product.slug) } },
