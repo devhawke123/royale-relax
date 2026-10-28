@@ -48,3 +48,6 @@ frontend/generated/prisma
 
 # personal Claude Code permission overrides — not for the team
 .claude/settings.local.json
+
+# locally uploaded product images (dev only; prod uses object storage)
+frontend/public/uploads/

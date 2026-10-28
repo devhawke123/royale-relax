@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+import { uploadImage } from '@/lib/upload-image'
 import { ProductConfigurationsTab, type SizeRow, type AddonRow } from '@/components/admin/ProductConfigurationsTab'
 
 type Tab = 'general' | 'pricing' | 'images' | 'colors' | 'configurations'
@@ -146,29 +147,23 @@ export default function EditProductPage() {
     }
   }, [accessToken, id])
 
-  function readFileAsDataUrl(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = () => reject(reader.error)
-      reader.readAsDataURL(file)
-    })
-  }
-
   async function handleMainImageFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     e.target.value = ''
-    if (!file) return
+    if (!file || !accessToken) return
     setUploading(true)
+    setSaveError('')
     try {
-      const dataUrl = await readFileAsDataUrl(file)
+      const { path, url } = await uploadImage(file, accessToken)
       setImages((prev) => {
         const rest = prev.filter((img) => !img.isMain)
-        return [{ path: dataUrl, url: dataUrl, isMain: true, sortOrder: 0 }, ...rest].map((img, i) => ({
+        return [{ path, url, isMain: true, sortOrder: 0 }, ...rest].map((img, i) => ({
           ...img,
           sortOrder: i,
         }))
       })
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Image upload failed')
     } finally {
       setUploading(false)
     }
@@ -177,15 +172,18 @@ export default function EditProductPage() {
   async function handleGalleryFiles(e: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? [])
     e.target.value = ''
-    if (files.length === 0) return
+    if (files.length === 0 || !accessToken) return
     setUploading(true)
+    setSaveError('')
     try {
-      const dataUrls = await Promise.all(files.map(readFileAsDataUrl))
+      const uploaded = await Promise.all(files.map((file) => uploadImage(file, accessToken)))
       setImages((prev) => {
-        const next = [...prev, ...dataUrls.map((path) => ({ path, url: path, isMain: false, sortOrder: 0 }))]
+        const next = [...prev, ...uploaded.map(({ path, url }) => ({ path, url, isMain: false, sortOrder: 0 }))]
         if (!next.some((img) => img.isMain) && next.length > 0) next[0].isMain = true
         return next.map((img, i) => ({ ...img, sortOrder: i }))
       })
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Image upload failed')
     } finally {
       setUploading(false)
     }
@@ -206,22 +204,25 @@ export default function EditProductPage() {
   async function handleAddColorFile(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     e.target.value = ''
-    if (!file) return
+    if (!file || !accessToken) return
     setUploading(true)
+    setSaveError('')
     try {
-      const dataUrl = await readFileAsDataUrl(file)
+      const { path, url } = await uploadImage(file, accessToken)
       setFabricColors((prev) => [
         ...prev,
         {
           code: '',
           colorName: '',
-          imagePath: dataUrl,
-          imageUrl: dataUrl,
+          imagePath: path,
+          imageUrl: url,
           description: '',
           status: 'ACTIVE',
           sortOrder: prev.length,
         },
       ])
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Image upload failed')
     } finally {
       setUploading(false)
     }
@@ -230,11 +231,14 @@ export default function EditProductPage() {
   async function handleReplaceColorImage(index: number, e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     e.target.value = ''
-    if (!file) return
+    if (!file || !accessToken) return
     setUploading(true)
+    setSaveError('')
     try {
-      const dataUrl = await readFileAsDataUrl(file)
-      updateColor(index, { imagePath: dataUrl, imageUrl: dataUrl })
+      const { path, url } = await uploadImage(file, accessToken)
+      updateColor(index, { imagePath: path, imageUrl: url })
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Image upload failed')
     } finally {
       setUploading(false)
     }
