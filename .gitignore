@@ -51,3 +51,8 @@ frontend/generated/prisma
 
 # locally uploaded product images (dev only; prod uses object storage)
 frontend/public/uploads/
+
+# database dumps contain customer and login data - never commit
+royale_dump.dump
+.migration-tmp/
+*.sql.gz
