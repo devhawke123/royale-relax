@@ -40,19 +40,19 @@ export function AboutStory() {
 
       <div className="absolute right-0 bottom-0 hidden aspect-[827/553] w-[calc(55%-2rem)] translate-x-20 overflow-hidden lg:block">
         <Image
-          src="/images/lifestyle/about-us-bed2.svg"
-          alt="Handcrafted Royale Relax bed"
+          src="/images/lifestyle/about-us-heritage-elite-bed.jpg"
+          alt="Royale Relax Heritage Elite bed"
           fill
           unoptimized
           sizes="50vw"
-          className="object-[30%_center]"
+          className="object-cover object-center"
         />
       </div>
 
       <div className="relative mt-10 aspect-[600/500] w-full overflow-hidden px-6 sm:px-10 lg:hidden">
         <Image
-          src="/images/lifestyle/about-us-bed2.svg"
-          alt="Handcrafted Royale Relax bed"
+          src="/images/lifestyle/about-us-heritage-elite-bed.jpg"
+          alt="Royale Relax Heritage Elite bed"
           fill
           unoptimized
           sizes="100vw"
