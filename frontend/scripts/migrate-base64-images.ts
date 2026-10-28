@@ -69,6 +69,13 @@ async function assertReachable(location: string) {
 
 async function main() {
   const dbUrl = new URL(process.env.DATABASE_URL ?? '')
+  const isLocalDb = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(dbUrl.hostname)
+  if (apply && !isLocalDb && storageDriver() === 'local') {
+    throw new Error(
+      'Refusing to --apply to a remote database with local-disk storage: rows would point at files that only exist on this PC. ' +
+        'Set AWS_ENDPOINT_URL_S3, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY first.',
+    )
+  }
   console.log(`Database: ${dbUrl.hostname}:${dbUrl.port || 3306}${dbUrl.pathname}`)
   console.log(`Storage:  ${storageDriver() === 's3' ? 'S3 / Neon Object Storage (REMOTE)' : 'local disk (public/uploads)'}`)
   console.log(apply ? 'Mode:     APPLY (will upload and update rows)\n' : 'Mode:     dry run (pass --apply to make changes)\n')
